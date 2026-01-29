@@ -30,9 +30,9 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                <div class="flex items-center gap-3">
                  <h1 class="text-2xl font-bold text-slate-900" [attr.title]="p.name">{{ p.name }}</h1>
                  <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border"
-                    [class.bg-blue-50]="p.status === 'EN_PROGRESO'"
-                    [class.text-blue-700]="p.status === 'EN_PROGRESO'"
-                    [class.border-blue-100]="p.status === 'EN_PROGRESO'"
+                    [class.bg-red-50]="p.status === 'EN_PROGRESO'"
+                    [class.text-red-700]="p.status === 'EN_PROGRESO'"
+                    [class.border-red-100]="p.status === 'EN_PROGRESO'"
                     [class.bg-green-50]="p.status === 'FINALIZADO'"
                     [class.text-green-700]="p.status === 'FINALIZADO'"
                     [class.border-green-100]="p.status === 'FINALIZADO'"
@@ -56,7 +56,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
              }
 
              @if (canManageActivities()) {
-                <button (click)="openEditForm()" class="flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all shadow-sm">
+                <button (click)="openEditForm()" class="flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-red-600 transition-all shadow-sm">
                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                    </svg>
@@ -88,8 +88,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
            <div class="bg-white rounded-2xl p-2 shadow-sm border border-slate-100 flex flex-wrap gap-2">
               <button (click)="activeTab.set('BOARD')" 
                       class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-blue-50]="activeTab() === 'BOARD'"
-                      [class.text-blue-700]="activeTab() === 'BOARD'"
+                      [class.bg-red-50]="activeTab() === 'BOARD'"
+                      [class.text-red-700]="activeTab() === 'BOARD'"
                       [class.text-slate-600]="activeTab() !== 'BOARD'"
                       [class.hover:bg-slate-50]="activeTab() !== 'BOARD'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
@@ -97,8 +97,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               </button>
               <button (click)="activeTab.set('EXPENSES')" 
                       class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-blue-50]="activeTab() === 'EXPENSES'"
-                      [class.text-blue-700]="activeTab() === 'EXPENSES'"
+                      [class.bg-red-50]="activeTab() === 'EXPENSES'"
+                      [class.text-red-700]="activeTab() === 'EXPENSES'"
                       [class.text-slate-600]="activeTab() !== 'EXPENSES'"
                       [class.hover:bg-slate-50]="activeTab() !== 'EXPENSES'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -106,8 +106,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               </button>
               <button (click)="activeTab.set('PAYBACK')" 
                       class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-blue-50]="activeTab() === 'PAYBACK'"
-                      [class.text-blue-700]="activeTab() === 'PAYBACK'"
+                      [class.bg-red-50]="activeTab() === 'PAYBACK'"
+                      [class.text-red-700]="activeTab() === 'PAYBACK'"
                       [class.text-slate-600]="activeTab() !== 'PAYBACK'"
                       [class.hover:bg-slate-50]="activeTab() !== 'PAYBACK'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
@@ -115,8 +115,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               </button>
               <button (click)="activeTab.set('FILES')" 
                       class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-blue-50]="activeTab() === 'FILES'"
-                      [class.text-blue-700]="activeTab() === 'FILES'"
+                      [class.bg-red-50]="activeTab() === 'FILES'"
+                      [class.text-red-700]="activeTab() === 'FILES'"
                       [class.text-slate-600]="activeTab() !== 'FILES'"
                       [class.hover:bg-slate-50]="activeTab() !== 'FILES'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
@@ -124,8 +124,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               </button>
               <button (click)="activeTab.set('CONVERSATIONS')" 
                       class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-blue-50]="activeTab() === 'CONVERSATIONS'"
-                      [class.text-blue-700]="activeTab() === 'CONVERSATIONS'"
+                      [class.bg-red-50]="activeTab() === 'CONVERSATIONS'"
+                      [class.text-red-700]="activeTab() === 'CONVERSATIONS'"
                       [class.text-slate-600]="activeTab() !== 'CONVERSATIONS'"
                       [class.hover:bg-slate-50]="activeTab() !== 'CONVERSATIONS'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
@@ -134,7 +134,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
            </div>
            
            @if (activeTab() === 'PAYBACK') {
-              <button (click)="goToManual.emit('finance')" class="text-slate-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-white" title="Ayuda sobre Payback">
+              <button (click)="goToManual.emit('finance')" class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-white" title="Ayuda sobre Payback">
                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                  </svg>

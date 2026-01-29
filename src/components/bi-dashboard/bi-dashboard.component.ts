@@ -6,18 +6,18 @@ import { DataService, Project, Currency, ImpactIndicator } from '../../services/
 import * as d3 from 'd3';
 
 @Component({
-  selector: 'app-bi-dashboard',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
+   selector: 'app-bi-dashboard',
+   standalone: true,
+   imports: [CommonModule, FormsModule],
+   template: `
     <div class="w-full flex flex-col space-y-6 animate-fade-in pb-20">
       
       <!-- Filters Bar -->
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center z-20 sticky top-0 md:relative">
          <div class="flex items-center gap-2">
             <h2 class="font-bold text-slate-700 text-lg">Dashboard Ejecutivo</h2>
-            <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">BI</span>
-            <button (click)="goToManual.emit()" class="text-slate-400 hover:text-blue-600 transition-colors p-1 ml-2 rounded-full hover:bg-slate-50" title="Ayuda sobre Proyectos">
+            <span class="px-2 py-0.5 rounded-md bg-red-50 text-red-700 text-xs font-bold border border-red-100">BI</span>
+            <button (click)="goToManual.emit()" class="text-slate-400 hover:text-red-600 transition-colors p-1 ml-2 rounded-full hover:bg-slate-50" title="Ayuda sobre Proyectos">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -25,7 +25,7 @@ import * as d3 from 'd3';
          </div>
          <div class="flex flex-wrap gap-3 w-full md:w-auto">
             <!-- Area Filter -->
-            <select [(ngModel)]="selectedArea" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 outline-none">
+            <select [(ngModel)]="selectedArea" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 p-2 outline-none">
               <option value="ALL">Todas las Áreas</option>
               @for(area of areas(); track area.id) {
                 <option [value]="area.id">{{ area.name }}</option>
@@ -33,7 +33,7 @@ import * as d3 from 'd3';
             </select>
             
             <!-- Manager Filter -->
-            <select [(ngModel)]="selectedLeader" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 outline-none">
+            <select [(ngModel)]="selectedLeader" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 p-2 outline-none">
               <option value="ALL">Todos los Líderes</option>
               @for(leader of leaders(); track leader.id) {
                 <option [value]="leader.id">{{ leader.name }}</option>
@@ -41,7 +41,7 @@ import * as d3 from 'd3';
             </select>
 
             <!-- Date Range (Mock) -->
-            <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 outline-none">
+            <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 p-2 outline-none">
                <option>Últimos 12 Meses</option>
                <option>Este Año (YTD)</option>
                <option>Todo el Histórico</option>
@@ -54,7 +54,7 @@ import * as d3 from 'd3';
          <!-- Active Projects -->
          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-32 relative overflow-hidden">
             <div class="absolute right-0 top-0 p-4 opacity-10">
-               <svg class="w-20 h-20 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+               <svg class="w-20 h-20 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
             </div>
             <div>
                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Proyectos Activos</p>
@@ -196,7 +196,7 @@ import * as d3 from 'd3';
       </div>
     </div>
   `,
-  styles: [`
+   styles: [`
     .animate-fade-in { animation: fadeIn 0.5s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes shimmer { 100% { transform: translateX(100%); } }
@@ -206,290 +206,290 @@ import * as d3 from 'd3';
   `]
 })
 export class BiDashboardComponent {
-  dataService = inject(DataService);
-  
-  selectProject = output<number>();
-  goToProjects = output<void>(); // To switch tab
-  goToManual = output<void>(); // New output for help context
+   dataService = inject(DataService);
 
-  // Filter Signals
-  selectedArea = signal<string | number>('ALL');
-  selectedLeader = signal<string | number>('ALL');
-  
-  @ViewChild('budgetChartContainer') budgetChartContainer!: ElementRef;
+   selectProject = output<number>();
+   goToProjects = output<void>(); // To switch tab
+   goToManual = output<void>(); // New output for help context
 
-  // --- Constants for Currency Conversion (Mock) ---
-  readonly EXCHANGE_RATE = 3.75; // USD to PEN
+   // Filter Signals
+   selectedArea = signal<string | number>('ALL');
+   selectedLeader = signal<string | number>('ALL');
 
-  constructor() {
-    // Redraw charts when data changes
-    effect(() => {
-       const p = this.filteredProjects(); // dependency
-       setTimeout(() => this.drawBudgetChart(), 100);
-    });
-  }
+   @ViewChild('budgetChartContainer') budgetChartContainer!: ElementRef;
 
-  // --- Data Accessors ---
-  areas = computed(() => this.dataService.getAllAreas());
-  leaders = computed(() => this.dataService.getAllUsers().filter(u => u.subRole === 'GERENTE' || u.subRole === 'JEFE'));
+   // --- Constants for Currency Conversion (Mock) ---
+   readonly EXCHANGE_RATE = 3.75; // USD to PEN
 
-  filteredProjects = computed(() => {
-    let projects = this.dataService.filteredProjects();
-    const area = this.selectedArea();
-    const leader = this.selectedLeader();
+   constructor() {
+      // Redraw charts when data changes
+      effect(() => {
+         const p = this.filteredProjects(); // dependency
+         setTimeout(() => this.drawBudgetChart(), 100);
+      });
+   }
 
-    if (area !== 'ALL') {
-      // Filter by checking if any entry in areaConfig matches the selected area
-      projects = projects.filter(p => p.areaConfig.some(c => c.areaId === +area));
-    }
-    if (leader !== 'ALL') {
-      // Filter by checking if any entry in areaConfig matches the selected leader
-      projects = projects.filter(p => p.areaConfig.some(c => c.leaderId === +leader));
-    }
-    return projects;
-  });
+   // --- Data Accessors ---
+   areas = computed(() => this.dataService.getAllAreas());
+   leaders = computed(() => this.dataService.getAllUsers().filter(u => u.subRole === 'GERENTE' || u.subRole === 'JEFE'));
 
-  // --- KPI Calculations ---
+   filteredProjects = computed(() => {
+      let projects = this.dataService.filteredProjects();
+      const area = this.selectedArea();
+      const leader = this.selectedLeader();
 
-  kpiActiveProjects = computed(() => {
-    return this.filteredProjects().filter(p => p.status === 'EN_PROGRESO').length;
-  });
+      if (area !== 'ALL') {
+         // Filter by checking if any entry in areaConfig matches the selected area
+         projects = projects.filter(p => p.areaConfig.some(c => c.areaId === +area));
+      }
+      if (leader !== 'ALL') {
+         // Filter by checking if any entry in areaConfig matches the selected leader
+         projects = projects.filter(p => p.areaConfig.some(c => c.leaderId === +leader));
+      }
+      return projects;
+   });
 
-  kpiMonthlySavings = computed(() => {
-    const projects = this.filteredProjects();
-    const indicators = this.dataService.getAllIndicators();
-    
-    let totalSavingsPEN = 0;
+   // --- KPI Calculations ---
 
-    projects.forEach(p => {
-       const projInds = indicators.filter(i => i.projectId === p.id);
-       projInds.forEach(ind => {
-          const diff = Math.max(0, ind.currentValue - ind.projectedValue);
-          let saving = diff * ind.frequency * ind.unitCost;
-          // Heuristic: We assume unitCost is in Project Currency
-          if (p.currency === 'USD') saving *= this.EXCHANGE_RATE;
-          
-          totalSavingsPEN += saving;
-       });
-    });
+   kpiActiveProjects = computed(() => {
+      return this.filteredProjects().filter(p => p.status === 'EN_PROGRESO').length;
+   });
 
-    return totalSavingsPEN;
-  });
+   kpiMonthlySavings = computed(() => {
+      const projects = this.filteredProjects();
+      const indicators = this.dataService.getAllIndicators();
 
-  kpiBudgetExec = computed(() => {
-    const projects = this.filteredProjects();
-    const expenses = this.dataService.getAllExpenses();
+      let totalSavingsPEN = 0;
 
-    let totalBudgetPEN = 0;
-    let totalSpentPEN = 0;
+      projects.forEach(p => {
+         const projInds = indicators.filter(i => i.projectId === p.id);
+         projInds.forEach(ind => {
+            const diff = Math.max(0, ind.currentValue - ind.projectedValue);
+            let saving = diff * ind.frequency * ind.unitCost;
+            // Heuristic: We assume unitCost is in Project Currency
+            if (p.currency === 'USD') saving *= this.EXCHANGE_RATE;
 
-    projects.forEach(p => {
-       // Budget
-       let b = p.budget;
-       if (p.currency === 'USD') b *= this.EXCHANGE_RATE;
-       totalBudgetPEN += b;
+            totalSavingsPEN += saving;
+         });
+      });
 
-       // Expenses
-       const projExpenses = expenses.filter(e => e.projectId === p.id);
-       const spent = projExpenses.reduce((acc, curr) => {
-          let amt = curr.amount;
-          if (curr.currency === 'USD') amt *= this.EXCHANGE_RATE;
-          return acc + amt;
-       }, 0);
-       totalSpentPEN += spent;
-    });
+      return totalSavingsPEN;
+   });
 
-    if (totalBudgetPEN === 0) return 0;
-    return Math.round((totalSpentPEN / totalBudgetPEN) * 100);
-  });
+   kpiBudgetExec = computed(() => {
+      const projects = this.filteredProjects();
+      const expenses = this.dataService.getAllExpenses();
 
-  kpiAvgPayback = computed(() => {
-     const projects = this.filteredProjects();
-     const indicators = this.dataService.getAllIndicators();
+      let totalBudgetPEN = 0;
+      let totalSpentPEN = 0;
 
-     let totalMonths = 0;
-     let count = 0;
+      projects.forEach(p => {
+         // Budget
+         let b = p.budget;
+         if (p.currency === 'USD') b *= this.EXCHANGE_RATE;
+         totalBudgetPEN += b;
 
-     projects.forEach(p => {
-        // Calculate Savings
-        const projInds = indicators.filter(i => i.projectId === p.id);
-        const monthlySavings = projInds.reduce((acc, ind) => {
-           const diff = Math.max(0, ind.currentValue - ind.projectedValue);
-           return acc + (diff * ind.frequency * ind.unitCost);
-        }, 0);
+         // Expenses
+         const projExpenses = expenses.filter(e => e.projectId === p.id);
+         const spent = projExpenses.reduce((acc, curr) => {
+            let amt = curr.amount;
+            if (curr.currency === 'USD') amt *= this.EXCHANGE_RATE;
+            return acc + amt;
+         }, 0);
+         totalSpentPEN += spent;
+      });
 
-        if (monthlySavings > 0) {
-           const payback = p.budget / monthlySavings;
-           totalMonths += payback;
-           count++;
-        }
-     });
+      if (totalBudgetPEN === 0) return 0;
+      return Math.round((totalSpentPEN / totalBudgetPEN) * 100);
+   });
 
-     if (count === 0) return 0;
-     return (totalMonths / count).toFixed(1);
-  });
+   kpiAvgPayback = computed(() => {
+      const projects = this.filteredProjects();
+      const indicators = this.dataService.getAllIndicators();
 
-  // --- Lists Computations ---
+      let totalMonths = 0;
+      let count = 0;
 
-  topProjectsByBudget = computed(() => {
-     return [...this.filteredProjects()]
-       .sort((a,b) => b.budget - a.budget) // Simplified: not normalizing currency for sorting list order, usually roughly correlated or mostly same currency
-       .slice(0, 5);
-  });
+      projects.forEach(p => {
+         // Calculate Savings
+         const projInds = indicators.filter(i => i.projectId === p.id);
+         const monthlySavings = projInds.reduce((acc, ind) => {
+            const diff = Math.max(0, ind.currentValue - ind.projectedValue);
+            return acc + (diff * ind.frequency * ind.unitCost);
+         }, 0);
 
-  topIndicators = computed(() => {
-     const projects = this.filteredProjects();
-     const allInds = this.dataService.getAllIndicators();
-     
-     const result: { indicator: ImpactIndicator, project: Project, savingsPEN: number }[] = [];
+         if (monthlySavings > 0) {
+            const payback = p.budget / monthlySavings;
+            totalMonths += payback;
+            count++;
+         }
+      });
 
-     projects.forEach(p => {
-        const pInds = allInds.filter(i => i.projectId === p.id);
-        pInds.forEach(ind => {
-           const diff = Math.max(0, ind.currentValue - ind.projectedValue);
-           let saving = diff * ind.frequency * ind.unitCost;
-           if (p.currency === 'USD') saving *= this.EXCHANGE_RATE;
-           
-           result.push({ indicator: ind, project: p, savingsPEN: saving });
-        });
-     });
+      if (count === 0) return 0;
+      return (totalMonths / count).toFixed(1);
+   });
 
-     return result.sort((a,b) => b.savingsPEN - a.savingsPEN).slice(0, 10);
-  });
+   // --- Lists Computations ---
 
-  // --- D3 Charts ---
+   topProjectsByBudget = computed(() => {
+      return [...this.filteredProjects()]
+         .sort((a, b) => b.budget - a.budget) // Simplified: not normalizing currency for sorting list order, usually roughly correlated or mostly same currency
+         .slice(0, 5);
+   });
 
-  drawBudgetChart() {
-    if (!this.budgetChartContainer) return;
-    const el = this.budgetChartContainer.nativeElement;
-    d3.select(el).selectAll('*').remove();
+   topIndicators = computed(() => {
+      const projects = this.filteredProjects();
+      const allInds = this.dataService.getAllIndicators();
 
-    // Aggregating Data by Area
-    const areaData = new Map<string, { budget: number, spent: number }>();
-    const projects = this.filteredProjects();
-    const expenses = this.dataService.getAllExpenses();
+      const result: { indicator: ImpactIndicator, project: Project, savingsPEN: number }[] = [];
 
-    projects.forEach(p => {
-       // FIX: Use the first area in areaConfig as the primary area for this chart
-       const primaryAreaId = p.areaConfig.length > 0 ? p.areaConfig[0].areaId : 0;
-       const areaName = this.dataService.getAllAreas().find(a => a.id === primaryAreaId)?.name || 'Sin Asignar';
-       
-       let budgetPEN = p.budget;
-       if (p.currency === 'USD') budgetPEN *= this.EXCHANGE_RATE;
+      projects.forEach(p => {
+         const pInds = allInds.filter(i => i.projectId === p.id);
+         pInds.forEach(ind => {
+            const diff = Math.max(0, ind.currentValue - ind.projectedValue);
+            let saving = diff * ind.frequency * ind.unitCost;
+            if (p.currency === 'USD') saving *= this.EXCHANGE_RATE;
 
-       // Calculate Spent
-       const projExp = expenses.filter(e => e.projectId === p.id);
-       const spentPEN = projExp.reduce((acc, curr) => {
-           let amt = curr.amount;
-           if (curr.currency === 'USD') amt *= this.EXCHANGE_RATE;
-           return acc + amt;
-       }, 0);
+            result.push({ indicator: ind, project: p, savingsPEN: saving });
+         });
+      });
 
-       const current = areaData.get(areaName) || { budget: 0, spent: 0 };
-       areaData.set(areaName, {
-          budget: current.budget + budgetPEN,
-          spent: current.spent + spentPEN
-       });
-    });
+      return result.sort((a, b) => b.savingsPEN - a.savingsPEN).slice(0, 10);
+   });
 
-    const data = Array.from(areaData.entries()).map(([area, val]) => ({ area, ...val }));
-    
-    // Setup Chart Dimensions
-    const margin = { top: 20, right: 20, bottom: 40, left: 60 };
-    const width = el.clientWidth - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
+   // --- D3 Charts ---
 
-    const svg = d3.select(el).append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+   drawBudgetChart() {
+      if (!this.budgetChartContainer) return;
+      const el = this.budgetChartContainer.nativeElement;
+      d3.select(el).selectAll('*').remove();
 
-    // X Axis
-    const x0 = d3.scaleBand()
-      .domain(data.map(d => d.area))
-      .rangeRound([0, width])
-      .paddingInner(0.1);
+      // Aggregating Data by Area
+      const areaData = new Map<string, { budget: number, spent: number }>();
+      const projects = this.filteredProjects();
+      const expenses = this.dataService.getAllExpenses();
 
-    const x1 = d3.scaleBand()
-      .domain(['Presupuesto', 'Gasto Real'])
-      .rangeRound([0, x0.bandwidth()])
-      .padding(0.05);
+      projects.forEach(p => {
+         // FIX: Use the first area in areaConfig as the primary area for this chart
+         const primaryAreaId = p.areaConfig.length > 0 ? p.areaConfig[0].areaId : 0;
+         const areaName = this.dataService.getAllAreas().find(a => a.id === primaryAreaId)?.name || 'Sin Asignar';
 
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(data, d => Math.max(d.budget, d.spent)) || 1000])
-      .rangeRound([height, 0]);
+         let budgetPEN = p.budget;
+         if (p.currency === 'USD') budgetPEN *= this.EXCHANGE_RATE;
 
-    // Colors
-    const z = d3.scaleOrdinal()
-      .domain(['Presupuesto', 'Gasto Real'])
-      .range(['#cbd5e1', '#3b82f6']); // Slate 300 vs Blue 500
+         // Calculate Spent
+         const projExp = expenses.filter(e => e.projectId === p.id);
+         const spentPEN = projExp.reduce((acc, curr) => {
+            let amt = curr.amount;
+            if (curr.currency === 'USD') amt *= this.EXCHANGE_RATE;
+            return acc + amt;
+         }, 0);
 
-    // Draw Bars
-    svg.append('g')
-      .selectAll('g')
-      .data(data)
-      .join('g')
-      .attr('transform', d => `translate(${x0(d.area)},0)`)
-      .selectAll('rect')
-      .data(d => [
-         { key: 'Presupuesto', value: d.budget }, 
-         { key: 'Gasto Real', value: d.spent }
-      ])
-      .join('rect')
-      .attr('x', d => x1(d.key)!)
-      .attr('y', d => y(d.value))
-      .attr('width', x1.bandwidth())
-      .attr('height', d => height - y(d.value))
-      .attr('fill', d => z(d.key) as string)
-      .attr('rx', 4); // Rounded top
+         const current = areaData.get(areaName) || { budget: 0, spent: 0 };
+         areaData.set(areaName, {
+            budget: current.budget + budgetPEN,
+            spent: current.spent + spentPEN
+         });
+      });
 
-    // X Axis
-    svg.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x0))
-      .selectAll('text')
-      .style('text-anchor', 'middle')
-      .style('font-size', '10px')
-      .style('fill', '#64748b');
+      const data = Array.from(areaData.entries()).map(([area, val]) => ({ area, ...val }));
 
-    // Y Axis
-    svg.append('g')
-      .call(d3.axisLeft(y).ticks(5, 's')) // 's' for SI units (1k, 1M)
-      .selectAll('text')
-      .style('fill', '#64748b');
-      
-    // Legend
-    const legend = svg.append('g')
-      .attr('font-family', 'sans-serif')
-      .attr('font-size', 10)
-      .attr('text-anchor', 'end')
-      .selectAll('g')
-      .data(['Presupuesto', 'Gasto Real'])
-      .join('g')
-      .attr('transform', (d, i) => `translate(0,${i * 20})`);
+      // Setup Chart Dimensions
+      const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+      const width = el.clientWidth - margin.left - margin.right;
+      const height = 300 - margin.top - margin.bottom;
 
-    legend.append('rect')
-      .attr('x', width - 19)
-      .attr('width', 19)
-      .attr('height', 19)
-      .attr('fill', d => z(d) as string)
-      .attr('rx', 4);
+      const svg = d3.select(el).append('svg')
+         .attr('width', width + margin.left + margin.right)
+         .attr('height', height + margin.top + margin.bottom)
+         .append('g')
+         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    legend.append('text')
-      .attr('x', width - 24)
-      .attr('y', 9.5)
-      .attr('dy', '0.32em')
-      .text(d => d)
-      .attr('fill', '#64748b');
+      // X Axis
+      const x0 = d3.scaleBand()
+         .domain(data.map(d => d.area))
+         .rangeRound([0, width])
+         .paddingInner(0.1);
 
-    if (data.length === 0) {
-        svg.append('text')
-          .attr('x', width / 2)
-          .attr('y', height / 2)
-          .attr('text-anchor', 'middle')
-          .text('No hay datos disponibles')
-          .attr('fill', '#cbd5e1');
-    }
-  }
+      const x1 = d3.scaleBand()
+         .domain(['Presupuesto', 'Gasto Real'])
+         .rangeRound([0, x0.bandwidth()])
+         .padding(0.05);
+
+      const y = d3.scaleLinear()
+         .domain([0, d3.max(data, d => Math.max(d.budget, d.spent)) || 1000])
+         .rangeRound([height, 0]);
+
+      // Colors
+      const z = d3.scaleOrdinal()
+         .domain(['Presupuesto', 'Gasto Real'])
+         .range(['#cbd5e1', '#3b82f6']); // Slate 300 vs Blue 500
+
+      // Draw Bars
+      svg.append('g')
+         .selectAll('g')
+         .data(data)
+         .join('g')
+         .attr('transform', d => `translate(${x0(d.area)},0)`)
+         .selectAll('rect')
+         .data(d => [
+            { key: 'Presupuesto', value: d.budget },
+            { key: 'Gasto Real', value: d.spent }
+         ])
+         .join('rect')
+         .attr('x', d => x1(d.key)!)
+         .attr('y', d => y(d.value))
+         .attr('width', x1.bandwidth())
+         .attr('height', d => height - y(d.value))
+         .attr('fill', d => z(d.key) as string)
+         .attr('rx', 4); // Rounded top
+
+      // X Axis
+      svg.append('g')
+         .attr('transform', `translate(0,${height})`)
+         .call(d3.axisBottom(x0))
+         .selectAll('text')
+         .style('text-anchor', 'middle')
+         .style('font-size', '10px')
+         .style('fill', '#64748b');
+
+      // Y Axis
+      svg.append('g')
+         .call(d3.axisLeft(y).ticks(5, 's')) // 's' for SI units (1k, 1M)
+         .selectAll('text')
+         .style('fill', '#64748b');
+
+      // Legend
+      const legend = svg.append('g')
+         .attr('font-family', 'sans-serif')
+         .attr('font-size', 10)
+         .attr('text-anchor', 'end')
+         .selectAll('g')
+         .data(['Presupuesto', 'Gasto Real'])
+         .join('g')
+         .attr('transform', (d, i) => `translate(0,${i * 20})`);
+
+      legend.append('rect')
+         .attr('x', width - 19)
+         .attr('width', 19)
+         .attr('height', 19)
+         .attr('fill', d => z(d) as string)
+         .attr('rx', 4);
+
+      legend.append('text')
+         .attr('x', width - 24)
+         .attr('y', 9.5)
+         .attr('dy', '0.32em')
+         .text(d => d)
+         .attr('fill', '#64748b');
+
+      if (data.length === 0) {
+         svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height / 2)
+            .attr('text-anchor', 'middle')
+            .text('No hay datos disponibles')
+            .attr('fill', '#cbd5e1');
+      }
+   }
 }
