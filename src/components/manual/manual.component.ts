@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data.service';
 
 @Component({
-  selector: 'app-manual',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+   selector: 'app-manual',
+   standalone: true,
+   imports: [CommonModule],
+   template: `
     <div class="flex h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
       
       <!-- Sidenav Menu -->
@@ -78,11 +78,11 @@ import { DataService } from '../../services/data.service';
                         <input #projInput type="file" class="hidden" accept="image/*" (change)="onFileSelected($event, 'PROJECT')">
                      }
 
-                     <div class="bg-slate-200 rounded-lg h-64 flex items-center justify-center relative overflow-hidden group">
+                     <div class="bg-slate-200 rounded-lg min-h-[16rem] flex items-center justify-center relative overflow-hidden group">
                         @if (projectImage()) {
-                           <img [src]="projectImage()" class="w-full h-full object-cover">
+                           <img [src]="projectImage()" class="w-full h-auto object-contain">
                         } @else {
-                           <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                           <img src="assets/manual/projects.png" class="w-full h-auto object-contain">
                            <div class="absolute inset-0 bg-black/5 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity">
                               <span class="text-xs font-bold text-slate-600 uppercase tracking-wide bg-white/80 px-3 py-1 rounded-full backdrop-blur-sm">Vista del Formulario de Creación</span>
                            </div>
@@ -133,14 +133,14 @@ import { DataService } from '../../services/data.service';
                         <input #kanbanInput type="file" class="hidden" accept="image/*" (change)="onFileSelected($event, 'KANBAN')">
                      }
 
-                     <div class="bg-slate-200 rounded-lg h-48 flex items-center justify-center relative overflow-hidden group">
+                     <div class="bg-slate-200 rounded-lg min-h-[16rem] flex items-center justify-center relative overflow-hidden group">
                         @if (kanbanImage()) {
-                           <img [src]="kanbanImage()" class="w-full h-full object-cover">
+                           <img [src]="kanbanImage()" class="w-full h-auto object-contain">
                         } @else {
-                           <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                           <img src="assets/manual/kanban.png" class="w-full h-auto object-contain">
                         }
                      </div>
-                     <p class="text-center text-xs text-slate-500 font-medium mt-2 italic">Fig 2. Tablero Kanban interactivo con indicadores de vencimiento.</p>
+                     <p class="text-center text-xs text-slate-500 font-medium mt-2 italic">Fig 3. Tablero Kanban interactivo con indicadores de vencimiento.</p>
                   </div>
                </div>
             </section>
@@ -248,82 +248,82 @@ import { DataService } from '../../services/data.service';
       </div>
     </div>
   `,
-  styles: [`
+   styles: [`
     .animate-slide-down { animation: slideDown 0.2s ease-out; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
   `]
 })
 export class ManualComponent {
-  dataService = inject(DataService);
-  section = input<string | null>(null); // Input for deep linking
-  
-  activeChapter = signal('intro');
-  openFaqs = signal<number[]>([]);
+   dataService = inject(DataService);
+   section = input<string | null>(null); // Input for deep linking
 
-  // Local state for editable images, persisted via LocalStorage
-  projectImage = signal<string | null>(localStorage.getItem('sole_manual_img_project'));
-  kanbanImage = signal<string | null>(localStorage.getItem('sole_manual_img_kanban'));
+   activeChapter = signal('intro');
+   openFaqs = signal<number[]>([]);
 
-  @ViewChildren('contentContainer') contentContainer!: QueryList<ElementRef>;
+   // Local state for editable images, persisted via LocalStorage
+   projectImage = signal<string | null>(localStorage.getItem('sole_manual_img_project'));
+   kanbanImage = signal<string | null>(localStorage.getItem('sole_manual_img_kanban'));
 
-  chapters = [
-    { id: 'intro', title: 'Introducción' },
-    { id: 'projects', title: 'Proyectos & Áreas' },
-    { id: 'tasks', title: 'Kanban & Tareas' },
-    { id: 'finance', title: 'Finanzas (Payback)' },
-    { id: 'faq', title: 'Preguntas Frecuentes' }
-  ];
+   @ViewChildren('contentContainer') contentContainer!: QueryList<ElementRef>;
 
-  isAdmin = computed(() => this.dataService.currentUser()?.role === 'ADMIN');
+   chapters = [
+      { id: 'intro', title: 'Introducción' },
+      { id: 'projects', title: 'Proyectos & Áreas' },
+      { id: 'tasks', title: 'Kanban & Tareas' },
+      { id: 'finance', title: 'Finanzas (Payback)' },
+      { id: 'faq', title: 'Preguntas Frecuentes' }
+   ];
 
-  constructor() {
-    effect(() => {
-      const sec = this.section();
-      if (sec) {
-        this.scrollTo(sec.toLowerCase());
+   isAdmin = computed(() => this.dataService.currentUser()?.role === 'ADMIN');
+
+   constructor() {
+      effect(() => {
+         const sec = this.section();
+         if (sec) {
+            this.scrollTo(sec.toLowerCase());
+         }
+      });
+   }
+
+   scrollTo(id: string) {
+      this.activeChapter.set(id);
+      const element = document.getElementById(id);
+      if (element) {
+         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    });
-  }
+   }
 
-  scrollTo(id: string) {
-    this.activeChapter.set(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
+   onScroll() {
+      // Simple intersection logic could be added here to update activeChapter on scroll
+   }
 
-  onScroll() {
-    // Simple intersection logic could be added here to update activeChapter on scroll
-  }
+   toggleFaq(id: number) {
+      this.openFaqs.update(ids => {
+         if (ids.includes(id)) return ids.filter(x => x !== id);
+         return [...ids, id];
+      });
+   }
 
-  toggleFaq(id: number) {
-    this.openFaqs.update(ids => {
-      if (ids.includes(id)) return ids.filter(x => x !== id);
-      return [...ids, id];
-    });
-  }
+   isFaqOpen(id: number) {
+      return this.openFaqs().includes(id);
+   }
 
-  isFaqOpen(id: number) {
-    return this.openFaqs().includes(id);
-  }
-
-  onFileSelected(event: any, type: 'PROJECT' | 'KANBAN') {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-         const result = e.target.result;
-         if (type === 'PROJECT') {
-             this.projectImage.set(result);
-             localStorage.setItem('sole_manual_img_project', result);
-         }
-         if (type === 'KANBAN') {
-             this.kanbanImage.set(result);
-             localStorage.setItem('sole_manual_img_kanban', result);
-         }
-      };
-      reader.readAsDataURL(file);
-    }
-  }
+   onFileSelected(event: any, type: 'PROJECT' | 'KANBAN') {
+      const file = event.target.files[0];
+      if (file) {
+         const reader = new FileReader();
+         reader.onload = (e: any) => {
+            const result = e.target.result;
+            if (type === 'PROJECT') {
+               this.projectImage.set(result);
+               localStorage.setItem('sole_manual_img_project', result);
+            }
+            if (type === 'KANBAN') {
+               this.kanbanImage.set(result);
+               localStorage.setItem('sole_manual_img_kanban', result);
+            }
+         };
+         reader.readAsDataURL(file);
+      }
+   }
 }
