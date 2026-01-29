@@ -147,13 +147,23 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                    </div>
                 }
 
-                <div>
-                   <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Rol del Sistema</label>
-                   <select formControlName="role" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                     <option value="USUARIO">Usuario Regular</option>
-                     <option value="ADMIN">Administrador</option>
-                   </select>
-                </div>
+                 <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Rol del Sistema</label>
+                    <select formControlName="role" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                      <option value="USUARIO">Usuario Regular</option>
+                      <option value="ADMIN">Administrador</option>
+                    </select>
+                 </div>
+
+                 <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Área Asignada</label>
+                    <select formControlName="areaId" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                       <option [value]="null">Seleccionar Área...</option>
+                       @for(area of areas(); track area.id) {
+                         <option [value]="area.id">{{ area.name }}</option>
+                       }
+                    </select>
+                 </div>
 
                 <!-- Fields for USUARIO only -->
                 @if (userForm.get('role')?.value === 'USUARIO') {
@@ -169,15 +179,7 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                       </select>
                     </div>
 
-                    <div>
-                      <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Área Asignada</label>
-                      <select formControlName="areaId" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                         <option [value]="null">Seleccionar Área...</option>
-                         @for(area of areas(); track area.id) {
-                           <option [value]="area.id">{{ area.name }}</option>
-                         }
-                      </select>
-                    </div>
+                    <!-- Area is now moved above for both roles -->
 
                     <div>
                       <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Supervisor (Reporta A)</label>
@@ -201,9 +203,17 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
 
                 <div class="pt-4 flex justify-end gap-3 sticky bottom-0 bg-white pb-2 border-t border-slate-100 mt-auto">
                    <button type="button" (click)="closeForm()" class="px-6 py-3 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
-                   <button type="submit" [disabled]="userForm.invalid" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50">
-                      {{ editingUser() ? 'Guardar Cambios' : 'Crear Usuario' }}
-                   </button>
+                    <button type="submit" [disabled]="userForm.invalid || isLoading()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 flex items-center gap-2">
+                       @if (isLoading()) {
+                          <svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Guardando...
+                       } @else {
+                          {{ editingUser() ? 'Guardar Cambios' : 'Crear Usuario' }}
+                       }
+                    </button>
                 </div>
 
               </form>
@@ -227,6 +237,7 @@ export class UserManagementComponent {
 
   showForm = signal(false);
   editingUser = signal<User | null>(null);
+  isLoading = signal(false);
 
   users = computed(() => this.dataService.getAllUsers());
   areas = computed(() => this.dataService.getAllAreas());
@@ -250,16 +261,16 @@ export class UserManagementComponent {
     // Reset subordinate fields if role changes to ADMIN
     this.userForm.get('role')?.valueChanges.subscribe(val => {
       if (val === 'ADMIN') {
-        this.userForm.patchValue({ subRole: null, areaId: 99, reportsToId: null });
+        this.userForm.patchValue({ subRole: null, reportsToId: null });
       }
     });
 
     // Reset reportsTo if area or subrole changes
     this.userForm.get('subRole')?.valueChanges.subscribe(() => {
-       if (this.userForm.dirty) this.userForm.patchValue({ reportsToId: null });
+      if (this.userForm.dirty) this.userForm.patchValue({ reportsToId: null });
     });
     this.userForm.get('areaId')?.valueChanges.subscribe(() => {
-       if (this.userForm.dirty) this.userForm.patchValue({ reportsToId: null });
+      if (this.userForm.dirty) this.userForm.patchValue({ reportsToId: null });
     });
   }
 
@@ -274,13 +285,13 @@ export class UserManagementComponent {
     if (role === 'ADMIN' || !subRole || !areaId) return [];
 
     const allUsers = this.dataService.getAllUsers();
-    
+
     // Filter supervisors in the same area (Ensure type match by converting to number)
     const targetAreaId = Number(areaId);
     const areaUsers = allUsers.filter(u => u.areaId === targetAreaId && u.id !== currentUserId);
 
     if (subRole === 'GERENTE') {
-      return []; 
+      return [];
     }
 
     if (subRole === 'JEFE') {
@@ -312,10 +323,10 @@ export class UserManagementComponent {
 
   openEdit(user: User) {
     this.editingUser.set(user);
-    this.userForm.markAsPristine(); 
+    this.userForm.markAsPristine();
     this.userForm.controls.password.clearValidators(); // Password not required on edit
     this.userForm.controls.password.updateValueAndValidity();
-    
+
     this.userForm.patchValue({
       name: user.name,
       email: user.email,
@@ -332,38 +343,47 @@ export class UserManagementComponent {
     this.editingUser.set(null);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.userForm.valid) {
+      this.isLoading.set(true);
       const val = this.userForm.value;
-      
+
       // Check Uniqueness
       if (this.dataService.isEmailTaken(val.email!, this.editingUser()?.id)) {
-         alert('El correo electrónico ya está registrado por otro usuario.');
-         return;
+        alert('El correo electrónico ya está registrado por otro usuario.');
+        this.isLoading.set(false);
+        return;
       }
 
-      const payload: any = {
-        name: val.name!,
-        email: val.email!,
-        role: val.role as Role,
-        subRole: val.subRole as SubRole,
-        areaId: +val.areaId!,
-        reportsToId: val.reportsToId ? +val.reportsToId : null,
-        avatar: this.editingUser() ? this.editingUser()!.avatar : `https://i.pravatar.cc/150?u=${Math.random()}`
-      };
-      
-      // Add password if creating new user
-      if (!this.editingUser() && val.password) {
-         payload.password = val.password;
-      }
+      try {
+        const payload: any = {
+          name: val.name!,
+          email: val.email!,
+          role: val.role as Role,
+          subRole: val.subRole as SubRole,
+          areaId: +val.areaId!,
+          reportsToId: val.reportsToId ? +val.reportsToId : null,
+          avatar: this.editingUser() ? this.editingUser()!.avatar : `https://i.pravatar.cc/150?u=${Math.random()}`
+        };
 
-      if (this.editingUser()) {
-        this.dataService.updateUser({ ...payload, id: this.editingUser()!.id });
-      } else {
-        this.dataService.addUser(payload);
+        // Add password if creating new user
+        if (!this.editingUser() && val.password) {
+          payload.password = val.password;
+        }
+
+        if (this.editingUser()) {
+          await this.dataService.updateUser({ ...payload, id: this.editingUser()!.id });
+        } else {
+          await this.dataService.addUser(payload);
+        }
+
+        this.closeForm();
+      } catch (err: any) {
+        console.error('Submit error:', err);
+        alert('Hubo un error al guardar el usuario. Por favor intenta de nuevo.');
+      } finally {
+        this.isLoading.set(false);
       }
-      
-      this.closeForm();
     }
   }
 
@@ -373,7 +393,7 @@ export class UserManagementComponent {
       alert(`No se puede eliminar al usuario: ${check.reason}`);
       return;
     }
-    
+
     if (confirm(`¿Estás seguro de eliminar a ${user.name}? Esta acción no se puede deshacer.`)) {
       this.dataService.deleteUser(user.id);
     }

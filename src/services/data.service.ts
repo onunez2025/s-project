@@ -617,7 +617,7 @@ export class DataService {
   // --- Users & Areas ---
 
   async addUser(user: Omit<User, 'id'>) {
-    await this.supabase.from('users').insert({
+    const { error } = await this.supabase.from('users').insert({
       name: user.name,
       email: user.email,
       password: user.password,
@@ -627,20 +627,30 @@ export class DataService {
       reports_to_id: user.reportsToId,
       avatar: user.avatar
     });
+
+    if (error) {
+      console.error('Error adding user:', error);
+      throw error;
+    }
+
     await this.loadUsers();
   }
 
   async updateUser(u: User) {
-    await this.supabase.from('users').update({
+    const { error } = await this.supabase.from('users').update({
       name: u.name,
       email: u.email,
-      // password: u.password, // Only update if provided logic handled in component
       role: u.role,
       sub_role: u.subRole,
       area_id: u.areaId,
       reports_to_id: u.reportsToId,
       avatar: u.avatar
     }).eq('id', u.id);
+
+    if (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
 
     // Special password handling if changed
     if (u.password) {
