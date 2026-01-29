@@ -9,8 +9,8 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   template: `
-    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end">
-      <div class="w-full max-w-2xl bg-white h-full shadow-2xl p-8 overflow-y-auto animate-slide-in flex flex-col">
+    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end">
+      <div class="w-full max-w-2xl bg-white h-full shadow-2xl p-8 overflow-y-auto animate-slide-in flex flex-col relative">
         
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
@@ -131,7 +131,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
                                 class="block w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm p-2.5 focus:border-purple-500 outline-none">
                            <option [value]="0">Seleccionar Líder...</option>
                            @for (user of getPotentialLeaders(areaId); track user.id) {
-                              <option [value]="user.id">{{ user.name }} ({{ user.subRole || 'ADMIN' }})</option>
+                              <option [value]="user.id" [selected]="getLeaderForArea(areaId) === user.id">{{ user.name }} ({{ user.subRole || 'ADMIN' }})</option>
                            }
                         </select>
                      </div>
