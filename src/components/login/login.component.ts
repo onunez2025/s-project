@@ -18,25 +18,25 @@ import { DataService } from '../../services/data.service';
                class="w-full h-full object-cover object-center transition-opacity duration-700 opacity-100" 
                alt="S-Project Background">
           
-          <!-- Gradient Overlay for better text contrast and red branding tint -->
-          <div class="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-red-900/50 to-slate-900/90 backdrop-blur-[2px]"></div>
-       </div>
+           <!-- Gradient Overlay for better text contrast and blue branding tint -->
+           <div class="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-blue-900/50 to-slate-900/90 backdrop-blur-[2px]"></div>
+        </div>
 
-       <!-- Login Card with Glassmorphism -->
-       <div class="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/20 w-full max-w-md p-8 md:p-10 animate-fade-in border border-white/50 relative z-10">
-          
-          <!-- Brand / Logo -->
-          <div class="flex flex-col items-center mb-10">
-             <div class="h-14 w-14 bg-red-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-red-600/30 mb-4 transform rotate-3">
-               Q
-             </div>
-             <h1 class="text-3xl font-bold text-slate-800">Sproject <span class="text-red-500">QAS</span></h1>
-             <p class="text-slate-500 font-mediumitalic">Ambiente de Pruebas y Calidad</p>
-          </div>
+        <!-- Login Card with Glassmorphism -->
+        <div class="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/20 w-full max-w-md p-8 md:p-10 animate-fade-in border border-white/50 relative z-10">
+           
+           <!-- Brand / Logo -->
+           <div class="flex flex-col items-center mb-10">
+              <div class="h-14 w-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-blue-600/30 mb-4 transform rotate-3">
+                S
+              </div>
+              <h1 class="text-3xl font-bold text-slate-800">S-Project</h1>
+              <p class="text-slate-500 font-medium italic">Sistema de Gestión de Proyectos Corporativos</p>
+           </div>
 
           <!-- Error Alert -->
           @if (errorMsg()) {
-            <div class="bg-red-50 text-red-600 p-3 rounded-xl text-sm font-medium mb-6 flex items-center gap-2 border border-red-100 animate-pulse">
+            <div class="bg-red-50 text-blue-600 p-3 rounded-xl text-sm font-medium mb-6 flex items-center gap-2 border border-red-100 animate-pulse">
                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                {{ errorMsg() }}
             </div>
@@ -49,7 +49,7 @@ import { DataService } from '../../services/data.service';
                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                    </div>
-                   <input type="email" formControlName="email" class="pl-10 block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all border p-3 text-slate-900 font-medium outline-none" placeholder="nombre@sole.com">
+                   <input type="email" formControlName="email" class="pl-10 block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none" placeholder="nombre@sole.com">
                 </div>
              </div>
 
@@ -59,7 +59,7 @@ import { DataService } from '../../services/data.service';
                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                    </div>
-                   <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" class="pl-10 pr-10 block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all border p-3 text-slate-900 font-medium outline-none" placeholder="••••••••">
+                   <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" class="pl-10 pr-10 block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none" placeholder="••••••••">
                    
                    <button type="button" (click)="showPassword.set(!showPassword())" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
                       @if(showPassword()) {
@@ -71,7 +71,7 @@ import { DataService } from '../../services/data.service';
                 </div>
              </div>
 
-             <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="w-full bg-red-600 text-white font-bold py-3.5 rounded-xl hover:bg-red-700 shadow-lg shadow-red-600/30 transition-all disabled:opacity-50 disabled:shadow-none mt-2 flex items-center justify-center gap-2">
+             <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 disabled:shadow-none mt-2 flex items-center justify-center gap-2">
                 @if (isLoading()) {
                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

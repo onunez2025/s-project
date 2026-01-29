@@ -56,7 +56,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
              }
 
              @if (canManageActivities()) {
-                <button (click)="openEditForm()" class="flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-red-600 transition-all shadow-sm">
+                <button (click)="openEditForm()" class="flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all shadow-sm">
                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                    </svg>
@@ -66,10 +66,10 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                 <button (click)="finishProject()" 
                         [disabled]="!isProjectReadyToFinish()"
                         class="flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all"
-                        [class.bg-red-600]="isProjectReadyToFinish()"
+                        [class.bg-blue-600]="isProjectReadyToFinish()"
                         [class.text-white]="isProjectReadyToFinish()"
                         [class.hover:bg-red-700]="isProjectReadyToFinish()"
-                        [class.shadow-red-600/20]="isProjectReadyToFinish()"
+                        [class.shadow-blue-600/20]="isProjectReadyToFinish()"
                         [class.bg-slate-100]="!isProjectReadyToFinish()"
                         [class.text-slate-400]="!isProjectReadyToFinish()"
                         [class.cursor-not-allowed]="!isProjectReadyToFinish()"
@@ -134,7 +134,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
            </div>
            
            @if (activeTab() === 'PAYBACK') {
-              <button (click)="goToManual.emit('finance')" class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-white" title="Ayuda sobre Payback">
+              <button (click)="goToManual.emit('finance')" class="text-slate-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-white" title="Ayuda sobre Payback">
                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                  </svg>

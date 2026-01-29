@@ -17,7 +17,7 @@ import * as d3 from 'd3';
          <div class="flex items-center gap-2">
             <h2 class="font-bold text-slate-700 text-lg">Dashboard Ejecutivo</h2>
             <span class="px-2 py-0.5 rounded-md bg-red-50 text-red-700 text-xs font-bold border border-red-100">BI</span>
-            <button (click)="goToManual.emit()" class="text-slate-400 hover:text-red-600 transition-colors p-1 ml-2 rounded-full hover:bg-slate-50" title="Ayuda sobre Proyectos">
+            <button (click)="goToManual.emit()" class="text-slate-400 hover:text-blue-600 transition-colors p-1 ml-2 rounded-full hover:bg-slate-50" title="Ayuda sobre Proyectos">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -54,7 +54,7 @@ import * as d3 from 'd3';
          <!-- Active Projects -->
          <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-32 relative overflow-hidden">
             <div class="absolute right-0 top-0 p-4 opacity-10">
-               <svg class="w-20 h-20 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+               <svg class="w-20 h-20 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
             </div>
             <div>
                <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Proyectos Activos</p>

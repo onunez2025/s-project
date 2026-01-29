@@ -28,9 +28,9 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
         <aside class="w-72 bg-[#0F172A] text-slate-300 hidden md:flex flex-col shadow-2xl z-20 transition-all font-medium relative h-full">
           <div class="h-20 flex items-center px-8 border-b border-slate-800/50 bg-[#0F172A] shrink-0">
             <div class="flex items-center gap-2">
-              <div class="h-8 w-8 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">Q</div>
+              <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">S</div>
               <span class="text-2xl font-bold tracking-tight text-white">
-                Sproject <span class="text-red-500 text-base">QAS</span>
+                S-Project
               </span>
             </div>
           </div>
@@ -42,10 +42,10 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             <!-- BI Dashboard -->
             <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('BI')" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-red-600]="dataService.currentView() === 'BI'"
+               [class.bg-blue-600]="dataService.currentView() === 'BI'"
                [class.text-white]="dataService.currentView() === 'BI'"
                [class.shadow-lg]="dataService.currentView() === 'BI'"
-               [class.shadow-red-900/50]="dataService.currentView() === 'BI'"
+               [class.shadow-blue-900/50]="dataService.currentView() === 'BI'"
                [class.hover:bg-slate-800]="dataService.currentView() !== 'BI'"
                [class.text-slate-400]="dataService.currentView() !== 'BI'">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,10 +57,10 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             <!-- Projects List -->
             <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('LIST')" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-red-600]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.bg-blue-600]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
                [class.text-white]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
                [class.shadow-lg]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
-               [class.shadow-red-900/50]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.shadow-blue-900/50]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
                [class.hover:bg-slate-800]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'"
                [class.text-slate-400]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,10 +72,10 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             <!-- Mis Tareas (KANBAN) -->
             <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('KANBAN')" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-red-600]="dataService.currentView() === 'KANBAN'"
+               [class.bg-blue-600]="dataService.currentView() === 'KANBAN'"
                [class.text-white]="dataService.currentView() === 'KANBAN'"
                [class.shadow-lg]="dataService.currentView() === 'KANBAN'"
-               [class.shadow-red-900/50]="dataService.currentView() === 'KANBAN'"
+               [class.shadow-blue-900/50]="dataService.currentView() === 'KANBAN'"
                [class.hover:bg-slate-800]="dataService.currentView() !== 'KANBAN'"
                [class.text-slate-400]="dataService.currentView() !== 'KANBAN'">
                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,7 +89,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             <!-- Manual de Uso -->
             <a href="#" (click)="$event.preventDefault(); dataService.goToManual()" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-red-600]="dataService.currentView() === 'MANUAL'"
+               [class.bg-blue-600]="dataService.currentView() === 'MANUAL'"
                [class.text-white]="dataService.currentView() === 'MANUAL'"
                [class.shadow-lg]="dataService.currentView() === 'MANUAL'"
                [class.hover:bg-slate-800]="dataService.currentView() !== 'MANUAL'"
@@ -106,7 +106,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
               
               <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('USERS')" 
                  class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-                 [class.bg-red-600]="dataService.currentView() === 'USERS'"
+                 [class.bg-blue-600]="dataService.currentView() === 'USERS'"
                  [class.text-white]="dataService.currentView() === 'USERS'"
                  [class.shadow-lg]="dataService.currentView() === 'USERS'"
                  [class.hover:bg-slate-800]="dataService.currentView() !== 'USERS'"
@@ -119,7 +119,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
 
               <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('AREAS')" 
                  class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-                 [class.bg-red-600]="dataService.currentView() === 'AREAS'"
+                 [class.bg-blue-600]="dataService.currentView() === 'AREAS'"
                  [class.text-white]="dataService.currentView() === 'AREAS'"
                  [class.shadow-lg]="dataService.currentView() === 'AREAS'"
                  [class.hover:bg-slate-800]="dataService.currentView() !== 'AREAS'"
@@ -156,7 +156,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
              <div (click)="showUserMenu.set(!showUserMenu())" class="p-6 border-t border-slate-800/50 bg-[#0F172A] cursor-pointer hover:bg-slate-800/50 transition-colors group z-30 relative">
                 <div class="flex items-center gap-3">
                   <div class="relative">
-                     <img [src]="dataService.currentUser()?.avatar" class="h-10 w-10 rounded-full bg-slate-700 border-2 border-slate-600 object-cover group-hover:border-red-500 transition-colors">
+                     <img [src]="dataService.currentUser()?.avatar" class="h-10 w-10 rounded-full bg-slate-700 border-2 border-slate-600 object-cover group-hover:border-blue-500 transition-colors">
                      <div class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-[#0F172A]"></div>
                   </div>
                   <div class="overflow-hidden flex-1">
@@ -176,7 +176,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
           
           <!-- Mobile Header -->
           <header class="md:hidden bg-[#0F172A] border-b border-slate-800 h-16 flex items-center px-4 justify-between shadow-md z-30 shrink-0">
-             <span class="text-xl font-bold text-white">Sproject <span class="text-red-500">QAS</span></span>
+             <span class="text-xl font-bold text-white">S-Project</span>
              <div class="flex items-center gap-3">
                <app-notification></app-notification>
                <img [src]="dataService.currentUser()?.avatar" (click)="dataService.currentView.set('PROFILE')" class="h-8 w-8 rounded-full border border-slate-500 cursor-pointer">
@@ -195,7 +195,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
                 <app-notification></app-notification>
                 <div class="h-8 w-px bg-slate-100"></div>
                 <!-- Profile Link / Quick Settings -->
-                <button (click)="dataService.currentView.set('PROFILE')" class="text-slate-400 hover:text-red-600 transition-colors">
+                <button (click)="dataService.currentView.set('PROFILE')" class="text-slate-400 hover:text-blue-600 transition-colors">
                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
              </div>
