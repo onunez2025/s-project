@@ -107,6 +107,12 @@ export interface AppNotification {
   createdAt: string;
 }
 
+export interface ManualAsset {
+  id: number;
+  sectionKey: string;
+  imageUrl: string;
+}
+
 export interface Project {
   id: number;
   name: string;
@@ -139,6 +145,7 @@ export class DataService {
   private _indicators = signal<ImpactIndicator[]>([]);
   private _messages = signal<ProjectMessage[]>([]);
   private _notifications = signal<AppNotification[]>([]);
+  private _manualAssets = signal<ManualAsset[]>([]);
 
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
@@ -167,6 +174,7 @@ export class DataService {
     await this.loadIndicators();
     await this.loadAllMessages();
     await this.loadNotifications();
+    await this.loadManualAssets();
     this.setupRealtimeSubscriptions();
     this.checkSession();
   }
@@ -211,6 +219,9 @@ export class DataService {
               break;
             case 'app_notifications':
               this.loadNotifications();
+              break;
+            case 'app_manual_assets':
+              this.loadManualAssets();
               break;
           }
         }
@@ -906,5 +917,30 @@ export class DataService {
 
   hasPendingActivities(projectId: number): boolean {
     return this._activities().some(a => a.projectId === projectId && a.status !== 'REALIZADA');
+  }
+
+  // --- Manual Assets ---
+  manualAssets = computed(() => this._manualAssets());
+
+  async loadManualAssets() {
+    const { data } = await this.supabase.from('app_manual_assets').select('*');
+    if (data) {
+      const mapped: ManualAsset[] = data.map((a: any) => ({
+        id: a.id,
+        sectionKey: a.section_key,
+        imageUrl: a.image_url
+      }));
+      this._manualAssets.set(mapped);
+    }
+  }
+
+  async updateManualAsset(sectionKey: string, imageUrl: string) {
+    const { data, error } = await this.supabase
+      .from('app_manual_assets')
+      .upsert({ section_key: sectionKey, image_url: imageUrl }, { onConflict: 'section_key' });
+
+    if (!error) {
+      await this.loadManualAssets();
+    }
   }
 }
