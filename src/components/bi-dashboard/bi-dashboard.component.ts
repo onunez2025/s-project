@@ -210,7 +210,7 @@ export class BiDashboardComponent {
   
   selectProject = output<number>();
   goToProjects = output<void>(); // To switch tab
-  goToManual = output<string>(); // New output for help context
+  goToManual = output<void>(); // New output for help context
 
   // Filter Signals
   selectedArea = signal<string | number>('ALL');
