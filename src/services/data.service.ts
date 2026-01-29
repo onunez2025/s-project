@@ -16,6 +16,8 @@ export type ActivityStatus = 'PENDIENTE' | 'EN_PROGRESO' | 'REALIZADA';
 export type ExpenseCategory = 'MATERIALES' | 'MANO_OBRA' | 'TRANSPORTE' | 'OTROS';
 export type FileType = 'PDF' | 'IMG' | 'EXCEL' | 'OTRO';
 export type IndicatorCategory = 'HORAS_HOMBRE' | 'INSUMOS' | 'RIESGOS';
+export type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROFILE' | 'MANUAL';
+
 
 export interface User {
   id: number;
@@ -94,6 +96,17 @@ export interface ProjectMessage {
   createdAt: string;
 }
 
+export interface AppNotification {
+  id: number;
+  userId: number;
+  title: string;
+  message: string;
+  type: 'CHAT' | 'PROJECT_UPDATE' | 'TASK_ASSIGNED';
+  linkId?: number;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export interface Project {
   id: number;
   name: string;
@@ -125,9 +138,18 @@ export class DataService {
   private _files = signal<ProjectFile[]>([]);
   private _indicators = signal<ImpactIndicator[]>([]);
   private _messages = signal<ProjectMessage[]>([]);
+  private _notifications = signal<AppNotification[]>([]);
 
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
+
+  // --- Navigation State ---
+  currentView = signal<ViewState>('BI');
+  selectedProjectId = signal<number | null>(null);
+  manualSection = signal<string | null>(null);
+
+  allNotifications = computed(() => this._notifications().sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+  unreadNotificationsCount = computed(() => this._notifications().filter(n => !n.isRead).length);
 
   constructor() {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -144,6 +166,7 @@ export class DataService {
     await this.loadFiles();
     await this.loadIndicators();
     await this.loadAllMessages();
+    await this.loadNotifications();
     this.setupRealtimeSubscriptions();
     this.checkSession();
   }
@@ -185,6 +208,9 @@ export class DataService {
               break;
             case 'areas':
               this.loadAreas();
+              break;
+            case 'app_notifications':
+              this.loadNotifications();
               break;
           }
         }
@@ -794,6 +820,62 @@ export class DataService {
     await this.supabase.from('areas').delete().eq('id', id);
     await this.loadAreas();
   }
+
+  // --- Notifications ---
+  async loadNotifications() {
+    const user = this.currentUser();
+    if (!user) return;
+
+    const { data } = await this.supabase
+      .from('app_notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (data) {
+      const mapped: AppNotification[] = data.map((n: any) => ({
+        id: n.id,
+        userId: n.user_id,
+        title: n.title,
+        message: n.message,
+        type: n.type,
+        linkId: n.link_id,
+        isRead: n.is_read,
+        createdAt: n.created_at
+      }));
+      this._notifications.set(mapped);
+    }
+  }
+
+  async markNotificationAsRead(id: number) {
+    await this.supabase.from('app_notifications').update({ is_read: true }).eq('id', id);
+    await this.loadNotifications();
+  }
+
+  async markAllNotificationsAsRead() {
+    const user = this.currentUser();
+    if (!user) return;
+    await this.supabase.from('app_notifications').update({ is_read: true }).eq('user_id', user.id);
+    await this.loadNotifications();
+  }
+
+  async deleteNotification(id: number) {
+    await this.supabase.from('app_notifications').delete().eq('id', id);
+    await this.loadNotifications();
+  }
+
+  // --- Navigation ---
+  goToDetail(id: number) {
+    this.selectedProjectId.set(id);
+    this.currentView.set('DETAIL');
+  }
+
+  goToManual(section: string | null = null) {
+    this.manualSection.set(section);
+    this.currentView.set('MANUAL');
+  }
+
 
   // --- Validation Helpers (Client-side cache is fine for quick check) ---
   isEmailTaken(email: string, excludeUserId?: number): boolean {
