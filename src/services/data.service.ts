@@ -144,7 +144,52 @@ export class DataService {
     await this.loadFiles();
     await this.loadIndicators();
     await this.loadAllMessages();
+    this.setupRealtimeSubscriptions();
     this.checkSession();
+  }
+
+  private setupRealtimeSubscriptions() {
+    this.supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        (payload) => {
+          const table = payload.table;
+          console.log('Realtime change detected in:', table);
+
+          switch (table) {
+            case 'projects':
+            case 'project_area_config':
+            case 'project_team_members':
+              this.loadProjects();
+              break;
+            case 'activities':
+              this.loadActivities();
+              this.loadProjects(); // Progress might have changed
+              break;
+            case 'expenses':
+              this.loadExpenses();
+              break;
+            case 'files':
+              this.loadFiles();
+              break;
+            case 'impact_indicators':
+              this.loadIndicators();
+              break;
+            case 'project_messages':
+              this.loadAllMessages();
+              break;
+            case 'users':
+              this.loadUsers();
+              break;
+            case 'areas':
+              this.loadAreas();
+              break;
+          }
+        }
+      )
+      .subscribe();
   }
 
   private checkSession() {
