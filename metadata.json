@@ -1,0 +1,5 @@
+{
+  "name": "S-Project",
+  "description": "Plataforma de gestión de proyectos con control de jerarquía, roles (Gerente, Jefe, Asistente) y vistas dinámicas.",
+  "requestFramePermissions": []
+}
