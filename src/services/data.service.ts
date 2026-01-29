@@ -86,6 +86,14 @@ export interface AreaLeaderConfig {
   leaderId: number;
 }
 
+export interface ProjectMessage {
+  id: number;
+  projectId: number;
+  userId: number;
+  content: string;
+  createdAt: string;
+}
+
 export interface Project {
   id: number;
   name: string;
@@ -116,6 +124,7 @@ export class DataService {
   private _expenses = signal<Expense[]>([]);
   private _files = signal<ProjectFile[]>([]);
   private _indicators = signal<ImpactIndicator[]>([]);
+  private _messages = signal<ProjectMessage[]>([]);
 
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
@@ -134,6 +143,7 @@ export class DataService {
     await this.loadExpenses();
     await this.loadFiles();
     await this.loadIndicators();
+    await this.loadAllMessages();
     this.checkSession();
   }
 
@@ -276,6 +286,20 @@ export class DataService {
         unitLabel: i.unit_label
       }));
       this._indicators.set(mapped);
+    }
+  }
+
+  async loadAllMessages() {
+    const { data } = await this.supabase.from('project_messages').select('*').order('created_at', { ascending: true });
+    if (data) {
+      const mapped: ProjectMessage[] = data.map((m: any) => ({
+        id: m.id,
+        projectId: m.project_id,
+        userId: m.user_id,
+        content: m.content,
+        createdAt: m.created_at
+      }));
+      this._messages.set(mapped);
     }
   }
 
@@ -477,6 +501,30 @@ export class DataService {
   async deleteIndicator(id: number) {
     await this.supabase.from('impact_indicators').delete().eq('id', id);
     await this.loadIndicators();
+  }
+
+  // --- Messages ---
+  getMessagesByProject(projectId: number) {
+    return this._messages().filter(m => m.projectId === projectId);
+  }
+
+  async addMessage(projectId: number, content: string) {
+    const user = this.currentUser();
+    if (!user) return;
+
+    const payload = {
+      project_id: projectId,
+      user_id: user.id,
+      content: content
+    };
+
+    await this.supabase.from('project_messages').insert(payload);
+    await this.loadAllMessages();
+  }
+
+  async deleteMessage(messageId: number) {
+    await this.supabase.from('project_messages').delete().eq('id', messageId);
+    await this.loadAllMessages();
   }
 
   // --- Project Logic ---

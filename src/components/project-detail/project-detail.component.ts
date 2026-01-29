@@ -5,14 +5,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService, Project, User, Activity, Expense, ProjectFile, ExpenseCategory, FileType, Currency, ImpactIndicator, IndicatorCategory } from '../../services/data.service';
 import { ProjectFormComponent } from '../project-form/project-form.component';
+import { ProjectChatComponent } from '../project-chat/project-chat.component';
 import * as d3 from 'd3';
 
-type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK';
+type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProjectFormComponent],
+  imports: [CommonModule, FormsModule, ProjectFormComponent, ProjectChatComponent],
   template: `
     @if (project(); as p) {
       <div class="flex flex-col h-full animate-fade-in gap-6 pb-10">
@@ -120,6 +121,15 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK';
                       [class.hover:bg-slate-50]="activeTab() !== 'FILES'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                 Archivos
+              </button>
+              <button (click)="activeTab.set('CONVERSATIONS')" 
+                      class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
+                      [class.bg-blue-50]="activeTab() === 'CONVERSATIONS'"
+                      [class.text-blue-700]="activeTab() === 'CONVERSATIONS'"
+                      [class.text-slate-600]="activeTab() !== 'CONVERSATIONS'"
+                      [class.hover:bg-slate-50]="activeTab() !== 'CONVERSATIONS'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                Conversaciones
               </button>
            </div>
            
@@ -599,7 +609,13 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK';
            </div>
         }
 
-        @if (showEditForm()) {
+        @if (activeTab() === 'CONVERSATIONS') {
+            <div class="max-w-3xl mx-auto w-full animate-fade-in">
+               <app-project-chat [projectId]="projectId()"></app-project-chat>
+            </div>
+         }
+
+         @if (showEditForm()) {
            <app-project-form 
               [projectToEdit]="p"
               (cancel)="closeEditForm()"
