@@ -103,9 +103,15 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                              </div>
                           </div>
 
-                          <!-- Leader -->
+                          <!-- Leaders -->
                           <div class="w-16 flex justify-end">
-                             <img [src]="getUser(p.leaderId)?.avatar" class="h-8 w-8 rounded-full border border-slate-100 shadow-sm" [title]="getUser(p.leaderId)?.name">
+                            <div class="flex items-center -space-x-2 overflow-hidden">
+                              @for(c of p.areaConfig; track c.areaId) {
+                                <img [src]="getUser(c.leaderId)?.avatar" 
+                                     class="h-7 w-7 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-100" 
+                                     [title]="getUser(c.leaderId)?.name">
+                              }
+                            </div>
                           </div>
                        </div>
                     }
@@ -158,15 +164,15 @@ export class GanttChartComponent implements OnDestroy {
   @ViewChild('tooltip') tooltip!: ElementRef;
 
   dataService = inject(DataService);
-  
+
   // Config
   rowHeight = 60;
   headerHeight = 50;
 
   totalContentHeight = signal(0);
-  
+
   private resizeObserver: ResizeObserver | null = null;
-  private todayX = 0; 
+  private todayX = 0;
 
   constructor() {
     effect(() => {
@@ -184,7 +190,7 @@ export class GanttChartComponent implements OnDestroy {
     this.resizeObserver = new ResizeObserver(() => {
       // Prevent "ResizeObserver loop completed with undelivered notifications"
       window.requestAnimationFrame(() => {
-         this.drawGantt();
+        this.drawGantt();
       });
     });
     this.resizeObserver.observe(this.chartContainer.nativeElement);
@@ -217,21 +223,21 @@ export class GanttChartComponent implements OnDestroy {
 
   scrollToToday() {
     if (this.chartContainer && this.todayX > 0) {
-        const containerWidth = this.chartContainer.nativeElement.clientWidth;
-        this.chartContainer.nativeElement.scrollTo({
-            left: this.todayX - (containerWidth / 2),
-            behavior: 'smooth'
-        });
+      const containerWidth = this.chartContainer.nativeElement.clientWidth;
+      this.chartContainer.nativeElement.scrollTo({
+        left: this.todayX - (containerWidth / 2),
+        behavior: 'smooth'
+      });
     }
   }
 
   // --- Core Drawing Logic ---
 
   private getDayWidth(): number {
-    switch(this.viewMode()) {
-        case 'Day': return 40;
-        case 'Week': return 10; // Approx 70px per week
-        case 'Month': return 3; // Approx 90px per month
+    switch (this.viewMode()) {
+      case 'Day': return 40;
+      case 'Week': return 10; // Approx 70px per week
+      case 'Month': return 3; // Approx 90px per month
     }
   }
 
@@ -247,7 +253,7 @@ export class GanttChartComponent implements OnDestroy {
     const dates = data.flatMap(d => [new Date(d.startDate), new Date(d.endDate)]);
     let minDate = d3.min(dates) || new Date();
     let maxDate = d3.max(dates) || new Date();
-    
+
     // Add Buffer
     minDate = new Date(minDate);
     minDate.setDate(minDate.getDate() - 15);
@@ -273,11 +279,11 @@ export class GanttChartComponent implements OnDestroy {
 
     // Dynamic Axis Generation based on View Mode
     if (this.viewMode() === 'Day') {
-        this.drawDayViewHeader(svgHeader, x, minDate, maxDate);
+      this.drawDayViewHeader(svgHeader, x, minDate, maxDate);
     } else if (this.viewMode() === 'Week') {
-        this.drawWeekViewHeader(svgHeader, x, minDate, maxDate);
+      this.drawWeekViewHeader(svgHeader, x, minDate, maxDate);
     } else {
-        this.drawMonthViewHeader(svgHeader, x, minDate, maxDate);
+      this.drawMonthViewHeader(svgHeader, x, minDate, maxDate);
     }
 
     // Divider Line
@@ -302,102 +308,102 @@ export class GanttChartComponent implements OnDestroy {
 
     // 2. Row Separators
     data.forEach((_, i) => {
-       const yPos = (i + 1) * this.rowHeight;
-       svgBody.append('line')
-         .attr('x1', 0).attr('x2', totalWidth)
-         .attr('y1', yPos).attr('y2', yPos)
-         .attr('stroke', '#f8fafc');
+      const yPos = (i + 1) * this.rowHeight;
+      svgBody.append('line')
+        .attr('x1', 0).attr('x2', totalWidth)
+        .attr('y1', yPos).attr('y2', yPos)
+        .attr('stroke', '#f8fafc');
     });
 
     // 3. Project Bars
     const barHeight = 24;
     data.forEach((d, i) => {
-       const yCenter = (i * this.rowHeight) + (this.rowHeight / 2);
-       const xStart = x(new Date(d.startDate));
-       const xEnd = x(new Date(d.endDate));
-       const width = Math.max(xEnd - xStart, 8); 
+      const yCenter = (i * this.rowHeight) + (this.rowHeight / 2);
+      const xStart = x(new Date(d.startDate));
+      const xEnd = x(new Date(d.endDate));
+      const width = Math.max(xEnd - xStart, 8);
 
-       const group = svgBody.append('g');
-       
-       let color = '#cbd5e1';
-       if (d.status === 'FINALIZADO') color = '#10b981';
-       else if (d.status === 'EN_PROGRESO') color = '#3b82f6';
+      const group = svgBody.append('g');
 
-       // Bar
-       const rect = group.append('rect')
-         .attr('x', xStart)
-         .attr('y', yCenter - (barHeight / 2))
-         .attr('width', width)
-         .attr('height', barHeight)
-         .attr('rx', 6)
-         .attr('fill', color)
-         .style('filter', 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))')
-         .style('cursor', 'pointer');
-         
-       rect.on('mousemove', (evt) => {
-          const tt = this.tooltip.nativeElement;
-          document.getElementById('tt-dates')!.textContent = `${d.startDate} - ${d.endDate}`;
-          document.getElementById('tt-progress')!.textContent = `Progreso: ${d.progress}%`;
-          
-          tt.style.opacity = '1';
-          tt.style.left = (evt.clientX + 10) + 'px';
-          tt.style.top = (evt.clientY + 10) + 'px';
-       })
-       .on('mouseleave', () => {
+      let color = '#cbd5e1';
+      if (d.status === 'FINALIZADO') color = '#10b981';
+      else if (d.status === 'EN_PROGRESO') color = '#3b82f6';
+
+      // Bar
+      const rect = group.append('rect')
+        .attr('x', xStart)
+        .attr('y', yCenter - (barHeight / 2))
+        .attr('width', width)
+        .attr('height', barHeight)
+        .attr('rx', 6)
+        .attr('fill', color)
+        .style('filter', 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))')
+        .style('cursor', 'pointer');
+
+      rect.on('mousemove', (evt) => {
+        const tt = this.tooltip.nativeElement;
+        document.getElementById('tt-dates')!.textContent = `${d.startDate} - ${d.endDate}`;
+        document.getElementById('tt-progress')!.textContent = `Progreso: ${d.progress}%`;
+
+        tt.style.opacity = '1';
+        tt.style.left = (evt.clientX + 10) + 'px';
+        tt.style.top = (evt.clientY + 10) + 'px';
+      })
+        .on('mouseleave', () => {
           this.tooltip.nativeElement.style.opacity = '0';
-       })
-       .on('click', () => {
+        })
+        .on('click', () => {
           this.projectSelected.emit(d.id);
-       });
+        });
 
-       // Label (Only if enough space)
-       // UPDATED: Now shows label for FINALIZADO as well
-       if (width > 30) {
-           let labelText = '';
-           let labelClass = '';
+      // Label (Only if enough space)
+      // UPDATED: Now shows label for FINALIZADO as well
+      if (width > 30) {
+        let labelText = '';
+        let labelClass = '';
 
-           if (d.status === 'EN_PROGRESO') {
-               labelText = 'En Curso';
-               labelClass = 'text-[10px] font-bold fill-blue-600 uppercase tracking-wide';
-           } else if (d.status === 'PLANIFICACION') {
-               labelText = 'Plan';
-               labelClass = 'text-[10px] font-bold fill-slate-400 uppercase tracking-wide';
-           } else if (d.status === 'FINALIZADO') {
-               labelText = 'Completado';
-               labelClass = 'text-[10px] font-bold fill-green-600 uppercase tracking-wide';
-           }
+        if (d.status === 'EN_PROGRESO') {
+          labelText = 'En Curso';
+          labelClass = 'text-[10px] font-bold fill-blue-600 uppercase tracking-wide';
+        } else if (d.status === 'PLANIFICACION') {
+          labelText = 'Plan';
+          labelClass = 'text-[10px] font-bold fill-slate-400 uppercase tracking-wide';
+        } else if (d.status === 'FINALIZADO') {
+          labelText = 'Completado';
+          labelClass = 'text-[10px] font-bold fill-green-600 uppercase tracking-wide';
+        }
 
-           group.append('text')
-             .attr('x', xEnd + 8)
-             .attr('y', yCenter)
-             .attr('dy', '0.35em')
-             .text(labelText)
-             .attr('class', labelClass)
-             .style('cursor', 'pointer')
-             .on('click', () => this.projectSelected.emit(d.id));
-       }
+        group.append('text')
+          .attr('x', xEnd + 8)
+          .attr('y', yCenter)
+          .attr('dy', '0.35em')
+          .text(labelText)
+          .attr('class', labelClass)
+          .style('cursor', 'pointer')
+          .on('click', () => this.projectSelected.emit(d.id));
+      }
     });
 
     // 4. Today Line
     const today = new Date();
     if (today >= minDate && today <= maxDate) {
-       this.todayX = x(today);
-       
-       // Body Line
-       svgBody.append('line')
-         .attr('x1', this.todayX).attr('x2', this.todayX)
-         .attr('y1', 0).attr('y2', totalHeight)
-         .attr('stroke', '#3b82f6').attr('stroke-width', 1.5);
+      this.todayX = x(today);
 
-       // Header Indicator
-       d3.select(headerEl).select('svg').append('line')
-          .attr('x1', this.todayX).attr('x2', this.todayX)
-          .attr('y1', 25).attr('y2', this.headerHeight)
-          .attr('stroke', '#3b82f6').attr('stroke-width', 1.5);
-       
-       d3.select(headerEl).select('svg').append('circle')
-          .attr('cx', this.todayX).attr('cy', 25)
-          .attr('r', 3).attr('fill', '#3b82f6');
+      // Body Line
+      svgBody.append('line')
+        .attr('x1', this.todayX).attr('x2', this.todayX)
+        .attr('y1', 0).attr('y2', totalHeight)
+        .attr('stroke', '#3b82f6').attr('stroke-width', 1.5);
+
+      // Header Indicator
+      d3.select(headerEl).select('svg').append('line')
+        .attr('x1', this.todayX).attr('x2', this.todayX)
+        .attr('y1', 25).attr('y2', this.headerHeight)
+        .attr('stroke', '#3b82f6').attr('stroke-width', 1.5);
+
+      d3.select(headerEl).select('svg').append('circle')
+        .attr('cx', this.todayX).attr('cy', 25)
+        .attr('r', 3).attr('fill', '#3b82f6');
     }
   }
 
@@ -407,21 +413,21 @@ export class GanttChartComponent implements OnDestroy {
     // Top: Months
     const months = d3.timeMonth.range(minDate, maxDate);
     months.forEach(month => {
-       const xPos = x(month);
-       svg.append('text').attr('x', xPos + 10).attr('y', 20)
-         .text(d3.timeFormat('%B %Y')(month).toUpperCase())
-         .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
-       svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
+      const xPos = x(month);
+      svg.append('text').attr('x', xPos + 10).attr('y', 20)
+        .text(d3.timeFormat('%B %Y')(month).toUpperCase())
+        .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
     });
 
     // Bottom: Days
     const days = d3.timeDay.range(minDate, maxDate);
     days.forEach(day => {
-       svg.append('text')
-         .attr('x', x(day) + (this.getDayWidth() / 2))
-         .attr('y', 42).attr('text-anchor', 'middle')
-         .text(day.getDate())
-         .attr('class', 'text-[10px] font-medium fill-slate-400');
+      svg.append('text')
+        .attr('x', x(day) + (this.getDayWidth() / 2))
+        .attr('y', 42).attr('text-anchor', 'middle')
+        .text(day.getDate())
+        .attr('class', 'text-[10px] font-medium fill-slate-400');
     });
   }
 
@@ -429,23 +435,23 @@ export class GanttChartComponent implements OnDestroy {
     // Top: Months
     const months = d3.timeMonth.range(minDate, maxDate);
     months.forEach(month => {
-       const xPos = x(month);
-       svg.append('text').attr('x', xPos + 10).attr('y', 20)
-         .text(d3.timeFormat('%B %Y')(month).toUpperCase())
-         .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
-       svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
+      const xPos = x(month);
+      svg.append('text').attr('x', xPos + 10).attr('y', 20)
+        .text(d3.timeFormat('%B %Y')(month).toUpperCase())
+        .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
     });
 
     // Bottom: Week Starts (Mondays)
     const weeks = d3.timeMonday.range(minDate, maxDate);
     weeks.forEach(week => {
-       const xPos = x(week);
-       svg.append('text')
-         .attr('x', xPos + 5)
-         .attr('y', 42)
-         .text(d3.timeFormat('%d %b')(week)) // "02 Oct"
-         .attr('class', 'text-[10px] font-medium fill-slate-400');
-       svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', '#f1f5f9');
+      const xPos = x(week);
+      svg.append('text')
+        .attr('x', xPos + 5)
+        .attr('y', 42)
+        .text(d3.timeFormat('%d %b')(week)) // "02 Oct"
+        .attr('class', 'text-[10px] font-medium fill-slate-400');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', '#f1f5f9');
     });
   }
 
@@ -453,26 +459,26 @@ export class GanttChartComponent implements OnDestroy {
     // Top: Years
     const years = d3.timeYear.range(minDate, maxDate);
     years.forEach(year => {
-       const xPos = x(year);
-       svg.append('text').attr('x', xPos + 10).attr('y', 20)
-         .text(d3.timeFormat('%Y')(year))
-         .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
-       svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
+      const xPos = x(year);
+      svg.append('text').attr('x', xPos + 10).attr('y', 20)
+        .text(d3.timeFormat('%Y')(year))
+        .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
     });
 
     // Bottom: Months
     const months = d3.timeMonth.range(minDate, maxDate);
     months.forEach(month => {
-       const xPos = x(month);
-       const nextMonth = new Date(month); nextMonth.setMonth(month.getMonth() + 1);
-       const width = x(nextMonth) - xPos;
+      const xPos = x(month);
+      const nextMonth = new Date(month); nextMonth.setMonth(month.getMonth() + 1);
+      const width = x(nextMonth) - xPos;
 
-       svg.append('text')
-         .attr('x', xPos + (width/2))
-         .attr('y', 42).attr('text-anchor', 'middle')
-         .text(d3.timeFormat('%b')(month)) // "Jan"
-         .attr('class', 'text-[10px] font-medium fill-slate-400');
-       svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', '#f1f5f9');
+      svg.append('text')
+        .attr('x', xPos + (width / 2))
+        .attr('y', 42).attr('text-anchor', 'middle')
+        .text(d3.timeFormat('%b')(month)) // "Jan"
+        .attr('class', 'text-[10px] font-medium fill-slate-400');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', '#f1f5f9');
     });
   }
 
@@ -483,15 +489,15 @@ export class GanttChartComponent implements OnDestroy {
     else ticks = d3.timeMonth.range(minDate, maxDate);
 
     ticks.forEach(t => {
-       const xPos = x(t);
-       // For Day view, draw at end of day. For others, draw at start.
-       const lineX = this.viewMode() === 'Day' ? xPos + this.getDayWidth() : xPos;
-       
-       svg.append('line')
-         .attr('x1', lineX).attr('x2', lineX)
-         .attr('y1', 0).attr('y2', height)
-         .attr('stroke', '#f8fafc') // very subtle
-         .attr('stroke-dasharray', this.viewMode() === 'Day' ? '0' : '4,4'); // Dashed for week/month separators
+      const xPos = x(t);
+      // For Day view, draw at end of day. For others, draw at start.
+      const lineX = this.viewMode() === 'Day' ? xPos + this.getDayWidth() : xPos;
+
+      svg.append('line')
+        .attr('x1', lineX).attr('x2', lineX)
+        .attr('y1', 0).attr('y2', height)
+        .attr('stroke', '#f8fafc') // very subtle
+        .attr('stroke-dasharray', this.viewMode() === 'Day' ? '0' : '4,4'); // Dashed for week/month separators
     });
   }
 }
