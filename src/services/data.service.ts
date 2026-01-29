@@ -89,7 +89,7 @@ export interface Project {
   id: number;
   name: string;
   description: string;
-  areaConfig: AreaLeaderConfig[]; 
+  areaConfig: AreaLeaderConfig[];
   budget: number;
   currency: Currency;
   startDate: string;
@@ -137,14 +137,18 @@ export class DataService {
   }
 
   private checkSession() {
-    const savedUser = localStorage.getItem('sole_session_user');
-    if (savedUser) {
+    try {
+      const savedUser = localStorage.getItem('sole_session_user');
+      if (savedUser) {
         const user = JSON.parse(savedUser);
         const exists = this._users().find(u => u.id === user.id);
         if (exists) {
-            this.currentUser.set(exists);
-            this.isAuthenticated.set(true);
+          this.currentUser.set(exists);
+          this.isAuthenticated.set(true);
         }
+      }
+    } catch (e) {
+      console.warn('Error reviving session:', e);
     }
   }
 
@@ -274,7 +278,7 @@ export class DataService {
   }
 
   // --- Computed Accessors ---
-  
+
   mySubordinates = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
@@ -293,12 +297,12 @@ export class DataService {
 
     const subordinateIds = this.mySubordinates().map(u => u.id);
     return projects.filter(p => {
-       const isLeader = p.areaConfig.some(c => c.leaderId === user.id);
-       const isTeam = p.teamIds.includes(user.id);
-       const isSubordinateLeader = p.areaConfig.some(c => subordinateIds.includes(c.leaderId));
-       const involvesMyArea = p.areaConfig.some(c => c.areaId === user.areaId);
-       const isAreaManager = user.subRole === 'GERENTE' && involvesMyArea;
-       return isLeader || isTeam || isSubordinateLeader || isAreaManager;
+      const isLeader = p.areaConfig.some(c => c.leaderId === user.id);
+      const isTeam = p.teamIds.includes(user.id);
+      const isSubordinateLeader = p.areaConfig.some(c => subordinateIds.includes(c.leaderId));
+      const involvesMyArea = p.areaConfig.some(c => c.areaId === user.areaId);
+      const isAreaManager = user.subRole === 'GERENTE' && involvesMyArea;
+      return isLeader || isTeam || isSubordinateLeader || isAreaManager;
     });
   });
 
@@ -353,16 +357,16 @@ export class DataService {
 
   async addActivity(activity: Omit<Activity, 'id' | 'status' | 'actualEndDate' | 'actualStartDate'>) {
     const payload = {
-        project_id: activity.projectId,
-        description: activity.description,
-        responsible_id: activity.responsibleId,
-        start_date: activity.startDate,
-        estimated_end_date: activity.estimatedEndDate,
-        status: 'PENDIENTE'
+      project_id: activity.projectId,
+      description: activity.description,
+      responsible_id: activity.responsibleId,
+      start_date: activity.startDate,
+      estimated_end_date: activity.estimatedEndDate,
+      status: 'PENDIENTE'
     };
     await this.supabase.from('activities').insert(payload);
     await this.loadActivities(); // Refresh
-    
+
     // Trigger logic
     this.checkProjectStatusOnActivityAdded(activity.projectId);
     this.calculateProjectProgress(activity.projectId);
@@ -371,20 +375,20 @@ export class DataService {
   async updateActivityStatus(activityId: number, newStatus: ActivityStatus) {
     const today = new Date().toISOString().split('T')[0];
     const updatePayload: any = { status: newStatus };
-    
+
     // Logic for timestamps
     const activity = this._activities().find(a => a.id === activityId);
     if (!activity) return;
 
     if (newStatus === 'PENDIENTE') {
-        updatePayload.actual_start_date = null;
-        updatePayload.actual_end_date = null;
+      updatePayload.actual_start_date = null;
+      updatePayload.actual_end_date = null;
     } else if (newStatus === 'EN_PROGRESO') {
-        if (!activity.actualStartDate) updatePayload.actual_start_date = today;
-        updatePayload.actual_end_date = null;
+      if (!activity.actualStartDate) updatePayload.actual_start_date = today;
+      updatePayload.actual_end_date = null;
     } else if (newStatus === 'REALIZADA') {
-        if (!activity.actualStartDate) updatePayload.actual_start_date = today;
-        if (!activity.actualEndDate) updatePayload.actual_end_date = today;
+      if (!activity.actualStartDate) updatePayload.actual_start_date = today;
+      if (!activity.actualEndDate) updatePayload.actual_end_date = today;
     }
 
     await this.supabase.from('activities').update(updatePayload).eq('id', activityId);
@@ -399,25 +403,25 @@ export class DataService {
   async deleteActivity(activityId: number) {
     const activity = this._activities().find(a => a.id === activityId);
     if (!activity) return;
-    
+
     await this.supabase.from('activities').delete().eq('id', activityId);
     await this.loadActivities();
-    
+
     this.calculateProjectProgress(activity.projectId);
     this.recalculateProjectActualStart(activity.projectId);
   }
 
   getExpensesByProject(projectId: number) { return this._expenses().filter(e => e.projectId === projectId); }
-  
+
   async addExpense(expense: Omit<Expense, 'id'>) {
     const payload = {
-        project_id: expense.projectId,
-        description: expense.description,
-        amount: expense.amount,
-        currency: expense.currency,
-        category: expense.category,
-        date: expense.date,
-        user_id: expense.userId
+      project_id: expense.projectId,
+      description: expense.description,
+      amount: expense.amount,
+      currency: expense.currency,
+      category: expense.category,
+      date: expense.date,
+      user_id: expense.userId
     };
     await this.supabase.from('expenses').insert(payload);
     await this.loadExpenses();
@@ -432,12 +436,12 @@ export class DataService {
 
   async addFile(file: Omit<ProjectFile, 'id'>) {
     const payload = {
-        project_id: file.projectId,
-        name: file.name,
-        type: file.type,
-        url: file.url,
-        uploaded_by: file.uploadedBy,
-        upload_date: new Date().toISOString().split('T')[0]
+      project_id: file.projectId,
+      name: file.name,
+      type: file.type,
+      url: file.url,
+      uploaded_by: file.uploadedBy,
+      upload_date: new Date().toISOString().split('T')[0]
     };
     await this.supabase.from('files').insert(payload);
     await this.loadFiles();
@@ -452,14 +456,14 @@ export class DataService {
 
   async addIndicator(indicator: Omit<ImpactIndicator, 'id'>) {
     const payload = {
-       project_id: indicator.projectId,
-       name: indicator.name,
-       category: indicator.category,
-       current_value: indicator.currentValue,
-       projected_value: indicator.projectedValue,
-       frequency: indicator.frequency,
-       unit_cost: indicator.unitCost,
-       unit_label: indicator.unitLabel
+      project_id: indicator.projectId,
+      name: indicator.name,
+      category: indicator.category,
+      current_value: indicator.currentValue,
+      projected_value: indicator.projectedValue,
+      frequency: indicator.frequency,
+      unit_cost: indicator.unitCost,
+      unit_label: indicator.unitLabel
     };
     await this.supabase.from('impact_indicators').insert(payload);
     await this.loadIndicators();
@@ -475,54 +479,54 @@ export class DataService {
   async addProject(project: Omit<Project, 'id' | 'progress' | 'actualStartDate' | 'actualEndDate'>) {
     // 1. Insert Project
     const { data, error } = await this.supabase.from('projects').insert({
-       name: project.name,
-       description: project.description,
-       budget: project.budget,
-       currency: project.currency,
-       start_date: project.startDate,
-       end_date: project.endDate,
-       status: 'PLANIFICACION',
-       progress: 0
+      name: project.name,
+      description: project.description,
+      budget: project.budget,
+      currency: project.currency,
+      start_date: project.startDate,
+      end_date: project.endDate,
+      status: 'PLANIFICACION',
+      progress: 0
     }).select().single();
 
     if (data && !error) {
-       const newId = data.id;
-       
-       // 2. Insert Area Config
-       if (project.areaConfig.length > 0) {
-          const areasPayload = project.areaConfig.map(ac => ({
-             project_id: newId,
-             area_id: ac.areaId,
-             leader_id: ac.leaderId
-          }));
-          await this.supabase.from('project_area_config').insert(areasPayload);
-       }
+      const newId = data.id;
 
-       // 3. Insert Team
-       if (project.teamIds.length > 0) {
-          const teamPayload = project.teamIds.map(uid => ({
-             project_id: newId,
-             user_id: uid
-          }));
-          await this.supabase.from('project_team_members').insert(teamPayload);
-       }
+      // 2. Insert Area Config
+      if (project.areaConfig.length > 0) {
+        const areasPayload = project.areaConfig.map(ac => ({
+          project_id: newId,
+          area_id: ac.areaId,
+          leader_id: ac.leaderId
+        }));
+        await this.supabase.from('project_area_config').insert(areasPayload);
+      }
 
-       await this.loadProjects();
+      // 3. Insert Team
+      if (project.teamIds.length > 0) {
+        const teamPayload = project.teamIds.map(uid => ({
+          project_id: newId,
+          user_id: uid
+        }));
+        await this.supabase.from('project_team_members').insert(teamPayload);
+      }
+
+      await this.loadProjects();
     }
   }
 
   async updateProject(p: Project) {
     // Update main table
     await this.supabase.from('projects').update({
-        name: p.name,
-        description: p.description,
-        budget: p.budget,
-        currency: p.currency,
-        start_date: p.startDate,
-        end_date: p.endDate,
-        status: p.status,
-        progress: p.progress,
-        actual_end_date: p.actualEndDate // In case finalized manually
+      name: p.name,
+      description: p.description,
+      budget: p.budget,
+      currency: p.currency,
+      start_date: p.startDate,
+      end_date: p.endDate,
+      status: p.status,
+      progress: p.progress,
+      actual_end_date: p.actualEndDate // In case finalized manually
     }).eq('id', p.id);
 
     // Update Relations (Delete and Re-insert strategy for simplicity)
@@ -530,20 +534,20 @@ export class DataService {
     await this.supabase.from('project_team_members').delete().eq('project_id', p.id);
 
     if (p.areaConfig.length > 0) {
-        const areasPayload = p.areaConfig.map(ac => ({
-            project_id: p.id,
-            area_id: ac.areaId,
-            leader_id: ac.leaderId
-        }));
-        await this.supabase.from('project_area_config').insert(areasPayload);
+      const areasPayload = p.areaConfig.map(ac => ({
+        project_id: p.id,
+        area_id: ac.areaId,
+        leader_id: ac.leaderId
+      }));
+      await this.supabase.from('project_area_config').insert(areasPayload);
     }
 
     if (p.teamIds.length > 0) {
-        const teamPayload = p.teamIds.map(uid => ({
-            project_id: p.id,
-            user_id: uid
-        }));
-        await this.supabase.from('project_team_members').insert(teamPayload);
+      const teamPayload = p.teamIds.map(uid => ({
+        project_id: p.id,
+        user_id: uid
+      }));
+      await this.supabase.from('project_team_members').insert(teamPayload);
     }
 
     await this.loadProjects();
@@ -552,9 +556,9 @@ export class DataService {
   async finalizeProject(projectId: number) {
     const today = new Date().toISOString().split('T')[0];
     await this.supabase.from('projects').update({
-        status: 'FINALIZADO',
-        progress: 100,
-        actual_end_date: today
+      status: 'FINALIZADO',
+      progress: 100,
+      actual_end_date: today
     }).eq('id', projectId);
     await this.loadProjects();
   }
@@ -564,12 +568,12 @@ export class DataService {
   }
 
   // --- Internal Business Logic (Sync back to DB) ---
-  
+
   private async ensureProjectInProgress(projectId: number) {
     const proj = this._projects().find(p => p.id === projectId);
     if (proj && proj.status === 'PLANIFICACION') {
-       await this.supabase.from('projects').update({ status: 'EN_PROGRESO' }).eq('id', projectId);
-       this.loadProjects();
+      await this.supabase.from('projects').update({ status: 'EN_PROGRESO' }).eq('id', projectId);
+      this.loadProjects();
     }
   }
 
@@ -580,7 +584,7 @@ export class DataService {
   private async calculateProjectProgress(projectId: number) {
     const { data } = await this.supabase.from('activities').select('status').eq('project_id', projectId);
     if (!data) return;
-    
+
     const total = data.length;
     const completed = data.filter((a: any) => a.status === 'REALIZADA').length;
     const newProgress = total === 0 ? 0 : Math.round((completed / total) * 100);
@@ -590,66 +594,66 @@ export class DataService {
   }
 
   private recalculateAllProjectsProgress() {
-     // Optional: could loop through all projects on init, but expensive. Rely on actions.
+    // Optional: could loop through all projects on init, but expensive. Rely on actions.
   }
 
   private async recalculateProjectActualStart(projectId: number) {
-     const { data } = await this.supabase.from('activities')
-        .select('actual_start_date')
-        .eq('project_id', projectId)
-        .not('actual_start_date', 'is', null)
-        .order('actual_start_date', { ascending: true })
-        .limit(1);
-     
-     let startDate = null;
-     if (data && data.length > 0) {
-        startDate = data[0].actual_start_date;
-     }
-     
-     await this.supabase.from('projects').update({ actual_start_date: startDate }).eq('id', projectId);
-     this.loadProjects();
+    const { data } = await this.supabase.from('activities')
+      .select('actual_start_date')
+      .eq('project_id', projectId)
+      .not('actual_start_date', 'is', null)
+      .order('actual_start_date', { ascending: true })
+      .limit(1);
+
+    let startDate = null;
+    if (data && data.length > 0) {
+      startDate = data[0].actual_start_date;
+    }
+
+    await this.supabase.from('projects').update({ actual_start_date: startDate }).eq('id', projectId);
+    this.loadProjects();
   }
 
   // --- Users & Areas ---
 
   async addUser(user: Omit<User, 'id'>) {
     await this.supabase.from('users').insert({
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        role: user.role,
-        sub_role: user.subRole,
-        area_id: user.areaId,
-        reports_to_id: user.reportsToId,
-        avatar: user.avatar
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      sub_role: user.subRole,
+      area_id: user.areaId,
+      reports_to_id: user.reportsToId,
+      avatar: user.avatar
     });
     await this.loadUsers();
   }
 
   async updateUser(u: User) {
     await this.supabase.from('users').update({
-        name: u.name,
-        email: u.email,
-        // password: u.password, // Only update if provided logic handled in component
-        role: u.role,
-        sub_role: u.subRole,
-        area_id: u.areaId,
-        reports_to_id: u.reportsToId,
-        avatar: u.avatar
+      name: u.name,
+      email: u.email,
+      // password: u.password, // Only update if provided logic handled in component
+      role: u.role,
+      sub_role: u.subRole,
+      area_id: u.areaId,
+      reports_to_id: u.reportsToId,
+      avatar: u.avatar
     }).eq('id', u.id);
-    
+
     // Special password handling if changed
     if (u.password) {
-        await this.supabase.from('users').update({ password: u.password }).eq('id', u.id);
+      await this.supabase.from('users').update({ password: u.password }).eq('id', u.id);
     }
 
     await this.loadUsers();
-    
+
     // Update session if self
     const current = this.currentUser();
     if (current && current.id === u.id) {
-        this.currentUser.set(u);
-        localStorage.setItem('sole_session_user', JSON.stringify(u));
+      this.currentUser.set(u);
+      localStorage.setItem('sole_session_user', JSON.stringify(u));
     }
   }
 

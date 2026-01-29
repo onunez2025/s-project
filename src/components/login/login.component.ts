@@ -5,10 +5,10 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataService } from '../../services/data.service';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  template: `
+   selector: 'app-login',
+   standalone: true,
+   imports: [CommonModule, ReactiveFormsModule],
+   template: `
     <div class="h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-slate-900">
        
        <!-- Background Image Layer -->
@@ -71,8 +71,16 @@ import { DataService } from '../../services/data.service';
                 </div>
              </div>
 
-             <button type="submit" [disabled]="loginForm.invalid" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 disabled:shadow-none mt-2">
-                Ingresar al Sistema
+             <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 disabled:shadow-none mt-2 flex items-center justify-center gap-2">
+                @if (isLoading()) {
+                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                   </svg>
+                   Iniciando Sesión...
+                } @else {
+                   Ingresar al Sistema
+                }
              </button>
 
              <p class="text-center text-xs text-slate-400 mt-6">
@@ -82,33 +90,42 @@ import { DataService } from '../../services/data.service';
        </div>
     </div>
   `,
-  styles: [`
+   styles: [`
     .animate-fade-in { animation: fadeIn 0.6s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   `]
 })
 export class LoginComponent {
-  fb = inject(FormBuilder);
-  dataService = inject(DataService);
-  
-  showPassword = signal(false);
-  errorMsg = signal('');
+   fb = inject(FormBuilder);
+   dataService = inject(DataService);
 
-  loginForm = this.fb.group({
-     email: ['', [Validators.required, Validators.email]],
-     password: ['', Validators.required]
-  });
+   showPassword = signal(false);
+   errorMsg = signal('');
+   isLoading = signal(false);
 
-  onSubmit() {
-    if (this.loginForm.valid) {
-       const val = this.loginForm.value;
-       const success = this.dataService.login(val.email!, val.password!);
-       
-       if (!success) {
-          this.errorMsg.set('Credenciales inválidas. Verifica tu email y contraseña.');
-       } else {
-          this.errorMsg.set('');
-       }
-    }
-  }
+   loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+   });
+
+   async onSubmit() {
+      if (this.loginForm.valid) {
+         this.isLoading.set(true);
+         this.errorMsg.set('');
+
+         try {
+            const val = this.loginForm.value;
+            const success = await this.dataService.login(val.email!, val.password!);
+
+            if (!success) {
+               this.errorMsg.set('Credenciales inválidas. Verifica tu email y contraseña.');
+            }
+         } catch (err: any) {
+            console.error('Login error:', err);
+            this.errorMsg.set('Error de conexión. Por favor, intenta de nuevo más tarde.');
+         } finally {
+            this.isLoading.set(false);
+         }
+      }
+   }
 }
