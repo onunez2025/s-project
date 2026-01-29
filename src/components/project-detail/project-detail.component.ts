@@ -28,7 +28,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
              </button>
              <div>
                <div class="flex items-center gap-3">
-                 <h1 class="text-2xl font-bold text-slate-900">{{ p.name }}</h1>
+                 <h1 class="text-2xl font-bold text-slate-900" [attr.title]="p.name">{{ p.name }}</h1>
                  <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border"
                     [class.bg-blue-50]="p.status === 'EN_PROGRESO'"
                     [class.text-blue-700]="p.status === 'EN_PROGRESO'"

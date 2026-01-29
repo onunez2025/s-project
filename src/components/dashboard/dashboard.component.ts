@@ -142,7 +142,7 @@ type ViewMode = 'CARDS' | 'GANTT';
 
               <!-- Content -->
               <div class="mb-6 flex-1">
-                <h3 class="text-lg font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors">{{ proj.name }}</h3>
+                <h3 class="text-lg font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
                 <!-- Display Joined Area Names -->
                 <p class="text-slate-500 text-sm mb-3 font-medium">{{ getProjectAreas(proj) }}</p>
                 <p class="text-slate-400 text-sm line-clamp-2 leading-relaxed h-10">{{ proj.description || 'Sin descripción.' }}</p>
@@ -232,13 +232,13 @@ type ViewMode = 'CARDS' | 'GANTT';
 })
 export class DashboardComponent {
   dataService = inject(DataService);
-  
+
   onSelect = output<number>();
   goToManual = output<void>();
 
   showForm = signal(false);
   editingProject = signal<Project | null>(null);
-  
+
   filterStatus = signal<string>('ALL');
   viewMode = signal<ViewMode>('CARDS');
 
@@ -260,14 +260,14 @@ export class DashboardComponent {
   });
 
   getProjectAreas(proj: Project) {
-    const names = proj.areaConfig.map(c => 
+    const names = proj.areaConfig.map(c =>
       this.dataService.getAllAreas().find(a => a.id === c.areaId)?.name
     ).filter(Boolean);
     return names.join(', ') || 'N/A';
   }
-  
+
   getLeaderIds(proj: Project) {
-     return proj.areaConfig.map(c => c.leaderId);
+    return proj.areaConfig.map(c => c.leaderId);
   }
 
   getUserAvatar(id: number) {
@@ -283,9 +283,9 @@ export class DashboardComponent {
   canEditProject(proj: Project): boolean {
     const user = this.dataService.currentUser();
     if (proj.status === 'FINALIZADO') return false;
-    
+
     if (user.role === 'ADMIN') return true;
-    
+
     // Check if user is one of the leaders
     if (proj.areaConfig.some(c => c.leaderId === user.id)) return true;
 
