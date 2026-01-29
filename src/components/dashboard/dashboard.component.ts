@@ -20,7 +20,7 @@ type ViewMode = 'CARDS' | 'GANTT';
             <h2 class="text-3xl font-bold text-slate-800">Proyectos</h2>
             <p class="text-slate-500 mt-1">Gestiona y supervisa tus proyectos activos</p>
           </div>
-          <button (click)="goToManual.emit()" class="text-slate-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-blue-50 mt-1" title="Ayuda">
+          <button (click)="goToManual.emit()" class="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50 mt-1" title="Ayuda">
              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
              </svg>
@@ -32,7 +32,7 @@ type ViewMode = 'CARDS' | 'GANTT';
           <!-- Filters -->
            <div class="relative w-full sm:w-48 animate-fade-in">
               <select 
-                class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-sm font-medium text-sm transition-all"
+                class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-sm font-medium text-sm transition-all"
                 (change)="filterStatus.set($any($event.target).value)"
               >
                 <option value="ALL">Todos los Estados</option>
@@ -50,7 +50,7 @@ type ViewMode = 'CARDS' | 'GANTT';
              <button (click)="viewMode.set('CARDS')" 
                class="p-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 px-3"
                [class.bg-white]="viewMode() === 'CARDS'"
-               [class.text-blue-600]="viewMode() === 'CARDS'"
+               [class.text-red-600]="viewMode() === 'CARDS'"
                [class.shadow-sm]="viewMode() === 'CARDS'"
                [class.text-slate-500]="viewMode() !== 'CARDS'"
                [class.hover:text-slate-700]="viewMode() !== 'CARDS'"
@@ -63,7 +63,7 @@ type ViewMode = 'CARDS' | 'GANTT';
              <button (click)="viewMode.set('GANTT')" 
                class="p-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 px-3"
                [class.bg-white]="viewMode() === 'GANTT'"
-               [class.text-blue-600]="viewMode() === 'GANTT'"
+               [class.text-red-600]="viewMode() === 'GANTT'"
                [class.shadow-sm]="viewMode() === 'GANTT'"
                [class.text-slate-500]="viewMode() !== 'GANTT'"
                [class.hover:text-slate-700]="viewMode() !== 'GANTT'"
@@ -78,7 +78,7 @@ type ViewMode = 'CARDS' | 'GANTT';
           
           <!-- Create Button -->
           @if (canCreateProject()) {
-            <button (click)="openCreate()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 whitespace-nowrap">
+            <button (click)="openCreate()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-red-600/30 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 whitespace-nowrap">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
@@ -94,11 +94,11 @@ type ViewMode = 'CARDS' | 'GANTT';
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-10 animate-fade-in">
           @for (proj of displayProjects(); track proj.id) {
             <!-- Card Component -->
-            <div (click)="onSelect.emit(proj.id)" class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-blue-900/5 border border-slate-100 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
+            <div (click)="onSelect.emit(proj.id)" class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
               
               <!-- Top Status Bar (Color Coded) -->
               <div class="absolute top-0 left-0 w-full h-1"
-                [class.bg-blue-500]="proj.status === 'EN_PROGRESO'"
+                [class.bg-red-500]="proj.status === 'EN_PROGRESO'"
                 [class.bg-green-500]="proj.status === 'FINALIZADO'"
                 [class.bg-slate-300]="proj.status === 'PLANIFICACION'"
               ></div>
@@ -106,8 +106,8 @@ type ViewMode = 'CARDS' | 'GANTT';
               <!-- Header -->
               <div class="flex justify-between items-start mb-4">
                  <div class="h-12 w-12 rounded-xl flex items-center justify-center text-xl font-bold shadow-sm"
-                      [class.bg-blue-50]="proj.status === 'EN_PROGRESO'"
-                      [class.text-blue-600]="proj.status === 'EN_PROGRESO'"
+                      [class.bg-red-50]="proj.status === 'EN_PROGRESO'"
+                      [class.text-red-600]="proj.status === 'EN_PROGRESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-600]="proj.status === 'FINALIZADO'"
                       [class.bg-slate-50]="proj.status === 'PLANIFICACION'"
@@ -117,9 +117,9 @@ type ViewMode = 'CARDS' | 'GANTT';
                  
                  <div class="flex items-center gap-2">
                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide border"
-                      [class.bg-blue-50]="proj.status === 'EN_PROGRESO'"
-                      [class.text-blue-700]="proj.status === 'EN_PROGRESO'"
-                      [class.border-blue-100]="proj.status === 'EN_PROGRESO'"
+                      [class.bg-red-50]="proj.status === 'EN_PROGRESO'"
+                      [class.text-red-700]="proj.status === 'EN_PROGRESO'"
+                      [class.border-red-100]="proj.status === 'EN_PROGRESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-700]="proj.status === 'FINALIZADO'"
                       [class.border-green-100]="proj.status === 'FINALIZADO'"
@@ -131,7 +131,7 @@ type ViewMode = 'CARDS' | 'GANTT';
                    
                    <!-- Edit Button (Contextual) -->
                    @if (canEditProject(proj)) {
-                     <button (click)="$event.stopPropagation(); openEdit(proj)" class="text-slate-300 hover:text-blue-600 p-1 transition-colors">
+                     <button (click)="$event.stopPropagation(); openEdit(proj)" class="text-slate-300 hover:text-red-600 p-1 transition-colors">
                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                        </svg>
@@ -142,7 +142,7 @@ type ViewMode = 'CARDS' | 'GANTT';
 
               <!-- Content -->
               <div class="mb-6 flex-1">
-                <h3 class="text-lg font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
+                <h3 class="text-lg font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-red-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
                 <!-- Display Joined Area Names -->
                 <p class="text-slate-500 text-sm mb-3 font-medium">{{ getProjectAreas(proj) }}</p>
                 <p class="text-slate-400 text-sm line-clamp-2 leading-relaxed h-10">{{ proj.description || 'Sin descripción.' }}</p>

@@ -9,27 +9,26 @@ import { DataService } from '../../services/data.service';
    imports: [CommonModule],
    template: `
     <div class="flex h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
-      
-      <!-- Sidenav Menu -->
+            <!-- Sidenav Menu -->
       <div class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col shrink-0">
         <div class="p-6 border-b border-slate-200">
            <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+             <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
              Manual de Uso
            </h3>
-           <p class="text-xs text-slate-500 mt-1">Versión 1.0.0</p>
+           <p class="text-xs text-slate-500 mt-1">Versión 1.1.0 QAS</p>
         </div>
         <nav class="flex-1 overflow-y-auto p-4 space-y-1">
            @for(chapter of chapters; track chapter.id) {
              <button (click)="scrollTo(chapter.id)" 
                 class="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-between group"
-                [class.bg-blue-100]="activeChapter() === chapter.id"
-                [class.text-blue-700]="activeChapter() === chapter.id"
+                [class.bg-red-100]="activeChapter() === chapter.id"
+                [class.text-red-700]="activeChapter() === chapter.id"
                 [class.text-slate-600]="activeChapter() !== chapter.id"
                 [class.hover:bg-slate-100]="activeChapter() !== chapter.id">
                 {{ chapter.title }}
                 @if(activeChapter() === chapter.id) {
-                   <div class="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
+                   <div class="w-1.5 h-1.5 rounded-full bg-red-600"></div>
                 }
              </button>
            }
@@ -42,7 +41,7 @@ import { DataService } from '../../services/data.service';
             
             <!-- Intro -->
             <section id="intro" class="scroll-mt-8">
-               <h1 class="text-4xl font-bold text-slate-900 mb-4">Bienvenido a S-Project</h1>
+               <h1 class="text-4xl font-bold text-slate-900 mb-4">Bienvenido a Sproject QAS</h1>
                <p class="text-lg text-slate-600 leading-relaxed">
                   Esta plataforma ha sido diseñada para centralizar la gestión de proyectos corporativos de SOLE, integrando control presupuestario, gestión de tareas y análisis de impacto financiero.
                </p>
@@ -51,7 +50,7 @@ import { DataService } from '../../services/data.service';
             <!-- Projects Section -->
             <section id="projects" class="scroll-mt-8 border-t border-slate-100 pt-10">
                <div class="flex items-center gap-3 mb-6">
-                  <div class="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                  <div class="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center text-red-600">
                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                   </div>
                   <h2 class="text-2xl font-bold text-slate-800">Gestión de Proyectos</h2>
@@ -60,7 +59,7 @@ import { DataService } from '../../services/data.service';
                <div class="prose prose-slate max-w-none text-slate-600">
                   <h3 class="text-lg font-bold text-slate-800 mt-4 mb-2">Creación de Proyectos Multi-Área</h3>
                   <p class="mb-4">
-                     S-Project permite la colaboración entre departamentos. Al crear un nuevo proyecto, debes configurar:
+                     Sproject QAS permite la colaboración entre departamentos. Al crear un nuevo proyecto, debes configurar:
                   </p>
                   <ul class="list-disc pl-5 space-y-2 mb-6">
                      <li><strong>Áreas Participantes:</strong> Selecciona todas las unidades de negocio involucradas.</li>
@@ -69,10 +68,10 @@ import { DataService } from '../../services/data.service';
                   </ul>
 
                   <!-- Screenshot Placeholder -->
-                  <div class="my-8 bg-slate-50 rounded-xl border border-slate-200 p-2 relative group/container">
+                   <div class="my-8 bg-slate-50 rounded-xl border border-slate-200 p-2 relative group/container">
                      <!-- Admin Edit Button -->
                      @if(isAdmin()) {
-                        <button (click)="projInput.click()" class="absolute top-4 right-4 z-10 p-2 bg-white text-slate-700 hover:text-blue-600 rounded-lg shadow-md border border-slate-100 opacity-0 group-hover/container:opacity-100 transition-opacity transform hover:scale-105" title="Cambiar imagen (Admin)">
+                        <button (click)="projInput.click()" class="absolute top-4 right-4 z-10 p-2 bg-white text-slate-700 hover:text-red-600 rounded-lg shadow-md border border-slate-100 opacity-0 group-hover/container:opacity-100 transition-opacity transform hover:scale-105" title="Cambiar imagen (Admin)">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                         </button>
                         <input #projInput type="file" class="hidden" accept="image/*" (change)="onFileSelected($event, 'PROJECT')">
@@ -124,10 +123,10 @@ import { DataService } from '../../services/data.service';
                   </div>
                   
                   <!-- Screenshot Placeholder -->
-                  <div class="my-8 bg-slate-50 rounded-xl border border-slate-200 p-2 relative group/container">
+                   <div class="my-8 bg-slate-50 rounded-xl border border-slate-200 p-2 relative group/container">
                      <!-- Admin Edit Button -->
                      @if(isAdmin()) {
-                        <button (click)="kanbanInput.click()" class="absolute top-4 right-4 z-10 p-2 bg-white text-slate-700 hover:text-blue-600 rounded-lg shadow-md border border-slate-100 opacity-0 group-hover/container:opacity-100 transition-opacity transform hover:scale-105" title="Cambiar imagen (Admin)">
+                        <button (click)="kanbanInput.click()" class="absolute top-4 right-4 z-10 p-2 bg-white text-slate-700 hover:text-red-600 rounded-lg shadow-md border border-slate-100 opacity-0 group-hover/container:opacity-100 transition-opacity transform hover:scale-105" title="Cambiar imagen (Admin)">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                         </button>
                         <input #kanbanInput type="file" class="hidden" accept="image/*" (change)="onFileSelected($event, 'KANBAN')">
@@ -148,7 +147,7 @@ import { DataService } from '../../services/data.service';
             <!-- Finance Section -->
             <section id="finance" class="scroll-mt-8 border-t border-slate-100 pt-10">
                <div class="flex items-center gap-3 mb-6">
-                  <div class="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+                  <div class="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center text-red-600">
                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                   </div>
                   <h2 class="text-2xl font-bold text-slate-800">Finanzas y Retorno (Payback)</h2>
@@ -160,8 +159,8 @@ import { DataService } from '../../services/data.service';
                   </p>
                   
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                     <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-100">
-                        <h4 class="font-bold text-blue-800 mb-2">CAPEX (Inversión)</h4>
+                     <div class="bg-red-50/50 p-5 rounded-xl border border-blue-100">
+                        <h4 class="font-bold text-red-800 mb-2">CAPEX (Inversión)</h4>
                         <p class="text-sm">Es el presupuesto asignado para ejecutar el proyecto (Capital Expenditure). Incluye licencias, desarrollo, hardware inicial, etc. Se define al crear el proyecto.</p>
                      </div>
                      <div class="bg-green-50/50 p-5 rounded-xl border border-green-100">
@@ -229,7 +228,7 @@ import { DataService } from '../../services/data.service';
                      }
                   </div>
 
-                  <!-- FAQ Item 3 -->
+                   <!-- FAQ Item 3 -->
                   <div class="border border-slate-200 rounded-xl overflow-hidden">
                      <button (click)="toggleFaq(3)" class="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 transition-colors text-left">
                         <span class="font-bold text-slate-700 text-sm">¿Qué formato de archivos soporta la plataforma?</span>
@@ -237,7 +236,7 @@ import { DataService } from '../../services/data.service';
                      </button>
                      @if(isFaqOpen(3)) {
                         <div class="p-4 bg-white text-sm text-slate-600 border-t border-slate-100 animate-slide-down">
-                           S-Project soporta oficialmente PDF, Imágenes (JPG, PNG) y Archivos Excel. El tamaño máximo recomendado por archivo es de 5MB para no saturar el servidor.
+                           Sproject QAS soporta oficialmente PDF, Imágenes (JPG, PNG) y Archivos Excel. El tamaño máximo recomendado por archivo es de 5MB para no saturar el servidor.
                         </div>
                      }
                   </div>
@@ -260,9 +259,10 @@ export class ManualComponent {
    activeChapter = signal('intro');
    openFaqs = signal<number[]>([]);
 
-   // Local state for editable images, persisted via LocalStorage
-   projectImage = signal<string | null>(localStorage.getItem('sole_manual_img_project'));
-   kanbanImage = signal<string | null>(localStorage.getItem('sole_manual_img_kanban'));
+   // Database-backed images
+   manualAssets = this.dataService.manualAssets;
+   projectImage = computed(() => this.manualAssets().find(a => a.sectionKey === 'PROJECT')?.imageUrl || 'assets/manual/projects.png');
+   kanbanImage = computed(() => this.manualAssets().find(a => a.sectionKey === 'KANBAN')?.imageUrl || 'assets/manual/kanban.png');
 
    @ViewChildren('contentContainer') contentContainer!: QueryList<ElementRef>;
 
@@ -308,20 +308,13 @@ export class ManualComponent {
       return this.openFaqs().includes(id);
    }
 
-   onFileSelected(event: any, type: 'PROJECT' | 'KANBAN') {
+   onFileSelected(event: any, type: string) {
       const file = event.target.files[0];
       if (file) {
          const reader = new FileReader();
          reader.onload = (e: any) => {
             const result = e.target.result;
-            if (type === 'PROJECT') {
-               this.projectImage.set(result);
-               localStorage.setItem('sole_manual_img_project', result);
-            }
-            if (type === 'KANBAN') {
-               this.kanbanImage.set(result);
-               localStorage.setItem('sole_manual_img_kanban', result);
-            }
+            this.dataService.updateManualAsset(type, result);
          };
          reader.readAsDataURL(file);
       }

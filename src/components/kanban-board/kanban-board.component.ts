@@ -20,7 +20,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
          <div class="relative w-full sm:w-64 animate-fade-in">
            <select 
              [(ngModel)]="selectedProjectId"
-             class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-sm font-medium text-sm transition-all"
+             class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-sm font-medium text-sm transition-all"
            >
              <option [value]="0">Todos los Proyectos</option>
              @for (proj of myProjects(); track proj.id) {
@@ -42,7 +42,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
              (drop)="onDrop($event, 'PENDIENTE')">
            <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
              <div class="w-3 h-3 rounded-full bg-slate-400"></div>
-             <h3 class="font-bold text-blue-900 uppercase tracking-wide text-sm">Pendiente</h3>
+             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">Pendiente</h3>
              <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ pendingActivities().length }}</span>
            </div>
            
@@ -55,7 +55,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                      [class.border-l-red-500]="isOverdue(act)">
                    
                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-blue-50 text-blue-700 border border-blue-100 truncate max-w-[120px]">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
                       @if (hasFiles(act.projectId)) {
@@ -84,8 +84,8 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'EN_PROGRESO')">
            <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
-             <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-             <h3 class="font-bold text-blue-900 uppercase tracking-wide text-sm">En Proceso</h3>
+             <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">En Proceso</h3>
              <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ progressActivities().length }}</span>
            </div>
 
@@ -94,10 +94,10 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-move hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)">
-                   <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                   <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                    
                    <div class="flex justify-between items-start mb-2 pl-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-blue-50 text-blue-700 border border-blue-100 truncate max-w-[120px]">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
                       @if (hasFiles(act.projectId)) {
@@ -112,7 +112,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                         <img [src]="getUser(act.responsibleId)?.avatar" class="w-6 h-6 rounded-full bg-slate-200">
                         <span class="text-xs text-slate-500 font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
                      </div>
-                     <span class="text-[10px] text-blue-600 font-bold">En curso</span>
+                     <span class="text-[10px] text-red-600 font-bold">En curso</span>
                    </div>
                 </div>
              }
@@ -125,7 +125,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
              (drop)="onDrop($event, 'REALIZADA')">
            <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
              <div class="w-3 h-3 rounded-full bg-green-500"></div>
-             <h3 class="font-bold text-blue-900 uppercase tracking-wide text-sm">Realizada</h3>
+             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">Realizada</h3>
              <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ doneActivities().length }}</span>
            </div>
 
@@ -178,13 +178,13 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
 })
 export class KanbanBoardComponent {
   dataService = inject(DataService);
-  
+
   selectedProjectId = signal<number>(0);
-  
-  constructor() {}
+
+  constructor() { }
 
   currentUser = this.dataService.currentUser;
-  
+
   myProjects = computed(() => {
     return this.dataService.filteredProjects();
   });
@@ -195,12 +195,12 @@ export class KanbanBoardComponent {
 
     // 1. Filter by User Hierarchy logic
     if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') {
-       // Managers see everything in their scope (filteredProjects logic already handles scope mostly, but let's be safe)
-       const visibleProjectIds = this.dataService.filteredProjects().map(p => p.id);
-       activities = activities.filter(a => visibleProjectIds.includes(a.projectId));
+      // Managers see everything in their scope (filteredProjects logic already handles scope mostly, but let's be safe)
+      const visibleProjectIds = this.dataService.filteredProjects().map(p => p.id);
+      activities = activities.filter(a => visibleProjectIds.includes(a.projectId));
     } else {
-       // Assistants only see THEIR tasks
-       activities = activities.filter(a => a.responsibleId === user.id);
+      // Assistants only see THEIR tasks
+      activities = activities.filter(a => a.responsibleId === user.id);
     }
 
     // 2. Filter by Selected Project Dropdown
@@ -248,7 +248,7 @@ export class KanbanBoardComponent {
   onDragOver(event: DragEvent) {
     event.preventDefault(); // Necessary to allow dropping
     if (event.dataTransfer) {
-       event.dataTransfer.dropEffect = 'move';
+      event.dataTransfer.dropEffect = 'move';
     }
   }
 
@@ -257,20 +257,20 @@ export class KanbanBoardComponent {
     if (event.dataTransfer) {
       const id = +event.dataTransfer.getData('text/plain');
       if (id) {
-         // Security Check: Can this user move this task?
-         // Logic: Assistants can move their own tasks. Managers can move any visible task.
-         const activity = this.dataService.getAllActivities().find(a => a.id === id);
-         if (activity) {
-            const user = this.currentUser();
-            const canMove = (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') || (activity.responsibleId === user.id);
-            
-            if (canMove) {
-               // Call service to update state + cascade logic
-               this.dataService.updateActivityStatus(id, newStatus);
-            } else {
-               alert('No tienes permisos para mover esta actividad.');
-            }
-         }
+        // Security Check: Can this user move this task?
+        // Logic: Assistants can move their own tasks. Managers can move any visible task.
+        const activity = this.dataService.getAllActivities().find(a => a.id === id);
+        if (activity) {
+          const user = this.currentUser();
+          const canMove = (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') || (activity.responsibleId === user.id);
+
+          if (canMove) {
+            // Call service to update state + cascade logic
+            this.dataService.updateActivityStatus(id, newStatus);
+          } else {
+            alert('No tienes permisos para mover esta actividad.');
+          }
+        }
       }
     }
   }

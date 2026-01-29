@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { DataService, AppNotification } from '../../services/data.service';
 
 @Component({
-    selector: 'app-notification',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-notification',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="relative">
       <!-- Bell Icon Button -->
       <button (click)="toggleDropdown()" 
-              class="relative p-2 rounded-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all active:scale-95">
+              class="relative p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all active:scale-95">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
@@ -30,21 +30,21 @@ import { DataService, AppNotification } from '../../services/data.service';
           <div class="p-4 border-b border-slate-50 flex items-center justify-between bg-white sticky top-0">
              <h3 class="font-bold text-slate-800">Notificaciones</h3>
              @if (notifications().length > 0) {
-                <button (click)="markAllAsRead()" class="text-xs text-blue-600 font-bold hover:underline">Marcar todo como leído</button>
+                <button (click)="markAllAsRead()" class="text-xs text-red-600 font-bold hover:underline">Marcar todo como leído</button>
              }
           </div>
 
           <div class="max-h-[400px] overflow-y-auto">
              @for (n of notifications(); track n.id) {
                 <div class="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors cursor-pointer group relative"
-                     [class.bg-blue-50/30]="!n.isRead"
+                     [class.bg-red-50/30]="!n.isRead"
                      (click)="handleNotificationClick(n)">
                    
                    <div class="flex gap-3">
                       <!-- Icon by Type -->
                       <div class="h-10 w-10 shrink-0 rounded-full flex items-center justify-center"
-                           [class.bg-blue-100]="n.type === 'CHAT'"
-                           [class.text-blue-600]="n.type === 'CHAT'"
+                           [class.bg-red-100]="n.type === 'CHAT'"
+                           [class.text-red-600]="n.type === 'CHAT'"
                            [class.bg-green-100]="n.type === 'PROJECT_UPDATE'"
                            [class.text-green-600]="n.type === 'PROJECT_UPDATE'"
                            [class.bg-amber-100]="n.type === 'TASK_ASSIGNED'"
@@ -74,7 +74,7 @@ import { DataService, AppNotification } from '../../services/data.service';
                    </div>
                    
                    @if (!n.isRead) {
-                      <div class="absolute top-1/2 -translate-y-1/2 right-4 h-2 w-2 bg-blue-600 rounded-full group-hover:hidden"></div>
+                      <div class="absolute top-1/2 -translate-y-1/2 right-4 h-2 w-2 bg-red-600 rounded-full group-hover:hidden"></div>
                    }
                 </div>
              } @empty {
@@ -96,7 +96,7 @@ import { DataService, AppNotification } from '../../services/data.service';
       }
     </div>
   `,
-    styles: [`
+  styles: [`
     .animate-slide-in {
       animation: slideIn 0.2s ease-out;
     }
@@ -107,30 +107,30 @@ import { DataService, AppNotification } from '../../services/data.service';
   `]
 })
 export class NotificationComponent {
-    dataService = inject(DataService);
+  dataService = inject(DataService);
 
-    isOpen = signal(false);
-    notifications = this.dataService.allNotifications;
-    unreadCount = this.dataService.unreadNotificationsCount;
+  isOpen = signal(false);
+  notifications = this.dataService.allNotifications;
+  unreadCount = this.dataService.unreadNotificationsCount;
 
-    toggleDropdown() {
-        this.isOpen.set(!this.isOpen());
+  toggleDropdown() {
+    this.isOpen.set(!this.isOpen());
+  }
+
+  handleNotificationClick(n: AppNotification) {
+    this.dataService.markNotificationAsRead(n.id);
+    this.isOpen.set(false);
+
+    if (n.linkId) {
+      this.dataService.goToDetail(n.linkId);
     }
+  }
 
-    handleNotificationClick(n: AppNotification) {
-        this.dataService.markNotificationAsRead(n.id);
-        this.isOpen.set(false);
+  markAllAsRead() {
+    this.dataService.markAllNotificationsAsRead();
+  }
 
-        if (n.linkId) {
-            this.dataService.goToDetail(n.linkId);
-        }
-    }
-
-    markAllAsRead() {
-        this.dataService.markAllNotificationsAsRead();
-    }
-
-    deleteNotification(id: number) {
-        this.dataService.deleteNotification(id);
-    }
+  deleteNotification(id: number) {
+    this.dataService.deleteNotification(id);
+  }
 }

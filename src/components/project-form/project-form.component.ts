@@ -33,7 +33,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
           <div>
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Nombre del Proyecto</label>
             <input type="text" formControlName="name" placeholder="Ej. Implementación SAP"
-              class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium">
+              class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all border p-3 text-slate-900 font-medium">
             @if (form.get('name')?.touched && form.get('name')?.invalid) {
               <p class="mt-1 text-xs text-red-500 font-medium">El nombre es requerido.</p>
             }
@@ -41,13 +41,13 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
 
           <div>
             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Descripción</label>
-            <textarea formControlName="description" rows="2" class="block w-full rounded-xl border-slate-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 resize-none"></textarea>
+            <textarea formControlName="description" rows="2" class="block w-full rounded-xl border-slate-200 bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all border p-3 text-slate-900 resize-none"></textarea>
           </div>
 
           <!-- Budget Section -->
           <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-5">
             <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-               <span class="w-1 h-4 bg-blue-500 rounded-full"></span>
+               <span class="w-1 h-4 bg-red-500 rounded-full"></span>
                Presupuesto y Tiempos
             </h4>
             
@@ -58,7 +58,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
                    <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-200 bg-white text-slate-500 text-sm font-bold">
                      {{ form.get('currency')?.value === 'PEN' ? 'S/' : '$' }}
                    </span>
-                   <input type="number" formControlName="budget" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-r-xl border-slate-200 focus:ring-blue-500 focus:border-blue-500 border text-slate-900 font-bold bg-white">
+                   <input type="number" formControlName="budget" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-r-xl border-slate-200 focus:ring-red-500 focus:border-red-500 border text-slate-900 font-bold bg-white">
                  </div>
                  @if(form.get('budget')?.touched && form.get('budget')?.invalid) {
                     <p class="text-[10px] text-red-500 mt-1">Debe ser mayor a 0</p>
@@ -70,22 +70,22 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
                   <div class="flex bg-white rounded-xl border border-slate-200 p-1">
                     <label class="flex-1 text-center cursor-pointer">
                       <input type="radio" formControlName="currency" value="PEN" class="hidden peer">
-                      <span class="block py-1.5 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-blue-100 peer-checked:text-blue-700 transition-all">Soles</span>
+                      <span class="block py-1.5 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-red-100 peer-checked:text-red-700 transition-all">Soles</span>
                     </label>
                     <label class="flex-1 text-center cursor-pointer">
                       <input type="radio" formControlName="currency" value="USD" class="hidden peer">
-                      <span class="block py-1.5 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-blue-100 peer-checked:text-blue-700 transition-all">Dólares</span>
+                      <span class="block py-1.5 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-red-100 peer-checked:text-red-700 transition-all">Dólares</span>
                     </label>
                   </div>
                </div>
 
                <div>
                  <label class="block text-xs font-bold text-slate-500 mb-1">Inicio</label>
-                 <input type="date" formControlName="startDate" class="block w-full rounded-xl border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-slate-900 font-medium text-sm">
+                 <input type="date" formControlName="startDate" class="block w-full rounded-xl border-slate-200 shadow-sm focus:border-red-500 focus:ring-red-500 border p-2 bg-white text-slate-900 font-medium text-sm">
                </div>
                <div>
                  <label class="block text-xs font-bold text-slate-500 mb-1">Fin</label>
-                 <input type="date" formControlName="endDate" class="block w-full rounded-xl border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-slate-900 font-medium text-sm">
+                 <input type="date" formControlName="endDate" class="block w-full rounded-xl border-slate-200 shadow-sm focus:border-red-500 focus:ring-red-500 border p-2 bg-white text-slate-900 font-medium text-sm">
                </div>
                @if(form.errors?.['dateRange']) {
                   <p class="col-span-2 text-center text-xs text-red-500 font-bold bg-red-50 p-1 rounded">
@@ -188,7 +188,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
              <button type="button" (click)="cancel.emit()" class="px-6 py-3 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors">
                Cancelar
              </button>
-             <button type="submit" [disabled]="form.invalid || !isValidConfig()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-lg shadow-blue-600/30">
+             <button type="submit" [disabled]="form.invalid || !isValidConfig()" class="px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 disabled:opacity-50 transition-colors shadow-lg shadow-red-600/30">
                {{ projectToEdit() ? 'Guardar Cambios' : 'Crear Proyecto' }}
              </button>
           </div>
