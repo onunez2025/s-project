@@ -84,7 +84,7 @@ import { DataService } from '../../services/data.service';
              </button>
 
              <p class="text-center text-xs text-slate-400 mt-6">
-                © 2023 Industrias SOLE. Todos los derechos reservados.
+                © 2026 Grupo SOLE. Todos los derechos reservados.
              </p>
           </form>
        </div>
