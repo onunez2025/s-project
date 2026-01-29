@@ -213,15 +213,15 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
 export class ProjectFormComponent {
   dataService = inject(DataService);
   fb = inject(FormBuilder);
-  
+
   projectToEdit = input<Project | null>(null);
-  
+
   cancel = output<void>();
   save = output<void>();
 
   currentUser = this.dataService.currentUser;
   allAreas = computed(() => this.dataService.getAllAreas());
-  
+
   // Local State for Multi-Area Logic
   selectedAreaIds = signal<number[]>([]);
   // Map AreaId -> LeaderId
@@ -260,11 +260,11 @@ export class ProjectFormComponent {
           status: proj.status,
           progress: proj.progress
         });
-        
+
         // Populate Areas & Leaders
         const areaIds = proj.areaConfig.map(c => c.areaId);
         this.selectedAreaIds.set(areaIds);
-        
+
         const map = new Map<number, number>();
         proj.areaConfig.forEach(c => map.set(c.areaId, c.leaderId));
         this.areaLeaderMap.set(map);
@@ -282,16 +282,16 @@ export class ProjectFormComponent {
         });
 
         if (user.role === 'ADMIN') {
-           // Admin starts empty
-           this.selectedAreaIds.set([]);
-           this.areaLeaderMap.set(new Map());
+          // Admin starts empty
+          this.selectedAreaIds.set([]);
+          this.areaLeaderMap.set(new Map());
         } else {
-           // Manager/Boss/Assistant starts with their area
-           this.selectedAreaIds.set([user.areaId]);
-           const map = new Map<number, number>();
-           // If they can be leader, set them. Otherwise leave 0.
-           map.set(user.areaId, user.id); 
-           this.areaLeaderMap.set(map);
+          // Manager/Boss/Assistant starts with their area
+          this.selectedAreaIds.set([user.areaId]);
+          const map = new Map<number, number>();
+          // If they can be leader, set them. Otherwise leave 0.
+          map.set(user.areaId, user.id);
+          this.areaLeaderMap.set(map);
         }
         this.selectedTeamIds.set([]);
       }
@@ -300,24 +300,24 @@ export class ProjectFormComponent {
 
   // --- Logic for Areas ---
   isAreaSelected(id: number) { return this.selectedAreaIds().includes(id); }
-  
+
   toggleArea(id: number) {
     this.selectedAreaIds.update(ids => {
-       if (ids.includes(id)) {
-          // Remove
-          const newIds = ids.filter(x => x !== id);
-          // Also remove leader choice
-          const map = new Map(this.areaLeaderMap());
-          map.delete(id);
-          this.areaLeaderMap.set(map);
-          return newIds;
-       } else {
-          // Add
-          return [...ids, id];
-       }
+      if (ids.includes(id)) {
+        // Remove
+        const newIds = ids.filter(x => x !== id);
+        // Also remove leader choice
+        const map = new Map(this.areaLeaderMap());
+        map.delete(id);
+        this.areaLeaderMap.set(map);
+        return newIds;
+      } else {
+        // Add
+        return [...ids, id];
+      }
     });
   }
-  
+
   getAreaName(id: number) { return this.allAreas().find(a => a.id === id)?.name || '...'; }
 
   // --- Logic for Leaders ---
@@ -325,65 +325,65 @@ export class ProjectFormComponent {
     // Return users in that area who are ADMIN, GERENTE or JEFE. 
     // Assistants usually don't lead projects, but let's allow Jefes/Gerentes mainly.
     // Allow Admins too (though they might have diff areaId).
-    return this.dataService.getAllUsers().filter(u => 
-       (u.areaId === areaId && (u.subRole === 'GERENTE' || u.subRole === 'JEFE' || u.role === 'ADMIN')) ||
-       (u.role === 'ADMIN') // Allow global admins
+    return this.dataService.getAllUsers().filter(u =>
+      (u.areaIds.includes(areaId) && (u.subRole === 'GERENTE' || u.subRole === 'JEFE' || u.role === 'ADMIN')) ||
+      (u.role === 'ADMIN') // Allow global admins
     );
   }
 
   getLeaderForArea(areaId: number): number {
-     return this.areaLeaderMap().get(areaId) || 0;
+    return this.areaLeaderMap().get(areaId) || 0;
   }
 
   setLeaderForArea(areaId: number, leaderIdStr: string) {
-     const leaderId = +leaderIdStr;
-     const map = new Map(this.areaLeaderMap());
-     map.set(areaId, leaderId);
-     this.areaLeaderMap.set(map);
+    const leaderId = +leaderIdStr;
+    const map = new Map(this.areaLeaderMap());
+    map.set(areaId, leaderId);
+    this.areaLeaderMap.set(map);
   }
 
   // --- Logic for Team ---
   getAvailableTeamMembers(areaId: number) {
     const leaderId = this.getLeaderForArea(areaId);
     // Return users in that area NOT including the assigned leader
-    return this.dataService.getAllUsers().filter(u => u.areaId === areaId && u.id !== leaderId);
+    return this.dataService.getAllUsers().filter(u => u.areaIds.includes(areaId) && u.id !== leaderId);
   }
 
   isTeamMemberSelected(uid: number) { return this.selectedTeamIds().includes(uid); }
 
   toggleTeamMember(uid: number) {
-     this.selectedTeamIds.update(ids => {
-        if (ids.includes(uid)) return ids.filter(x => x !== uid);
-        return [...ids, uid];
-     });
+    this.selectedTeamIds.update(ids => {
+      if (ids.includes(uid)) return ids.filter(x => x !== uid);
+      return [...ids, uid];
+    });
   }
 
   // --- Submit ---
   isValidConfig() {
-     if (this.selectedAreaIds().length === 0) return false;
-     // Validate all selected areas have a leader
-     for (const areaId of this.selectedAreaIds()) {
-        const leader = this.areaLeaderMap().get(areaId);
-        if (!leader || leader === 0) return false;
-     }
-     return true;
+    if (this.selectedAreaIds().length === 0) return false;
+    // Validate all selected areas have a leader
+    for (const areaId of this.selectedAreaIds()) {
+      const leader = this.areaLeaderMap().get(areaId);
+      if (!leader || leader === 0) return false;
+    }
+    return true;
   }
 
   onSubmit() {
     if (this.form.valid && this.isValidConfig()) {
       const formVal = this.form.value;
-      
+
       // Check for Status Logic
       if (this.projectToEdit() && formVal.status === 'FINALIZADO') {
-         if (this.dataService.hasPendingActivities(this.projectToEdit()!.id)) {
-            alert('No puedes marcar el proyecto como Finalizado porque tiene actividades pendientes.');
-            return;
-         }
+        if (this.dataService.hasPendingActivities(this.projectToEdit()!.id)) {
+          alert('No puedes marcar el proyecto como Finalizado porque tiene actividades pendientes.');
+          return;
+        }
       }
 
       const areaConfig: AreaLeaderConfig[] = this.selectedAreaIds().map(aid => ({
-         areaId: aid,
-         leaderId: this.areaLeaderMap().get(aid)!
+        areaId: aid,
+        leaderId: this.areaLeaderMap().get(aid)!
       }));
 
       const payload: any = {

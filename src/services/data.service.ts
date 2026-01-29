@@ -286,7 +286,9 @@ export class DataService {
     if (!user) return [];
     const allUsers = this._users();
     if (user.role === 'ADMIN') return allUsers;
-    if (user.subRole === 'GERENTE') return allUsers.filter(u => user.areaIds.includes(u.areaId) && u.id !== user.id);
+    if (user.subRole === 'GERENTE') return allUsers.filter(u =>
+      u.areaIds.some(aid => user.areaIds.includes(aid)) && u.id !== user.id
+    );
     if (user.subRole === 'JEFE') return allUsers.filter(u => u.reportsToId === user.id);
     return [];
   });
@@ -568,6 +570,14 @@ export class DataService {
 
   getProjectById(id: number): Project | undefined {
     return this._projects().find(p => p.id === id);
+  }
+
+  getUserById(id: number): User | undefined {
+    return this._users().find(u => u.id === id);
+  }
+
+  getAreaName(id: number): string {
+    return this._areas().find(a => a.id === id)?.name || 'N/A';
   }
 
   // --- Internal Business Logic (Sync back to DB) ---

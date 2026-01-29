@@ -336,7 +336,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK';
                           <img [src]="getUser(memberId)?.avatar" class="h-8 w-8 rounded-full bg-slate-200">
                           <div>
                              <p class="text-sm font-medium text-slate-700">{{ getUser(memberId)?.name }}</p>
-                             <p class="text-[10px] text-slate-400">{{ getUser(memberId)?.subRole }} - {{ getAreaName(getUser(memberId)?.areaId || 0) }}</p>
+                             <p class="text-[10px] text-slate-400">{{ getUser(memberId)?.subRole }} - {{ getJoinedAreaNames(getUser(memberId)) }}</p>
                           </div>
                        </div>
                      } @empty {
@@ -624,9 +624,9 @@ export class ProjectDetailComponent {
   projectId = input.required<number>();
   back = output<void>();
   goToManual = output<string>(); // New output for help
-  
+
   dataService = inject(DataService);
-  
+
   // D3 Chart Ref
   @ViewChild('paybackChart') paybackChart!: ElementRef;
 
@@ -643,7 +643,7 @@ export class ProjectDetailComponent {
   // Local state for Adding Expense
   newExpenseDesc = signal('');
   newExpenseAmount = signal<number | null>(null);
-  newExpenseCurrency = signal<Currency>('PEN'); 
+  newExpenseCurrency = signal<Currency>('PEN');
   newExpenseCat = signal<ExpenseCategory>('OTROS');
   newExpenseDate = signal(new Date().toISOString().split('T')[0]);
 
@@ -658,16 +658,16 @@ export class ProjectDetailComponent {
 
   constructor() {
     effect(() => {
-        const p = this.project();
-        if (p) {
-            this.newExpenseCurrency.set(p.currency);
-        }
+      const p = this.project();
+      if (p) {
+        this.newExpenseCurrency.set(p.currency);
+      }
     });
 
     effect(() => {
-       if (this.activeTab() === 'PAYBACK') {
-          setTimeout(() => this.generatePaybackChart(), 100);
-       }
+      if (this.activeTab() === 'PAYBACK') {
+        setTimeout(() => this.generatePaybackChart(), 100);
+      }
     });
   }
 
@@ -694,17 +694,17 @@ export class ProjectDetailComponent {
   totalSpent = computed(() => {
     const proj = this.project();
     if (!proj) return 0;
-    
+
     return this.expenses().reduce((acc, curr) => {
-        const RATE = 3.75;
-        if (curr.currency === proj.currency) {
-            return acc + curr.amount;
-        } else if (proj.currency === 'PEN' && curr.currency === 'USD') {
-            return acc + (curr.amount * RATE);
-        } else if (proj.currency === 'USD' && curr.currency === 'PEN') {
-            return acc + (curr.amount / RATE);
-        }
+      const RATE = 3.75;
+      if (curr.currency === proj.currency) {
         return acc + curr.amount;
+      } else if (proj.currency === 'PEN' && curr.currency === 'USD') {
+        return acc + (curr.amount * RATE);
+      } else if (proj.currency === 'USD' && curr.currency === 'PEN') {
+        return acc + (curr.amount / RATE);
+      }
+      return acc + curr.amount;
     }, 0);
   });
 
@@ -716,16 +716,16 @@ export class ProjectDetailComponent {
 
   // --- Payback Computed Logic ---
   totalMonthlySavings = computed(() => {
-     return this.indicators().reduce((acc, ind) => acc + this.calculateMonthlySavings(ind), 0);
+    return this.indicators().reduce((acc, ind) => acc + this.calculateMonthlySavings(ind), 0);
   });
 
   roiAnnual = computed(() => this.totalMonthlySavings() * 12);
 
   paybackMonths = computed(() => {
-     const savings = this.totalMonthlySavings();
-     const budget = this.project()?.budget || 0;
-     if (savings <= 0) return Infinity;
-     return budget / savings;
+    const savings = this.totalMonthlySavings();
+    const budget = this.project()?.budget || 0;
+    if (savings <= 0) return Infinity;
+    return budget / savings;
   });
 
   calculateMonthlySavings(ind: ImpactIndicator): number {
@@ -748,23 +748,23 @@ export class ProjectDetailComponent {
     const user = this.currentUser();
     const project = this.project();
     if (!project || project.status === 'FINALIZADO') return false;
-    
+
     if (user.role === 'ADMIN') return true;
-    
+
     // Am I a leader of any area in this project?
     return project.areaConfig.some(c => c.leaderId === user.id);
   });
 
   // Rule: Assistants, Bosses, Managers in the project can UPLOAD/ADD
   canManageFilesAndExpenses = computed(() => {
-     const project = this.project();
-     if (!project || project.status === 'FINALIZADO') return false;
-     const user = this.currentUser();
-     
-     if (user.role === 'ADMIN') return true;
-     if (project.areaConfig.some(c => c.leaderId === user.id)) return true;
-     if (project.teamIds.includes(user.id)) return true;
-     return false;
+    const project = this.project();
+    if (!project || project.status === 'FINALIZADO') return false;
+    const user = this.currentUser();
+
+    if (user.role === 'ADMIN') return true;
+    if (project.areaConfig.some(c => c.leaderId === user.id)) return true;
+    if (project.teamIds.includes(user.id)) return true;
+    return false;
   });
 
   isProjectReadyToFinish = computed(() => {
@@ -776,18 +776,25 @@ export class ProjectDetailComponent {
   canEditActivity(act: Activity): boolean {
     const project = this.project();
     if (!project || project.status === 'FINALIZADO') return false;
-    
+
     const user = this.currentUser();
     if (user.role === 'ADMIN') return true;
     if (act.responsibleId === user.id) return true;
 
-    // Find Area of the responsible user
-    const responsibleUser = this.getUser(act.responsibleId);
+    const responsibleUser = this.dataService.getUserById(act.responsibleId);
     if (!responsibleUser) return false;
 
-    // Is current user the leader of that area in this project?
-    const areaLeaderId = project.areaConfig.find(c => c.areaId === responsibleUser.areaId)?.leaderId;
-    return areaLeaderId === user.id;
+    // Is current user the leader of ANY area that the responsible user belongs to (within this project)?
+    const involvesMyArea = project.areaConfig.some(c =>
+      c.leaderId === user.id && (responsibleUser.areaIds || []).includes(c.areaId)
+    );
+    return involvesMyArea;
+  }
+
+  getJoinedAreaNames(user: User | undefined | null): string {
+    if (!user) return 'N/A';
+    const names = (user.areaIds || []).map(id => this.dataService.getAreaName(id));
+    return names.join(', ') || 'N/A';
   }
 
   // --- Actions ---
@@ -816,8 +823,8 @@ export class ProjectDetailComponent {
     if (this.newActivityDesc() && this.newActivityResp() && this.newActivityStart() && this.newActivityEnd()) {
       // Validate: End >= Start
       if (new Date(this.newActivityEnd()) < new Date(this.newActivityStart())) {
-         alert('La fecha de fin planificada no puede ser anterior a la fecha de inicio.');
-         return;
+        alert('La fecha de fin planificada no puede ser anterior a la fecha de inicio.');
+        return;
       }
 
       this.dataService.addActivity({
@@ -845,28 +852,28 @@ export class ProjectDetailComponent {
 
   addExpense() {
     if (this.newExpenseDesc() && this.newExpenseAmount() && this.newExpenseDate()) {
-      
+
       // Validation: Amount
       if (this.newExpenseAmount()! <= 0) {
-         alert('El monto debe ser mayor a 0.');
-         return;
+        alert('El monto debe ser mayor a 0.');
+        return;
       }
 
       // Validation: Future Date
       const today = new Date().toISOString().split('T')[0];
       if (this.newExpenseDate() > today) {
-         alert('No se pueden registrar gastos con fecha futura.');
-         return;
+        alert('No se pueden registrar gastos con fecha futura.');
+        return;
       }
 
       this.dataService.addExpense({
-         projectId: this.projectId(),
-         description: this.newExpenseDesc(),
-         amount: +this.newExpenseAmount()!,
-         category: this.newExpenseCat(),
-         currency: this.newExpenseCurrency(), 
-         date: this.newExpenseDate(),
-         userId: this.currentUser().id
+        projectId: this.projectId(),
+        description: this.newExpenseDesc(),
+        amount: +this.newExpenseAmount()!,
+        category: this.newExpenseCat(),
+        currency: this.newExpenseCurrency(),
+        date: this.newExpenseDate(),
+        userId: this.currentUser().id
       });
       this.newExpenseDesc.set('');
       this.newExpenseAmount.set(null);
@@ -911,27 +918,27 @@ export class ProjectDetailComponent {
   addIndicator() {
     if (this.newIndName() && this.newIndCurrent() !== null && this.newIndProjected() !== null) {
       this.dataService.addIndicator({
-         projectId: this.projectId(),
-         name: this.newIndName(),
-         category: this.newIndCategory(),
-         currentValue: +this.newIndCurrent()!,
-         projectedValue: +this.newIndProjected()!,
-         frequency: +this.newIndFreq(),
-         unitCost: +this.newIndCost()!,
-         unitLabel: this.newIndUnitLabel()
+        projectId: this.projectId(),
+        name: this.newIndName(),
+        category: this.newIndCategory(),
+        currentValue: +this.newIndCurrent()!,
+        projectedValue: +this.newIndProjected()!,
+        frequency: +this.newIndFreq(),
+        unitCost: +this.newIndCost()!,
+        unitLabel: this.newIndUnitLabel()
       });
       this.newIndName.set('');
       this.newIndCurrent.set(null);
       this.newIndProjected.set(null);
       this.newIndCost.set(null);
-      
+
       setTimeout(() => this.generatePaybackChart(), 50);
     }
   }
 
   deleteIndicator(id: number) {
-     this.dataService.deleteIndicator(id);
-     setTimeout(() => this.generatePaybackChart(), 50);
+    this.dataService.deleteIndicator(id);
+    setTimeout(() => this.generatePaybackChart(), 50);
   }
 
   updateUnitLabel() {
@@ -950,56 +957,56 @@ export class ProjectDetailComponent {
     const monthlySavings = this.totalMonthlySavings();
 
     if (budget === 0 || monthlySavings === 0) {
-       d3.select(el).append('div').attr('class', 'flex h-full items-center justify-center text-slate-400 text-sm italic').text('Agrega indicadores y presupuesto para ver la proyección.');
-       return;
+      d3.select(el).append('div').attr('class', 'flex h-full items-center justify-center text-slate-400 text-sm italic').text('Agrega indicadores y presupuesto para ver la proyección.');
+      return;
     }
 
     const paybackMonth = budget / monthlySavings;
-    const maxMonths = Math.max(12, Math.ceil(paybackMonth * 1.2)); 
-    
-    const margin = {top: 30, right: 30, bottom: 30, left: 60};
+    const maxMonths = Math.max(12, Math.ceil(paybackMonth * 1.2));
+
+    const margin = { top: 30, right: 30, bottom: 30, left: 60 };
     const width = el.clientWidth - margin.left - margin.right;
     const height = 300 - margin.top - margin.bottom;
 
     const svg = d3.select(el).append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
     const dataPoints = [];
-    for(let i=0; i <= maxMonths; i++) {
-       dataPoints.push({ month: i, netValue: (i * monthlySavings) - budget });
+    for (let i = 0; i <= maxMonths; i++) {
+      dataPoints.push({ month: i, netValue: (i * monthlySavings) - budget });
     }
 
     const x = d3.scaleLinear().domain([0, maxMonths]).range([0, width]);
-    const yMin = -budget; 
-    const yMax = dataPoints[dataPoints.length-1].netValue;
-    const yDomainMax = Math.max(yMax * 1.1, budget * 0.2); 
+    const yMin = -budget;
+    const yMax = dataPoints[dataPoints.length - 1].netValue;
+    const yDomainMax = Math.max(yMax * 1.1, budget * 0.2);
 
     const y = d3.scaleLinear().domain([yMin, yDomainMax]).range([height, 0]);
 
     svg.append('g')
-       .attr('transform', `translate(0,${height})`)
-       .call(d3.axisBottom(x).ticks(5).tickFormat(d => `Mes ${d}`));
+      .attr('transform', `translate(0,${height})`)
+      .call(d3.axisBottom(x).ticks(5).tickFormat(d => `Mes ${d}`));
 
     svg.append('g').call(d3.axisLeft(y).ticks(5));
 
     svg.append('line')
-       .attr('x1', 0).attr('x2', width)
-       .attr('y1', y(0)).attr('y2', y(0))
-       .attr('stroke', '#64748b').attr('stroke-width', 1).attr('stroke-dasharray', '4,2');
-    
+      .attr('x1', 0).attr('x2', width)
+      .attr('y1', y(0)).attr('y2', y(0))
+      .attr('stroke', '#64748b').attr('stroke-width', 1).attr('stroke-dasharray', '4,2');
+
     const line = d3.line<any>()
-       .x(d => x(d.month))
-       .y(d => y(d.netValue));
+      .x(d => x(d.month))
+      .y(d => y(d.netValue));
 
     svg.append('path')
-       .datum(dataPoints)
-       .attr('fill', 'none')
-       .attr('stroke', '#3b82f6')
-       .attr('stroke-width', 3)
-       .attr('d', line);
+      .datum(dataPoints)
+      .attr('fill', 'none')
+      .attr('stroke', '#3b82f6')
+      .attr('stroke-width', 3)
+      .attr('d', line);
   }
 
   finishProject() {

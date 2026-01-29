@@ -122,18 +122,18 @@ import { DataService, Area } from '../../services/data.service';
 export class AreaManagementComponent {
   dataService = inject(DataService);
   fb = inject(FormBuilder);
-  
+
   showForm = signal(false);
   editingArea = signal<Area | null>(null);
 
   areas = computed(() => this.dataService.getAllAreas());
-  
+
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]]
   });
 
   getEmployeeCount(areaId: number) {
-    return this.dataService.getAllUsers().filter(u => u.areaId === areaId).length;
+    return this.dataService.getAllUsers().filter(u => u.areaIds.includes(areaId)).length;
   }
 
   openCreate() {
@@ -157,8 +157,8 @@ export class AreaManagementComponent {
     if (this.form.valid) {
       // Uniqueness check
       if (this.dataService.isAreaNameTaken(this.form.value.name!, this.editingArea()?.id)) {
-         alert('Ya existe un área con este nombre.');
-         return;
+        alert('Ya existe un área con este nombre.');
+        return;
       }
 
       if (this.editingArea()) {

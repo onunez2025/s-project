@@ -294,8 +294,10 @@ export class UserManagementComponent {
 
     const allUsers = this.dataService.getAllUsers();
 
-    // Filter supervisors in any of the selected areas
-    const areaUsers = allUsers.filter(u => areaIds.includes(u.areaId) && u.id !== currentUserId);
+    // Filter supervisors who share AT LEAST ONE area with the selected areas of the new user
+    const areaUsers = allUsers.filter(u =>
+      u.areaIds.some(aid => areaIds.includes(aid)) && u.id !== currentUserId
+    );
 
     if (subRole === 'GERENTE') {
       return [];
