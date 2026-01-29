@@ -284,10 +284,11 @@ export class DashboardComponent {
     const user = this.dataService.currentUser();
     if (proj.status === 'FINALIZADO') return false;
 
-    if (user.role === 'ADMIN') return true;
+    if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') return true;
 
-    // Check if user is one of the leaders
+    // Check if user is one of the leaders OR a team member
     if (proj.areaConfig.some(c => c.leaderId === user.id)) return true;
+    if (proj.teamIds.includes(user.id)) return true;
 
     return false;
   }

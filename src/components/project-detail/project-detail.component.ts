@@ -765,10 +765,13 @@ export class ProjectDetailComponent {
     const project = this.project();
     if (!project || project.status === 'FINALIZADO') return false;
 
-    if (user.role === 'ADMIN') return true;
+    if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') return true;
 
-    // Am I a leader of any area in this project?
-    return project.areaConfig.some(c => c.leaderId === user.id);
+    // Am I a leader of any area in this project OR a team member?
+    if (project.areaConfig.some(c => c.leaderId === user.id)) return true;
+    if (project.teamIds.includes(user.id)) return true;
+
+    return false;
   });
 
   // Rule: Assistants, Bosses, Managers in the project can UPLOAD/ADD
