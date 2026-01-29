@@ -24,7 +24,8 @@ export interface User {
   password?: string;
   role: Role;
   subRole: SubRole;
-  areaId: number;
+  areaId: number; // Keep for compatibility if needed, but primary is areaIds
+  areaIds: number[];
   reportsToId: number | null;
   avatar: string;
 }
@@ -170,6 +171,7 @@ export class DataService {
         role: u.role,
         subRole: u.sub_role,
         areaId: u.area_id,
+        areaIds: u.area_ids || (u.area_id ? [u.area_id] : []),
         reportsToId: u.reports_to_id,
         avatar: u.avatar || 'https://i.pravatar.cc/150'
       }));
@@ -284,7 +286,7 @@ export class DataService {
     if (!user) return [];
     const allUsers = this._users();
     if (user.role === 'ADMIN') return allUsers;
-    if (user.subRole === 'GERENTE') return allUsers.filter(u => u.areaId === user.areaId && u.id !== user.id);
+    if (user.subRole === 'GERENTE') return allUsers.filter(u => user.areaIds.includes(u.areaId) && u.id !== user.id);
     if (user.subRole === 'JEFE') return allUsers.filter(u => u.reportsToId === user.id);
     return [];
   });
@@ -300,7 +302,7 @@ export class DataService {
       const isLeader = p.areaConfig.some(c => c.leaderId === user.id);
       const isTeam = p.teamIds.includes(user.id);
       const isSubordinateLeader = p.areaConfig.some(c => subordinateIds.includes(c.leaderId));
-      const involvesMyArea = p.areaConfig.some(c => c.areaId === user.areaId);
+      const involvesMyArea = p.areaConfig.some(c => user.areaIds.includes(c.areaId));
       const isAreaManager = user.subRole === 'GERENTE' && involvesMyArea;
       return isLeader || isTeam || isSubordinateLeader || isAreaManager;
     });
@@ -326,6 +328,7 @@ export class DataService {
         role: data.role,
         subRole: data.sub_role,
         areaId: data.area_id,
+        areaIds: data.area_ids || (data.area_id ? [data.area_id] : []),
         reportsToId: data.reports_to_id,
         avatar: data.avatar || 'https://i.pravatar.cc/150'
       };
@@ -623,7 +626,8 @@ export class DataService {
       password: user.password,
       role: user.role,
       sub_role: user.subRole,
-      area_id: user.areaId,
+      area_id: user.areaIds.length > 0 ? user.areaIds[0] : null,
+      area_ids: user.areaIds,
       reports_to_id: user.reportsToId,
       avatar: user.avatar
     });
@@ -642,7 +646,8 @@ export class DataService {
       email: u.email,
       role: u.role,
       sub_role: u.subRole,
-      area_id: u.areaId,
+      area_id: u.areaIds.length > 0 ? u.areaIds[0] : null,
+      area_ids: u.areaIds,
       reports_to_id: u.reportsToId,
       avatar: u.avatar
     }).eq('id', u.id);

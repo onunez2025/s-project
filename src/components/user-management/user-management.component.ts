@@ -55,9 +55,16 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                     <span class="text-sm font-medium text-slate-600 bg-slate-50 px-2 py-1 rounded-md border border-slate-100">
-                        {{ getAreaName(user.areaId) }}
-                     </span>
+                      <div class="flex flex-wrap gap-1">
+                        @for (areaId of user.areaIds; track areaId) {
+                           <span class="text-[10px] font-bold text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                             {{ getAreaName(areaId) }}
+                           </span>
+                        }
+                        @if (user.areaIds.length === 0) {
+                           <span class="text-xs text-slate-300 italic">Sin área</span>
+                        }
+                      </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     @if (user.role === 'ADMIN') {
@@ -147,22 +154,19 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                    </div>
                 }
 
-                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Rol del Sistema</label>
-                    <select formControlName="role" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                      <option value="USUARIO">Usuario Regular</option>
-                      <option value="ADMIN">Administrador</option>
-                    </select>
-                 </div>
-
-                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Área Asignada</label>
-                    <select formControlName="areaId" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                       <option [value]="null">Seleccionar Área...</option>
-                       @for(area of areas(); track area.id) {
-                         <option [value]="area.id">{{ area.name }}</option>
-                       }
-                    </select>
+                 <div class="p-5 bg-slate-50 rounded-2xl space-y-4 border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide">Áreas Asignadas</label>
+                    <div class="grid grid-cols-2 gap-2">
+                      @for(area of areas(); track area.id) {
+                        <label class="flex items-center gap-3 p-2 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-blue-400 transition-all select-none">
+                          <input type="checkbox" 
+                                 [checked]="isAreaSelected(area.id)"
+                                 (change)="toggleArea(area.id)"
+                                 class="w-5 h-5 rounded text-blue-600 border-slate-300 focus:ring-blue-500">
+                          <span class="text-sm font-medium text-slate-700">{{ area.name }}</span>
+                        </label>
+                      }
+                    </div>
                  </div>
 
                 <!-- Fields for USUARIO only -->
@@ -171,35 +175,43 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                     
                     <div>
                       <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Nivel Jerárquico</label>
-                      <select formControlName="subRole" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                        <option [value]="null">Seleccionar Nivel...</option>
-                        <option value="GERENTE">Gerente</option>
-                        <option value="JEFE">Jefe</option>
-                        <option value="ASISTENTE">Asistente</option>
-                      </select>
-                    </div>
+                   <div>
+                      <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Rol del Sistema</label>
+                      <select formControlName="role" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                        <option value="USUARIO">Usuario Regular</option>
+                 <!-- Fields for USUARIO only -->
+                 @if (userForm.get('role')?.value === 'USUARIO') {
+                   <div class="p-5 bg-blue-50/50 rounded-2xl space-y-5 border border-blue-100">
+                     
+                     <div>
+                       <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Nivel Jerárquico</label>
+                       <select formControlName="subRole" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                         <option [value]="null">Seleccionar Nivel...</option>
+                         <option value="GERENTE">Gerente</option>
+                         <option value="JEFE">Jefe</option>
+                         <option value="ASISTENTE">Asistente</option>
+                       </select>
+                     </div>
 
-                    <!-- Area is now moved above for both roles -->
+                     <div>
+                       <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Supervisor (Reporta A)</label>
+                       <select formControlName="reportsToId" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                         <option [value]="null">
+                            {{ potentialSupervisors().length === 0 ? 'Sin superior (o no aplica)' : 'Seleccionar Supervisor...' }}
+                         </option>
+                         @for (boss of potentialSupervisors(); track boss.id) {
+                           <option [value]="boss.id">{{ boss.name }} ({{ boss.subRole }})</option>
+                         }
+                       </select>
+                       @if (userForm.get('subRole')?.value && potentialSupervisors().length === 0 && userForm.get('subRole')?.value !== 'GERENTE') {
+                         <p class="text-[10px] text-red-500 mt-2 font-medium bg-red-50 p-2 rounded-lg border border-red-100">
+                            ⚠️ No se encontraron superiores válidos en esta área.
+                         </p>
+                       }
+                     </div>
 
-                    <div>
-                      <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Supervisor (Reporta A)</label>
-                      <select formControlName="reportsToId" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                        <option [value]="null">
-                           {{ potentialSupervisors().length === 0 ? 'Sin superior (o no aplica)' : 'Seleccionar Supervisor...' }}
-                        </option>
-                        @for (boss of potentialSupervisors(); track boss.id) {
-                          <option [value]="boss.id">{{ boss.name }} ({{ boss.subRole }})</option>
-                        }
-                      </select>
-                      @if (userForm.get('subRole')?.value && potentialSupervisors().length === 0 && userForm.get('subRole')?.value !== 'GERENTE') {
-                        <p class="text-[10px] text-red-500 mt-2 font-medium bg-red-50 p-2 rounded-lg border border-red-100">
-                           ⚠️ No se encontraron superiores válidos en esta área.
-                        </p>
-                      }
-                    </div>
-
-                  </div>
-                }
+                   </div>
+                 }
 
                 <div class="pt-4 flex justify-end gap-3 sticky bottom-0 bg-white pb-2 border-t border-slate-100 mt-auto">
                    <button type="button" (click)="closeForm()" class="px-6 py-3 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
@@ -245,32 +257,39 @@ export class UserManagementComponent {
   userForm = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: [''], // Optional, usually required for new users in validation logic
+    password: [''],
     role: ['USUARIO' as Role, Validators.required],
     subRole: [null as SubRole],
-    areaId: [null as number | null],
+    areaIds: [[] as number[]],
     reportsToId: [null as number | null]
   });
 
   // Convert form value changes to signals for reactivity in computed
   selectedRole = toSignal(this.userForm.controls.role.valueChanges, { initialValue: 'USUARIO' });
   selectedSubRole = toSignal(this.userForm.controls.subRole.valueChanges, { initialValue: null });
-  selectedAreaId = toSignal(this.userForm.controls.areaId.valueChanges, { initialValue: null });
+  selectedAreaIds = toSignal(this.userForm.controls.areaIds.valueChanges, { initialValue: [] as number[] });
 
   constructor() {
     // Reset subordinate fields if role changes to ADMIN
     this.userForm.get('role')?.valueChanges.subscribe(val => {
       if (val === 'ADMIN') {
-        this.userForm.patchValue({ subRole: null, reportsToId: null });
+        this.userForm.patchValue({ subRole: null, reportsToId: null, areaIds: [] });
       }
     });
 
-    // Reset reportsTo if area or subrole changes
+    // Reset reportsTo if subrole changes
     this.userForm.get('subRole')?.valueChanges.subscribe(() => {
       if (this.userForm.dirty) this.userForm.patchValue({ reportsToId: null });
     });
-    this.userForm.get('areaId')?.valueChanges.subscribe(() => {
-      if (this.userForm.dirty) this.userForm.patchValue({ reportsToId: null });
+
+    // For single area users (non-Managers), ensure only one area can be selected
+    this.userForm.get('subRole')?.valueChanges.subscribe(val => {
+      if (val !== 'GERENTE' && this.userForm.get('role')?.value !== 'ADMIN') {
+        const current = this.userForm.get('areaIds')?.value || [];
+        if (current.length > 1) {
+          this.userForm.get('areaIds')?.setValue([current[0]]);
+        }
+      }
     });
   }
 
@@ -279,16 +298,15 @@ export class UserManagementComponent {
   potentialSupervisors = computed(() => {
     const role = this.selectedRole();
     const subRole = this.selectedSubRole(); // The level of the new user
-    const areaId = this.selectedAreaId();
+    const areaIds = this.selectedAreaIds();
     const currentUserId = this.editingUser()?.id; // Don't show self as boss
 
-    if (role === 'ADMIN' || !subRole || !areaId) return [];
+    if (role === 'ADMIN' || !subRole || areaIds.length === 0) return [];
 
     const allUsers = this.dataService.getAllUsers();
 
-    // Filter supervisors in the same area (Ensure type match by converting to number)
-    const targetAreaId = Number(areaId);
-    const areaUsers = allUsers.filter(u => u.areaId === targetAreaId && u.id !== currentUserId);
+    // Filter supervisors in any of the selected areas
+    const areaUsers = allUsers.filter(u => areaIds.includes(u.areaId) && u.id !== currentUserId);
 
     if (subRole === 'GERENTE') {
       return [];
@@ -316,7 +334,7 @@ export class UserManagementComponent {
 
   openCreate() {
     this.editingUser.set(null);
-    this.userForm.reset({ role: 'USUARIO' });
+    this.userForm.reset({ role: 'USUARIO', areaIds: [] });
     this.userForm.controls.password.setValidators([Validators.required, Validators.minLength(4)]);
     this.showForm.set(true);
   }
@@ -332,10 +350,35 @@ export class UserManagementComponent {
       email: user.email,
       role: user.role,
       subRole: user.subRole,
-      areaId: user.areaId,
+      areaIds: user.areaIds || [],
       reportsToId: user.reportsToId
     });
     this.showForm.set(true);
+  }
+
+  isAreaSelected(id: number): boolean {
+    const current = this.userForm.get('areaIds')?.value || [];
+    return current.includes(id);
+  }
+
+  toggleArea(id: number) {
+    const role = this.userForm.get('role')?.value;
+    const subRole = this.userForm.get('subRole')?.value;
+    const current = [...(this.userForm.get('areaIds')?.value || [])];
+
+    const index = current.indexOf(id);
+    if (index > -1) {
+      current.splice(index, 1);
+    } else {
+      // If not Gerente and not Admin, limit to one selection
+      if (role !== 'ADMIN' && subRole !== 'GERENTE') {
+        current.length = 0; // Clear
+      }
+      current.push(id);
+    }
+
+    this.userForm.get('areaIds')?.setValue(current);
+    this.userForm.get('areaIds')?.markAsDirty();
   }
 
   closeForm() {
@@ -361,7 +404,7 @@ export class UserManagementComponent {
           email: val.email!,
           role: val.role as Role,
           subRole: val.subRole as SubRole,
-          areaId: +val.areaId!,
+          areaIds: val.areaIds as number[],
           reportsToId: val.reportsToId ? +val.reportsToId : null,
           avatar: this.editingUser() ? this.editingUser()!.avatar : `https://i.pravatar.cc/150?u=${Math.random()}`
         };
