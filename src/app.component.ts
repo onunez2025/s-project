@@ -40,14 +40,14 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             <div class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Menu Principal</div>
             
             <!-- BI Dashboard -->
-            <a href="#" (click)="$event.preventDefault(); currentView.set('BI')" 
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('BI')" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="currentView() === 'BI'"
-               [class.text-white]="currentView() === 'BI'"
-               [class.shadow-lg]="currentView() === 'BI'"
-               [class.shadow-blue-900/50]="currentView() === 'BI'"
-               [class.hover:bg-slate-800]="currentView() !== 'BI'"
-               [class.text-slate-400]="currentView() !== 'BI'">
+               [class.bg-blue-600]="dataService.currentView() === 'BI'"
+               [class.text-white]="dataService.currentView() === 'BI'"
+               [class.shadow-lg]="dataService.currentView() === 'BI'"
+               [class.shadow-blue-900/50]="dataService.currentView() === 'BI'"
+               [class.hover:bg-slate-800]="dataService.currentView() !== 'BI'"
+               [class.text-slate-400]="dataService.currentView() !== 'BI'">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
@@ -55,14 +55,14 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             </a>
 
             <!-- Projects List -->
-            <a href="#" (click)="$event.preventDefault(); currentView.set('LIST')" 
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('LIST')" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="currentView() === 'LIST' || currentView() === 'DETAIL'"
-               [class.text-white]="currentView() === 'LIST' || currentView() === 'DETAIL'"
-               [class.shadow-lg]="currentView() === 'LIST' || currentView() === 'DETAIL'"
-               [class.shadow-blue-900/50]="currentView() === 'LIST' || currentView() === 'DETAIL'"
-               [class.hover:bg-slate-800]="currentView() !== 'LIST' && currentView() !== 'DETAIL'"
-               [class.text-slate-400]="currentView() !== 'LIST' && currentView() !== 'DETAIL'">
+               [class.bg-blue-600]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.text-white]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.shadow-lg]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.shadow-blue-900/50]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.hover:bg-slate-800]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'"
+               [class.text-slate-400]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
@@ -70,14 +70,14 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             </a>
             
             <!-- Mis Tareas (KANBAN) -->
-            <a href="#" (click)="$event.preventDefault(); currentView.set('KANBAN')" 
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('KANBAN')" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="currentView() === 'KANBAN'"
-               [class.text-white]="currentView() === 'KANBAN'"
-               [class.shadow-lg]="currentView() === 'KANBAN'"
-               [class.shadow-blue-900/50]="currentView() === 'KANBAN'"
-               [class.hover:bg-slate-800]="currentView() !== 'KANBAN'"
-               [class.text-slate-400]="currentView() !== 'KANBAN'">
+               [class.bg-blue-600]="dataService.currentView() === 'KANBAN'"
+               [class.text-white]="dataService.currentView() === 'KANBAN'"
+               [class.shadow-lg]="dataService.currentView() === 'KANBAN'"
+               [class.shadow-blue-900/50]="dataService.currentView() === 'KANBAN'"
+               [class.hover:bg-slate-800]="dataService.currentView() !== 'KANBAN'"
+               [class.text-slate-400]="dataService.currentView() !== 'KANBAN'">
                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                </svg>
@@ -87,13 +87,13 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             <div class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-8">Soporte</div>
 
             <!-- Manual de Uso -->
-            <a href="#" (click)="$event.preventDefault(); goToManual()" 
+            <a href="#" (click)="$event.preventDefault(); dataService.goToManual()" 
                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="currentView() === 'MANUAL'"
-               [class.text-white]="currentView() === 'MANUAL'"
-               [class.shadow-lg]="currentView() === 'MANUAL'"
-               [class.hover:bg-slate-800]="currentView() !== 'MANUAL'"
-               [class.text-slate-400]="currentView() !== 'MANUAL'">
+               [class.bg-blue-600]="dataService.currentView() === 'MANUAL'"
+               [class.text-white]="dataService.currentView() === 'MANUAL'"
+               [class.shadow-lg]="dataService.currentView() === 'MANUAL'"
+               [class.hover:bg-slate-800]="dataService.currentView() !== 'MANUAL'"
+               [class.text-slate-400]="dataService.currentView() !== 'MANUAL'">
                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                </svg>
@@ -104,26 +104,26 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             @if (dataService.currentUser()?.role === 'ADMIN') {
               <div class="mt-8 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Administración</div>
               
-              <a href="#" (click)="$event.preventDefault(); currentView.set('USERS')" 
+              <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('USERS')" 
                  class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-                 [class.bg-blue-600]="currentView() === 'USERS'"
-                 [class.text-white]="currentView() === 'USERS'"
-                 [class.shadow-lg]="currentView() === 'USERS'"
-                 [class.hover:bg-slate-800]="currentView() !== 'USERS'"
-                 [class.text-slate-400]="currentView() !== 'USERS'">
+                 [class.bg-blue-600]="dataService.currentView() === 'USERS'"
+                 [class.text-white]="dataService.currentView() === 'USERS'"
+                 [class.shadow-lg]="dataService.currentView() === 'USERS'"
+                 [class.hover:bg-slate-800]="dataService.currentView() !== 'USERS'"
+                 [class.text-slate-400]="dataService.currentView() !== 'USERS'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
                 Equipos y Usuarios
               </a>
 
-              <a href="#" (click)="$event.preventDefault(); currentView.set('AREAS')" 
+              <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('AREAS')" 
                  class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-                 [class.bg-blue-600]="currentView() === 'AREAS'"
-                 [class.text-white]="currentView() === 'AREAS'"
-                 [class.shadow-lg]="currentView() === 'AREAS'"
-                 [class.hover:bg-slate-800]="currentView() !== 'AREAS'"
-                 [class.text-slate-400]="currentView() !== 'AREAS'">
+                 [class.bg-blue-600]="dataService.currentView() === 'AREAS'"
+                 [class.text-white]="dataService.currentView() === 'AREAS'"
+                 [class.shadow-lg]="dataService.currentView() === 'AREAS'"
+                 [class.hover:bg-slate-800]="dataService.currentView() !== 'AREAS'"
+                 [class.text-slate-400]="dataService.currentView() !== 'AREAS'">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
@@ -137,7 +137,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
              @if(showUserMenu()) {
                 <!-- Popover Menu -->
                 <div class="absolute bottom-full left-4 w-64 mb-2 bg-[#1E293B] rounded-xl shadow-xl border border-slate-700/50 overflow-hidden animate-fade-in z-30">
-                   <button (click)="currentView.set('PROFILE'); showUserMenu.set(false)" class="w-full text-left px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-slate-700/50 flex items-center gap-2 transition-colors">
+                   <button (click)="dataService.currentView.set('PROFILE'); showUserMenu.set(false)" class="w-full text-left px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-slate-700/50 flex items-center gap-2 transition-colors">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                       Mi Perfil
                    </button>
@@ -179,7 +179,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
              <span class="text-xl font-bold text-white">Project<span class="text-blue-500">.</span></span>
              <div class="flex items-center gap-3">
                <app-notification></app-notification>
-               <img [src]="dataService.currentUser()?.avatar" (click)="currentView.set('PROFILE')" class="h-8 w-8 rounded-full border border-slate-500 cursor-pointer">
+               <img [src]="dataService.currentUser()?.avatar" (click)="dataService.currentView.set('PROFILE')" class="h-8 w-8 rounded-full border border-slate-500 cursor-pointer">
              </div>
           </header>
 
@@ -188,14 +188,14 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
              <div class="flex items-center gap-4 text-slate-500">
                <span class="text-sm font-medium">Dashboard</span>
                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-               <span class="text-sm font-bold text-slate-800">{{ currentView() }}</span>
+               <span class="text-sm font-bold text-slate-800">{{ dataService.currentView() }}</span>
              </div>
              
              <div class="flex items-center gap-4">
                 <app-notification></app-notification>
                 <div class="h-8 w-px bg-slate-100"></div>
                 <!-- Profile Link / Quick Settings -->
-                <button (click)="currentView.set('PROFILE')" class="text-slate-400 hover:text-blue-600 transition-colors">
+                <button (click)="dataService.currentView.set('PROFILE')" class="text-slate-400 hover:text-blue-600 transition-colors">
                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </button>
              </div>
