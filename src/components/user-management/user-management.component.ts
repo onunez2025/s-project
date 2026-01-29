@@ -134,27 +134,34 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                  </button>
               </div>
 
-              <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6 flex-1">
-                
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Nombre Completo</label>
-                  <input type="text" formControlName="name" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                </div>
-                
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Email Corporativo</label>
-                  <input type="email" formControlName="email" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                </div>
-                
-                <!-- Password Field (Only for New Users or if explicitly resetting) -->
-                @if (!editingUser()) {
-                   <div>
-                      <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Contraseña Inicial</label>
-                      <input type="text" formControlName="password" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none" placeholder="••••••••">
-                   </div>
-                }
+              <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex-1 flex flex-col min-h-0">
+                <div class="space-y-6 overflow-y-auto pr-2 custom-scrollbar pb-6">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Nombre Completo</label>
+                    <input type="text" formControlName="name" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Email Corporativo</label>
+                    <input type="email" formControlName="email" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                  </div>
+                  
+                  @if (!editingUser()) {
+                     <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Contraseña Inicial</label>
+                        <input type="text" formControlName="password" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none" placeholder="••••••••">
+                     </div>
+                  }
 
-                 <div class="p-5 bg-slate-50 rounded-2xl space-y-4 border border-slate-200">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Rol del Sistema</label>
+                    <select formControlName="role" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                      <option value="USUARIO">Usuario Regular</option>
+                      <option value="ADMIN">Administrador</option>
+                    </select>
+                  </div>
+
+                  <div class="p-5 bg-slate-50 rounded-2xl space-y-4 border border-slate-200">
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide">Áreas Asignadas</label>
                     <div class="grid grid-cols-2 gap-2">
                       @for(area of areas(); track area.id) {
@@ -167,53 +174,36 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                         </label>
                       }
                     </div>
-                 </div>
+                  </div>
 
-                <!-- Fields for USUARIO only -->
-                @if (userForm.get('role')?.value === 'USUARIO') {
-                  <div class="p-5 bg-blue-50/50 rounded-2xl space-y-5 border border-blue-100">
-                    
-                    <div>
-                      <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Nivel Jerárquico</label>
-                   <div>
-                      <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Rol del Sistema</label>
-                      <select formControlName="role" class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                        <option value="USUARIO">Usuario Regular</option>
-                 <!-- Fields for USUARIO only -->
-                 @if (userForm.get('role')?.value === 'USUARIO') {
-                   <div class="p-5 bg-blue-50/50 rounded-2xl space-y-5 border border-blue-100">
-                     
-                     <div>
-                       <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Nivel Jerárquico</label>
-                       <select formControlName="subRole" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                         <option [value]="null">Seleccionar Nivel...</option>
-                         <option value="GERENTE">Gerente</option>
-                         <option value="JEFE">Jefe</option>
-                         <option value="ASISTENTE">Asistente</option>
-                       </select>
-                     </div>
+                  @if (userForm.get('role')?.value === 'USUARIO') {
+                    <div class="p-5 bg-blue-50/50 rounded-2xl space-y-5 border border-blue-100">
+                      <div>
+                        <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Nivel Jerárquico</label>
+                        <select formControlName="subRole" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                          <option [value]="null">Seleccionar Nivel...</option>
+                          <option value="GERENTE">Gerente</option>
+                          <option value="JEFE">Jefe</option>
+                          <option value="ASISTENTE">Asistente</option>
+                        </select>
+                      </div>
 
-                     <div>
-                       <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Supervisor (Reporta A)</label>
-                       <select formControlName="reportsToId" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
-                         <option [value]="null">
-                            {{ potentialSupervisors().length === 0 ? 'Sin superior (o no aplica)' : 'Seleccionar Supervisor...' }}
-                         </option>
-                         @for (boss of potentialSupervisors(); track boss.id) {
-                           <option [value]="boss.id">{{ boss.name }} ({{ boss.subRole }})</option>
-                         }
-                       </select>
-                       @if (userForm.get('subRole')?.value && potentialSupervisors().length === 0 && userForm.get('subRole')?.value !== 'GERENTE') {
-                         <p class="text-[10px] text-red-500 mt-2 font-medium bg-red-50 p-2 rounded-lg border border-red-100">
-                            ⚠️ No se encontraron superiores válidos en esta área.
-                         </p>
-                       }
-                     </div>
+                      <div>
+                        <label class="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-2">Supervisor (Reporta A)</label>
+                        <select formControlName="reportsToId" class="block w-full rounded-xl border-blue-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium outline-none">
+                          <option [value]="null">
+                             {{ potentialSupervisors().length === 0 ? 'Sin superior (o no aplica)' : 'Seleccionar Supervisor...' }}
+                          </option>
+                          @for (boss of potentialSupervisors(); track boss.id) {
+                            <option [value]="boss.id">{{ boss.name }} ({{ boss.subRole }})</option>
+                          }
+                        </select>
+                      </div>
+                    </div>
+                  }
+                </div>
 
-                   </div>
-                 }
-
-                <div class="pt-4 flex justify-end gap-3 sticky bottom-0 bg-white pb-2 border-t border-slate-100 mt-auto">
+                <div class="pt-6 flex justify-end gap-3 border-t border-slate-100 mt-auto">
                    <button type="button" (click)="closeForm()" class="px-6 py-3 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
                     <button type="submit" [disabled]="userForm.invalid || isLoading()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 flex items-center gap-2">
                        @if (isLoading()) {
@@ -227,7 +217,6 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                        }
                     </button>
                 </div>
-
               </form>
             </div>
           </div>
