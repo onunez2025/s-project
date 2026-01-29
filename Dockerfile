@@ -1,8 +1,8 @@
-# Build Stage
+# Build Stage (v2 - force build)
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps --force
 COPY . .
 RUN npm run build
 
