@@ -15,7 +15,7 @@ type ViewMode = 'CARDS' | 'GANTT';
   template: `
     <div class="h-full flex flex-col animate-fade-in">
       <!-- Header / Filters -->
-      <div class="flex flex-col xl:flex-row justify-between items-end xl:items-center gap-4 mb-8">
+      <div class="flex flex-col xl:flex-row justify-between items-end xl:items-center gap-4 mb-8 relative z-30">
         <div class="flex items-center gap-3">
           <div>
             <h2 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Proyectos</h2>
