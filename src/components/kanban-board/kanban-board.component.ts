@@ -48,9 +48,10 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
            
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of pendingActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-move hover:shadow-md transition-all active:cursor-grabbing group relative"
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
+                     (click)="onCardClick(act)"
                      [class.border-l-4]="getUrgencyColor(act) !== ''"
                      [ngClass]="getUrgencyColor(act)">
                    
@@ -60,7 +61,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                       </span>
                       <div class="flex items-center gap-2">
                         @if (canEdit(act)) {
-                            <button (click)="openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all">
+                            <button (click)="$event.stopPropagation(); openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </button>
                         }
@@ -98,9 +99,10 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
 
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of progressActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-move hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
                      draggable="true"
-                     (dragstart)="onDragStart($event, act)">
+                     (dragstart)="onDragStart($event, act)"
+                     (click)="onCardClick(act)">
                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                    
                    <div class="flex justify-between items-start mb-2 pl-2">
@@ -109,7 +111,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                       </span>
                       <div class="flex items-center gap-2">
                           @if (canEdit(act)) {
-                            <button (click)="openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all z-10 relative">
+                            <button (click)="$event.stopPropagation(); openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all z-10 relative">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </button>
                           }
@@ -146,7 +148,8 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of doneActivities(); track act.id) {
                 <!-- Removed draggable="true" and (dragstart) to prevent moving completed items -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-default transition-all opacity-80 hover:opacity-100 group relative">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-pointer transition-all opacity-80 hover:opacity-100 group relative"
+                     (click)="onCardClick(act)">>
                    
                    <div class="flex justify-between items-start mb-2">
                       <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-200 text-slate-600 border border-slate-300 truncate max-w-[120px]">
