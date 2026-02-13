@@ -13,14 +13,14 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
       <!-- Header / Filters -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
          <div>
-           <h2 class="text-3xl font-bold text-slate-800">Mis Tareas</h2>
-           <p class="text-slate-500 mt-1">Gestión visual de actividades (Kanban)</p>
+           <h2 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Mis Tareas</h2>
+           <p class="text-slate-500 dark:text-slate-400 mt-1">Gestión visual de actividades (Kanban)</p>
          </div>
          
          <div class="relative w-full sm:w-64 animate-fade-in">
            <select 
              [(ngModel)]="selectedProjectId"
-             class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-sm font-medium text-sm transition-all"
+             class="appearance-none w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-sm font-medium text-sm transition-all"
            >
              <option [value]="0">Todos los Proyectos</option>
              @for (proj of myProjects(); track proj.id) {
@@ -37,18 +37,18 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
       <div class="flex-1 flex gap-6 overflow-x-auto pb-4">
         
         <!-- PENDIENTE -->
-        <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
+        <div class="flex-1 min-w-[300px] bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl flex flex-col border border-slate-200/60 dark:border-slate-700/60"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'PENDIENTE')">
-           <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
+           <div class="p-4 border-b border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2">
              <div class="w-3 h-3 rounded-full bg-slate-400"></div>
-             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">Pendiente</h3>
-             <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ pendingActivities().length }}</span>
+             <h3 class="font-bold text-red-900 dark:text-slate-300 uppercase tracking-wide text-sm">Pendiente</h3>
+             <span class="ml-auto bg-white dark:bg-slate-700 px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-600">{{ pendingActivities().length }}</span>
            </div>
            
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of pendingActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative"
+                <div class="bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-600 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
                      (click)="onCardClick(act)"
@@ -56,7 +56,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                      [ngClass]="getUrgencyColor(act)">
                    
                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-50 text-slate-600 border border-slate-200 truncate max-w-[120px]">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-50 dark:bg-slate-600 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-500 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
                       <div class="flex items-center gap-2">
@@ -71,7 +71,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                       </div>
                    </div>
                    
-                   <p class="text-sm font-bold text-slate-700 mb-3 leading-snug">{{ act.description }}</p>
+                   <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3 leading-snug">{{ act.description }}</p>
                    
                    <div class="flex items-center justify-between mt-auto">
                      <div class="flex items-center gap-2">
@@ -88,25 +88,25 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
         </div>
 
         <!-- EN PROCESO -->
-        <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
+        <div class="flex-1 min-w-[300px] bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl flex flex-col border border-slate-200/60 dark:border-slate-700/60"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'EN_PROCESO')">
-           <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
+           <div class="p-4 border-b border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2">
              <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
-             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">En Proceso</h3>
-             <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ progressActivities().length }}</span>
+             <h3 class="font-bold text-red-900 dark:text-red-300 uppercase tracking-wide text-sm">En Proceso</h3>
+             <span class="ml-auto bg-white dark:bg-slate-700 px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-600">{{ progressActivities().length }}</span>
            </div>
 
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of progressActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
+                <div class="bg-white dark:bg-slate-700 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-600 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
                      (click)="onCardClick(act)">
                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                    
                    <div class="flex justify-between items-start mb-2 pl-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100 truncate max-w-[120px]">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
                       <div class="flex items-center gap-2">
@@ -121,7 +121,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                       </div>
                    </div>
                    
-                   <p class="text-sm font-bold text-slate-700 mb-3 leading-snug pl-2">{{ act.description }}</p>
+                   <p class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-3 leading-snug pl-2">{{ act.description }}</p>
                    
                    <div class="flex items-center justify-between mt-auto pl-2">
                      <div class="flex items-center gap-2">
@@ -136,31 +136,31 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
         </div>
 
         <!-- REALIZADA -->
-        <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
+        <div class="flex-1 min-w-[300px] bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl flex flex-col border border-slate-200/60 dark:border-slate-700/60"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'REALIZADA')">
-           <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
+           <div class="p-4 border-b border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2">
              <div class="w-3 h-3 rounded-full bg-green-500"></div>
-             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">Realizada</h3>
-             <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ doneActivities().length }}</span>
+             <h3 class="font-bold text-red-900 dark:text-green-400 uppercase tracking-wide text-sm">Realizada</h3>
+             <span class="ml-auto bg-white dark:bg-slate-700 px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 dark:text-slate-300 border border-slate-200 dark:border-slate-600">{{ doneActivities().length }}</span>
            </div>
 
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of doneActivities(); track act.id) {
                 <!-- Removed draggable="true" and (dragstart) to prevent moving completed items -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-pointer transition-all opacity-80 hover:opacity-100 group relative"
-                     (click)="onCardClick(act)">>
+                <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer transition-all opacity-80 hover:opacity-100 group relative"
+                     (click)="onCardClick(act)">
                    
                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-200 text-slate-600 border border-slate-300 truncate max-w-[120px]">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-600 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
-                      <div class="h-5 w-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                      <div class="h-5 w-5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center">
                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                       </div>
                    </div>
                    
-                   <p class="text-sm font-medium text-slate-500 line-through mb-3 leading-snug">{{ act.description }}</p>
+                   <p class="text-sm font-medium text-slate-500 dark:text-slate-500 line-through mb-3 leading-snug">{{ act.description }}</p>
                    
                    <div class="flex items-center justify-between mt-auto">
                      <div class="flex items-center gap-2 grayscale opacity-70">
@@ -183,32 +183,32 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
       <!-- Edit Modal -->
       @if (isEditing()) {
           <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
-             <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-200">
-                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+             <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Editar Tarea
                 </h3>
                 
                 <div class="space-y-4">
                     <div>
-                      <label class="block text-xs font-bold text-slate-500 mb-1">Descripción</label>
-                      <input type="text" [(ngModel)]="editDesc" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900">
+                      <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Descripción</label>
+                      <input type="text" [(ngModel)]="editDesc" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 dark:text-slate-100">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-3">
                        <div>
-                         <label class="block text-xs font-bold text-slate-500 mb-1">Inicio</label>
-                         <input type="date" [(ngModel)]="editStart" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                         <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Inicio</label>
+                         <input type="date" [(ngModel)]="editStart" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900 dark:text-slate-100">
                        </div>
                        <div>
-                         <label class="block text-xs font-bold text-slate-500 mb-1">Fin Estimado</label>
-                         <input type="date" [(ngModel)]="editEnd" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                         <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Fin Estimado</label>
+                         <input type="date" [(ngModel)]="editEnd" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900 dark:text-slate-100">
                        </div>
                     </div>
 
                     <div>
-                      <label class="block text-xs font-bold text-slate-500 mb-1">Responsable</label>
-                      <select [(ngModel)]="editResp" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                      <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Responsable</label>
+                      <select [(ngModel)]="editResp" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900 dark:text-slate-100">
                         @for (user of getAllUsers(); track user.id) {
                             <option [value]="user.id">{{ user.name }} ({{ user.subRole || user.role }})</option>
                         }
@@ -216,7 +216,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                     </div>
 
                     <div class="flex items-center gap-3 pt-4">
-                       <button (click)="closeEditModal()" class="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
+                       <button (click)="closeEditModal()" class="flex-1 py-2.5 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
                        <button (click)="saveEdit()" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all">Guardar Cambios</button>
                     </div>
                 </div>

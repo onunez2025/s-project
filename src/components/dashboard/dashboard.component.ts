@@ -113,12 +113,21 @@ type ViewMode = 'CARDS' | 'GANTT';
                       [class.bg-red-50]="proj.status === 'EN_PROCESO'"
                       [class.text-red-700]="proj.status === 'EN_PROCESO'"
                       [class.border-red-100]="proj.status === 'EN_PROCESO'"
+                      [class.dark:bg-red-900/30]="proj.status === 'EN_PROCESO'"
+                      [class.dark:text-red-400]="proj.status === 'EN_PROCESO'"
+                      [class.dark:border-red-800]="proj.status === 'EN_PROCESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-700]="proj.status === 'FINALIZADO'"
                       [class.border-green-100]="proj.status === 'FINALIZADO'"
+                      [class.dark:bg-green-900/30]="proj.status === 'FINALIZADO'"
+                      [class.dark:text-green-400]="proj.status === 'FINALIZADO'"
+                      [class.dark:border-green-800]="proj.status === 'FINALIZADO'"
                       [class.bg-slate-50]="proj.status === 'PLANIFICACION'"
                       [class.text-slate-600]="proj.status === 'PLANIFICACION'"
-                      [class.border-slate-100]="proj.status === 'PLANIFICACION'">
+                      [class.border-slate-100]="proj.status === 'PLANIFICACION'"
+                      [class.dark:bg-slate-700/50]="proj.status === 'PLANIFICACION'"
+                      [class.dark:text-slate-300]="proj.status === 'PLANIFICACION'"
+                      [class.dark:border-slate-600]="proj.status === 'PLANIFICACION'">
                      {{ proj.status.replace('_', ' ') }}
                    </span>
                    
