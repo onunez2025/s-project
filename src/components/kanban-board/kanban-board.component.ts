@@ -82,7 +82,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
         <!-- EN PROCESO -->
         <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
              (dragover)="onDragOver($event)"
-             (drop)="onDrop($event, 'EN_PROGRESO')">
+             (drop)="onDrop($event, 'EN_PROCESO')">
            <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
              <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
              <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">En Proceso</h3>
@@ -213,7 +213,7 @@ export class KanbanBoardComponent {
 
   // Columns derived from filtered activities
   pendingActivities = computed(() => this.filteredActivities().filter(a => a.status === 'PENDIENTE'));
-  progressActivities = computed(() => this.filteredActivities().filter(a => a.status === 'EN_PROGRESO'));
+  progressActivities = computed(() => this.filteredActivities().filter(a => a.status === 'EN_PROCESO'));
   doneActivities = computed(() => this.filteredActivities().filter(a => a.status === 'REALIZADA'));
 
   // --- Helpers ---

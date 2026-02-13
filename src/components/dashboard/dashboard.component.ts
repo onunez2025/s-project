@@ -37,7 +37,7 @@ type ViewMode = 'CARDS' | 'GANTT';
               >
                 <option value="ALL">Todos los Estados</option>
                 <option value="PLANIFICACION">Planificación</option>
-                <option value="EN_PROGRESO">En Progreso</option>
+                <option value="EN_PROCESO">En Progreso</option>
                 <option value="FINALIZADO">Finalizado</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
@@ -97,8 +97,7 @@ type ViewMode = 'CARDS' | 'GANTT';
             <div (click)="onSelect.emit(proj.id)" class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
               
               <!-- Top Status Bar (Color Coded) -->
-              <div class="absolute top-0 left-0 w-full h-1"
-                [class.bg-blue-500]="proj.status === 'EN_PROGRESO'"
+                [class.bg-blue-500]="proj.status === 'EN_PROCESO'"
                 [class.bg-green-500]="proj.status === 'FINALIZADO'"
                 [class.bg-slate-300]="proj.status === 'PLANIFICACION'"
               ></div>
@@ -106,8 +105,8 @@ type ViewMode = 'CARDS' | 'GANTT';
               <!-- Header -->
               <div class="flex justify-between items-start mb-4">
                  <div class="h-12 w-12 rounded-xl flex items-center justify-center text-xl font-bold shadow-sm"
-                      [class.bg-red-50]="proj.status === 'EN_PROGRESO'"
-                      [class.text-blue-600]="proj.status === 'EN_PROGRESO'"
+                      [class.bg-red-50]="proj.status === 'EN_PROCESO'"
+                      [class.text-blue-600]="proj.status === 'EN_PROCESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-600]="proj.status === 'FINALIZADO'"
                       [class.bg-slate-50]="proj.status === 'PLANIFICACION'"
@@ -117,9 +116,9 @@ type ViewMode = 'CARDS' | 'GANTT';
                  
                  <div class="flex items-center gap-2">
                    <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide border"
-                      [class.bg-red-50]="proj.status === 'EN_PROGRESO'"
-                      [class.text-red-700]="proj.status === 'EN_PROGRESO'"
-                      [class.border-red-100]="proj.status === 'EN_PROGRESO'"
+                      [class.bg-blue-50]="proj.status === 'EN_PROCESO'"
+                      [class.text-blue-700]="proj.status === 'EN_PROCESO'"
+                      [class.border-blue-100]="proj.status === 'EN_PROCESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-700]="proj.status === 'FINALIZADO'"
                       [class.border-green-100]="proj.status === 'FINALIZADO'"

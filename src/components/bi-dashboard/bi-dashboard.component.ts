@@ -252,7 +252,7 @@ export class BiDashboardComponent {
    // --- KPI Calculations ---
 
    kpiActiveProjects = computed(() => {
-      return this.filteredProjects().filter(p => p.status === 'EN_PROGRESO').length;
+      return this.filteredProjects().filter(p => p.status === 'EN_PROCESO').length;
    });
 
    kpiMonthlySavings = computed(() => {

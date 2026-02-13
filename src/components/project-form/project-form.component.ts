@@ -177,7 +177,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
                 <label class="block text-xs font-bold text-slate-500 mb-2">Estado Manual</label>
                 <select formControlName="status" class="block w-full rounded-xl border-slate-200 bg-white p-2 text-slate-900 text-sm outline-none">
                    <option value="PLANIFICACION">Planificación</option>
-                   <option value="EN_PROGRESO">En Progreso</option>
+                   <option value="EN_PROCESO">En Progreso</option>
                    <option value="FINALIZADO">Finalizado</option>
                 </select>
              </div>

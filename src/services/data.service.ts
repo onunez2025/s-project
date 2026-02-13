@@ -10,8 +10,8 @@ const SUPABASE_KEY = 'sb_publishable_LhZaMW6mITqlC_Z5rPzbZA_ftL8CKQI';
 export type Role = 'ADMIN' | 'USUARIO';
 export type SubRole = 'GERENTE' | 'JEFE' | 'ASISTENTE' | null;
 export type Currency = 'PEN' | 'USD';
-export type ProjectStatus = 'PLANIFICACION' | 'EN_PROGRESO' | 'FINALIZADO';
-export type ActivityStatus = 'PENDIENTE' | 'EN_PROGRESO' | 'REALIZADA';
+export type ProjectStatus = 'PLANIFICACION' | 'EN_PROCESO' | 'FINALIZADO';
+export type ActivityStatus = 'PENDIENTE' | 'EN_PROCESO' | 'REALIZADA';
 
 export type ExpenseCategory = 'MATERIALES' | 'MANO_OBRA' | 'TRANSPORTE' | 'OTROS';
 export type FileType = 'PDF' | 'IMG' | 'EXCEL' | 'OTRO';

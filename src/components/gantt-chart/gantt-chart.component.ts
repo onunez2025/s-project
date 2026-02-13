@@ -89,7 +89,7 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                              <div class="flex items-center gap-2 mb-0.5">
                                @if(p.status === 'FINALIZADO') {
                                  <div class="h-2 w-2 rounded-full bg-green-500 shrink-0"></div>
-                               } @else if (p.status === 'EN_PROGRESO') {
+                               } @else if (p.status === 'EN_PROCESO') {
                                  <div class="h-2 w-2 rounded-full bg-blue-500 shrink-0 animate-pulse"></div>
                                } @else {
                                  <div class="h-2 w-2 rounded-full bg-slate-300 shrink-0"></div>
@@ -327,7 +327,7 @@ export class GanttChartComponent implements OnDestroy {
 
       let color = '#cbd5e1';
       if (d.status === 'FINALIZADO') color = '#10b981';
-      else if (d.status === 'EN_PROGRESO') color = '#3b82f6';
+      else if (d.status === 'EN_PROCESO') color = '#3b82f6';
 
       // Bar
       const rect = group.append('rect')
@@ -362,7 +362,7 @@ export class GanttChartComponent implements OnDestroy {
         let labelText = '';
         let labelClass = '';
 
-        if (d.status === 'EN_PROGRESO') {
+        if (d.status === 'EN_PROCESO') {
           labelText = 'En Curso';
           labelClass = 'text-[10px] font-bold fill-blue-600 uppercase tracking-wide';
         } else if (d.status === 'PLANIFICACION') {
