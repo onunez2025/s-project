@@ -1,4 +1,4 @@
-import { Component, computed, input, inject, output } from '@angular/core';
+import { Component, computed, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Project, Activity, DataService } from '../../../services/data.service';
 
@@ -68,12 +68,11 @@ interface UrgentTask {
       </div>
     </div>
   `
-        `
 })
 export class DueSoonWidgetComponent {
     dataService = inject(DataService);
 
-    selectTask = output<number>();
+    @Output() selectTask = new EventEmitter<number>();
 
     projects = this.dataService.projects;
 
