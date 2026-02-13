@@ -399,6 +399,9 @@ export class DataService {
 
   // --- Computed Accessors ---
 
+  projects = this._projects.asReadonly();
+  activities = this._activities.asReadonly();
+
   mySubordinates = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
