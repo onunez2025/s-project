@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { DataService, Project } from '../../services/data.service';
 import { ProjectFormComponent } from '../project-form/project-form.component';
 import { GanttChartComponent } from '../gantt-chart/gantt-chart.component';
+import { FilterBarComponent, FilterState } from '../ui/filter-bar/filter-bar.component';
 
 type ViewMode = 'CARDS' | 'GANTT';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ProjectFormComponent, GanttChartComponent],
+  imports: [CommonModule, ProjectFormComponent, GanttChartComponent, FilterBarComponent],
   template: `
     <div class="h-full flex flex-col animate-fade-in">
       <!-- Header / Filters -->
@@ -29,21 +30,13 @@ type ViewMode = 'CARDS' | 'GANTT';
         
         <div class="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
           
-          <!-- Filters -->
-           <div class="relative w-full sm:w-48 animate-fade-in">
-              <select 
-                class="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-sm font-medium text-sm transition-all"
-                (change)="filterStatus.set($any($event.target).value)"
-              >
-                <option value="ALL">Todos los Estados</option>
-                <option value="PLANIFICACION">Planificación</option>
-                <option value="EN_PROCESO">En Progreso</option>
-                <option value="FINALIZADO">Finalizado</option>
-              </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-              </div>
-            </div>
+            <!-- Filters (New) -->
+            <app-filter-bar 
+               class="w-full xl:w-auto animate-fade-in"
+               [areas]="dataService.getAllAreas()"
+               [users]="dataService.getAllUsers()"
+               (filtersChanged)="onFiltersChanged($event)">
+            </app-filter-bar>
 
           <!-- View Switcher -->
           <div class="bg-slate-200 p-1 rounded-xl flex items-center shadow-inner">
@@ -233,7 +226,13 @@ export class DashboardComponent {
   showForm = signal(false);
   editingProject = signal<Project | null>(null);
 
-  filterStatus = signal<string>('ALL');
+  activeFilters = signal<FilterState>({
+    searchText: '',
+    status: [],
+    areaId: null,
+    userId: null
+  });
+
   viewMode = signal<ViewMode>('CARDS');
 
   constructor() {
@@ -246,11 +245,40 @@ export class DashboardComponent {
     });
   }
 
+  onFiltersChanged(filters: FilterState) {
+    this.activeFilters.set(filters);
+  }
+
   displayProjects = computed(() => {
-    const projects = this.dataService.filteredProjects();
-    const status = this.filterStatus();
-    if (status === 'ALL') return projects;
-    return projects.filter(p => p.status === status);
+    let projects = this.dataService.filteredProjects(); // Start with security-layer filtered
+    const filters = this.activeFilters();
+
+    // 1. Search Text
+    if (filters.searchText) {
+      const lower = filters.searchText.toLowerCase();
+      projects = projects.filter(p => p.name.toLowerCase().includes(lower));
+    }
+
+    // 2. Status
+    if (filters.status.length > 0) {
+      projects = projects.filter(p => filters.status.includes(p.status));
+    }
+
+    // 3. Area
+    if (filters.areaId) {
+      projects = projects.filter(p => p.areaConfig.some(c => c.areaId === filters.areaId));
+    }
+
+    // 4. User (Responsible/Leader)
+    if (filters.userId) {
+      // Filter if user is Leader OR Team Member
+      projects = projects.filter(p =>
+        p.areaConfig.some(c => c.leaderId === filters.userId) ||
+        p.teamIds.includes(filters.userId!)
+      );
+    }
+
+    return projects;
   });
 
   getProjectAreas(proj: Project) {
