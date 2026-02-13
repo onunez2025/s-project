@@ -48,7 +48,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
            
            <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
              @for (act of pendingActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-move hover:shadow-md transition-all active:cursor-grabbing group"
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-move hover:shadow-md transition-all active:cursor-grabbing group relative"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
                      [class.border-l-4]="getUrgencyColor(act) !== ''"
@@ -58,9 +58,16 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                       <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-50 text-slate-600 border border-slate-200 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
-                      @if (hasFiles(act.projectId)) {
-                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                      }
+                      <div class="flex items-center gap-2">
+                        @if (canEdit(act)) {
+                            <button (click)="openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
+                        }
+                        @if (hasFiles(act.projectId)) {
+                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                        }
+                      </div>
                    </div>
                    
                    <p class="text-sm font-bold text-slate-700 mb-3 leading-snug">{{ act.description }}</p>
@@ -100,9 +107,16 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                       <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
-                      @if (hasFiles(act.projectId)) {
-                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                      }
+                      <div class="flex items-center gap-2">
+                          @if (canEdit(act)) {
+                            <button (click)="openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all z-10 relative">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
+                          }
+                          @if (hasFiles(act.projectId)) {
+                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                          }
+                      </div>
                    </div>
                    
                    <p class="text-sm font-bold text-slate-700 mb-3 leading-snug pl-2">{{ act.description }}</p>
@@ -161,8 +175,52 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
              }
            </div>
         </div>
-
       </div>
+      
+      <!-- Edit Modal -->
+      @if (isEditing()) {
+          <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
+             <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Editar Tarea
+                </h3>
+                
+                <div class="space-y-4">
+                    <div>
+                      <label class="block text-xs font-bold text-slate-500 mb-1">Descripción</label>
+                      <input type="text" [(ngModel)]="editDesc" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                       <div>
+                         <label class="block text-xs font-bold text-slate-500 mb-1">Inicio</label>
+                         <input type="date" [(ngModel)]="editStart" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                       </div>
+                       <div>
+                         <label class="block text-xs font-bold text-slate-500 mb-1">Fin Estimado</label>
+                         <input type="date" [(ngModel)]="editEnd" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                       </div>
+                    </div>
+
+                    <div>
+                      <label class="block text-xs font-bold text-slate-500 mb-1">Responsable</label>
+                      <select [(ngModel)]="editResp" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                        @for (user of getAllUsers(); track user.id) {
+                            <option [value]="user.id">{{ user.name }} ({{ user.subRole || user.role }})</option>
+                        }
+                      </select>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-4">
+                       <button (click)="closeEditModal()" class="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
+                       <button (click)="saveEdit()" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all">Guardar Cambios</button>
+                    </div>
+                </div>
+             </div>
+          </div>
+      }
+
     </div>
   `,
   styles: [`
