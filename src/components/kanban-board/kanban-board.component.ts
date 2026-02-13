@@ -269,10 +269,79 @@ export class KanbanBoardComponent {
     return activities;
   });
 
-  // Columns derived from filtered activities
-  pendingActivities = computed(() => this.filteredActivities().filter(a => a.status === 'PENDIENTE'));
-  progressActivities = computed(() => this.filteredActivities().filter(a => a.status === 'EN_PROCESO'));
-  doneActivities = computed(() => this.filteredActivities().filter(a => a.status === 'REALIZADA'));
+  // Columns derived from filtered activities, SORTED by estimatedEndDate
+  pendingActivities = computed(() => {
+    return this.filteredActivities()
+      .filter(a => a.status === 'PENDIENTE')
+      .sort((a, b) => this.sortByDate(a, b));
+  });
+
+  progressActivities = computed(() => {
+    return this.filteredActivities()
+      .filter(a => a.status === 'EN_PROCESO')
+      .sort((a, b) => this.sortByDate(a, b));
+  });
+
+  doneActivities = computed(() => {
+    return this.filteredActivities()
+      .filter(a => a.status === 'REALIZADA')
+      .sort((a, b) => this.sortByDate(a, b, true));
+  });
+
+  sortByDate(a: Activity, b: Activity, descending = false): number {
+    const dateA = a.estimatedEndDate || '9999-12-31';
+    const dateB = b.estimatedEndDate || '9999-12-31';
+    return descending ? dateB.localeCompare(dateA) : dateA.localeCompare(dateB);
+  }
+
+  // --- Edit Modal Logic ---
+  isEditing = signal(false);
+  editingActivity = signal<Activity | null>(null);
+
+  // Edit Form Signals
+  editDesc = signal('');
+  editStart = signal('');
+  editEnd = signal('');
+  editResp = signal<number>(0);
+
+  openEditModal(act: Activity) {
+    this.editingActivity.set(act);
+    this.editDesc.set(act.description);
+    this.editStart.set(act.startDate);
+    this.editEnd.set(act.estimatedEndDate);
+    this.editResp.set(act.responsibleId);
+    this.isEditing.set(true);
+  }
+
+  closeEditModal() {
+    this.isEditing.set(false);
+    this.editingActivity.set(null);
+  }
+
+  async saveEdit() {
+    const act = this.editingActivity();
+    if (!act) return;
+
+    await this.dataService.updateActivity({
+      id: act.id,
+      description: this.editDesc(),
+      startDate: this.editStart(),
+      estimatedEndDate: this.editEnd(),
+      responsibleId: this.editResp()
+    });
+
+    this.closeEditModal();
+  }
+
+  canEdit(act: Activity): boolean {
+    if (act.status === 'REALIZADA') return false;
+    const user = this.currentUser();
+    if (!user) return false;
+
+    // Admin, Boss, Manager OR Responsible can edit
+    if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') return true;
+    return act.responsibleId === user.id;
+  }
 
   // --- Helpers ---
 
@@ -282,6 +351,10 @@ export class KanbanBoardComponent {
 
   getUser(id: number) {
     return this.dataService.getAllUsers().find(u => u.id === id);
+  }
+
+  getAllUsers() {
+    return this.dataService.getAllUsers();
   }
 
   hasFiles(projectId: number): boolean {
