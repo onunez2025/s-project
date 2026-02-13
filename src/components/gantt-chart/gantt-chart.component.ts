@@ -11,43 +11,55 @@ type TimeScale = 'Day' | 'Week' | 'Month';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden font-sans">
+    <div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden font-sans">
       
       <!-- Toolbar -->
-      <div class="h-16 border-b border-slate-200 flex items-center justify-between px-6 bg-white shrink-0 z-20">
+      <div class="h-16 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-6 bg-white dark:bg-slate-800 shrink-0 z-20">
           <div class="flex items-center gap-4">
              <div>
-                <h3 class="font-bold text-slate-800 text-lg leading-tight">Cronograma</h3>
-                <span class="text-xs text-slate-500 font-medium">{{ projects().length }} Proyectos Activos</span>
+                <h3 class="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight">Cronograma</h3>
+                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{ projects().length }} Proyectos Activos</span>
              </div>
              
              <!-- View Mode Switcher (New) -->
-             <div class="bg-slate-100 p-1 rounded-lg flex items-center ml-4">
+             <div class="bg-slate-100 dark:bg-slate-700 p-1 rounded-lg flex items-center ml-4">
                 <button (click)="changeViewMode('Day')" 
                    class="px-3 py-1 text-xs font-bold rounded-md transition-all duration-200"
                    [class.bg-white]="viewMode() === 'Day'"
+                   [class.dark:bg-slate-600]="viewMode() === 'Day'"
                    [class.shadow-sm]="viewMode() === 'Day'"
                    [class.text-slate-800]="viewMode() === 'Day'"
+                   [class.dark:text-slate-100]="viewMode() === 'Day'"
                    [class.text-slate-500]="viewMode() !== 'Day'"
-                   [class.hover:text-slate-700]="viewMode() !== 'Day'">
+                   [class.dark:text-slate-400]="viewMode() !== 'Day'"
+                   [class.hover:text-slate-700]="viewMode() !== 'Day'"
+                   [class.dark:hover:text-slate-300]="viewMode() !== 'Day'">
                    Día
                 </button>
                 <button (click)="changeViewMode('Week')" 
                    class="px-3 py-1 text-xs font-bold rounded-md transition-all duration-200"
                    [class.bg-white]="viewMode() === 'Week'"
+                   [class.dark:bg-slate-600]="viewMode() === 'Week'"
                    [class.shadow-sm]="viewMode() === 'Week'"
                    [class.text-slate-800]="viewMode() === 'Week'"
+                   [class.dark:text-slate-100]="viewMode() === 'Week'"
                    [class.text-slate-500]="viewMode() !== 'Week'"
-                   [class.hover:text-slate-700]="viewMode() !== 'Week'">
+                   [class.dark:text-slate-400]="viewMode() !== 'Week'"
+                   [class.hover:text-slate-700]="viewMode() !== 'Week'"
+                   [class.dark:hover:text-slate-300]="viewMode() !== 'Week'">
                    Semana
                 </button>
                 <button (click)="changeViewMode('Month')" 
                    class="px-3 py-1 text-xs font-bold rounded-md transition-all duration-200"
                    [class.bg-white]="viewMode() === 'Month'"
+                   [class.dark:bg-slate-600]="viewMode() === 'Month'"
                    [class.shadow-sm]="viewMode() === 'Month'"
                    [class.text-slate-800]="viewMode() === 'Month'"
+                   [class.dark:text-slate-100]="viewMode() === 'Month'"
                    [class.text-slate-500]="viewMode() !== 'Month'"
-                   [class.hover:text-slate-700]="viewMode() !== 'Month'">
+                   [class.dark:text-slate-400]="viewMode() !== 'Month'"
+                   [class.hover:text-slate-700]="viewMode() !== 'Month'"
+                   [class.dark:hover:text-slate-300]="viewMode() !== 'Month'">
                    Mes
                 </button>
              </div>
@@ -66,20 +78,20 @@ type TimeScale = 'Day' | 'Week' | 'Month';
       <div class="flex flex-1 overflow-hidden relative">
          
          <!-- LEFT PANEL: Table Info (Fixed Width) -->
-         <div class="w-[420px] flex-shrink-0 border-r border-slate-200 flex flex-col bg-white z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+         <div class="w-[420px] flex-shrink-0 border-r border-slate-200 dark:border-slate-700 flex flex-col bg-white dark:bg-slate-800 z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
             
             <!-- Table Header -->
-            <div class="h-[50px] border-b border-slate-100 flex items-center px-6 bg-slate-50/80 shrink-0">
-               <div class="flex-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Proyecto</div>
-               <div class="w-16 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Líder</div>
+            <div class="h-[50px] border-b border-slate-100 dark:border-slate-700 flex items-center px-6 bg-slate-50/80 dark:bg-slate-800/80 shrink-0">
+               <div class="flex-1 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Proyecto</div>
+               <div class="w-16 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-right">Líder</div>
             </div>
 
             <!-- Table Rows (Scrolls synced with Chart) -->
-            <div class="flex-1 overflow-hidden relative bg-white">
+            <div class="flex-1 overflow-hidden relative bg-white dark:bg-slate-800">
                <div class="overflow-hidden h-full" #leftSideContainer>
                   <div [style.height.px]="totalContentHeight()" class="relative">
                     @for (p of projects(); track p.id; let i = $index) {
-                       <div class="absolute w-full border-b border-slate-50 hover:bg-slate-50/80 transition-colors group flex items-center px-6 cursor-pointer"
+                       <div class="absolute w-full border-b border-slate-50 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-700/50 transition-colors group flex items-center px-6 cursor-pointer"
                             (click)="projectSelected.emit(p.id)"
                             [style.top.px]="i * rowHeight"
                             [style.height.px]="rowHeight">
@@ -92,13 +104,13 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                                } @else if (p.status === 'EN_PROCESO') {
                                  <div class="h-2 w-2 rounded-full bg-red-500 shrink-0 animate-pulse"></div>
                                } @else {
-                                 <div class="h-2 w-2 rounded-full bg-slate-300 shrink-0"></div>
+                                 <div class="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0"></div>
                                }
-                               <span class="text-sm font-bold text-slate-700 group-hover:text-blue-700 transition-colors cursor-pointer leading-tight" [title]="p.name">{{ p.name }}</span>
+                               <span class="text-sm font-bold text-slate-700 dark:text-slate-200 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors cursor-pointer leading-tight" [title]="p.name">{{ p.name }}</span>
                              </div>
-                             <div class="text-[10px] text-slate-400 truncate pl-4 flex gap-2">
+                             <div class="text-[10px] text-slate-400 dark:text-slate-500 truncate pl-4 flex gap-2">
                                 <span>{{ p.status.replace('_', ' ') }}</span>
-                                <span class="text-slate-300">•</span>
+                                <span class="text-slate-300 dark:text-slate-600">•</span>
                                 <span>{{ getDuration(p) }} días</span>
                              </div>
                           </div>
@@ -108,7 +120,7 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                             <div class="flex items-center -space-x-2 overflow-hidden">
                               @for(c of p.areaConfig; track c.areaId) {
                                 <img [src]="getUser(c.leaderId)?.avatar" 
-                                     class="h-7 w-7 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-100" 
+                                     class="h-7 w-7 rounded-full border-2 border-white dark:border-slate-800 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700" 
                                      [title]="getUser(c.leaderId)?.name">
                               }
                             </div>
@@ -121,15 +133,15 @@ type TimeScale = 'Day' | 'Week' | 'Month';
          </div>
 
          <!-- RIGHT PANEL: Gantt Chart (Scrollable) -->
-         <div class="flex-1 flex flex-col min-w-0 bg-white relative">
+         <div class="flex-1 flex flex-col min-w-0 bg-white dark:bg-slate-800 relative">
             
             <!-- Timeline Header (Sticky Top) -->
-            <div class="h-[50px] border-b border-slate-100 bg-slate-50/80 overflow-hidden relative shrink-0" #timelineHeader>
+            <div class="h-[50px] border-b border-slate-100 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/80 overflow-hidden relative shrink-0" #timelineHeader>
                 <div #svgHeaderContainer></div>
             </div>
 
             <!-- Bars Container (Scrollable X & Y) -->
-            <div class="flex-1 overflow-auto custom-scrollbar relative scroll-smooth" #chartContainer (scroll)="syncScroll($event)">
+            <div class="flex-1 overflow-auto custom-scrollbar relative scroll-smooth bg-white dark:bg-slate-800" #chartContainer (scroll)="syncScroll($event)">
                  <div #svgBodyContainer [style.height.px]="totalContentHeight()"></div>
             </div>
          </div>
@@ -290,7 +302,7 @@ export class GanttChartComponent implements OnDestroy {
     svgHeader.append('line')
       .attr('x1', 0).attr('x2', totalWidth)
       .attr('y1', 25).attr('y2', 25)
-      .attr('stroke', '#e2e8f0');
+      .attr('stroke', 'var(--chart-stroke)');
 
 
     // --- DRAW BODY ---
@@ -312,7 +324,7 @@ export class GanttChartComponent implements OnDestroy {
       svgBody.append('line')
         .attr('x1', 0).attr('x2', totalWidth)
         .attr('y1', yPos).attr('y2', yPos)
-        .attr('stroke', '#f8fafc');
+        .attr('stroke', 'var(--chart-grid)');
     });
 
     // 3. Project Bars
@@ -326,9 +338,10 @@ export class GanttChartComponent implements OnDestroy {
       const group = svgBody.append('g')
         .attr('class', 'bar-group'); // Class for selection if needed
 
-      let color = '#cbd5e1';
+      let color = '#cbd5e1'; // Light mode fallback
       if (d.status === 'FINALIZADO') color = '#10b981';
       else if (d.status === 'EN_PROCESO') color = '#ef4444'; // Red-500
+      else color = '#94a3b8'; // Slate 400 for Planification
 
       // Bar
       const rect = group.append('rect')
@@ -421,13 +434,13 @@ export class GanttChartComponent implements OnDestroy {
 
         if (d.status === 'EN_PROCESO') {
           labelText = 'En Curso';
-          labelClass = 'text-[10px] font-bold fill-red-700 uppercase tracking-wide';
+          labelClass = 'text-[10px] font-bold fill-red-700 dark:fill-red-200 uppercase tracking-wide';
         } else if (d.status === 'PLANIFICACION') {
           labelText = 'Plan';
-          labelClass = 'text-[10px] font-bold fill-slate-400 uppercase tracking-wide';
+          labelClass = 'text-[10px] font-bold fill-slate-400 dark:fill-slate-500 uppercase tracking-wide';
         } else if (d.status === 'FINALIZADO') {
           labelText = 'Completado';
-          labelClass = 'text-[10px] font-bold fill-green-600 uppercase tracking-wide';
+          labelClass = 'text-[10px] font-bold fill-green-600 dark:fill-green-200 uppercase tracking-wide';
         }
 
         group.append('text')
@@ -544,8 +557,8 @@ export class GanttChartComponent implements OnDestroy {
       const xPos = x(month);
       svg.append('text').attr('x', xPos + 10).attr('y', 20)
         .text(d3.timeFormat('%B %Y')(month).toUpperCase())
-        .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
-      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
+        .attr('class', 'text-[10px] font-bold fill-slate-500 dark:fill-slate-400 tracking-widest');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', 'var(--chart-stroke)');
     });
 
     // Bottom: Days
@@ -555,7 +568,7 @@ export class GanttChartComponent implements OnDestroy {
         .attr('x', x(day) + (this.getDayWidth() / 2))
         .attr('y', 42).attr('text-anchor', 'middle')
         .text(day.getDate())
-        .attr('class', 'text-[10px] font-medium fill-slate-400');
+        .attr('class', 'text-[10px] font-medium fill-slate-400 dark:fill-slate-500');
     });
   }
 
@@ -566,8 +579,8 @@ export class GanttChartComponent implements OnDestroy {
       const xPos = x(month);
       svg.append('text').attr('x', xPos + 10).attr('y', 20)
         .text(d3.timeFormat('%B %Y')(month).toUpperCase())
-        .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
-      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
+        .attr('class', 'text-[10px] font-bold fill-slate-500 dark:fill-slate-400 tracking-widest');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', 'var(--chart-stroke)');
     });
 
     // Bottom: Week Starts (Mondays)
@@ -578,8 +591,8 @@ export class GanttChartComponent implements OnDestroy {
         .attr('x', xPos + 5)
         .attr('y', 42)
         .text(d3.timeFormat('%d %b')(week)) // "02 Oct"
-        .attr('class', 'text-[10px] font-medium fill-slate-400');
-      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', '#f1f5f9');
+        .attr('class', 'text-[10px] font-medium fill-slate-400 dark:fill-slate-500');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', 'var(--chart-grid)');
     });
   }
 
@@ -590,8 +603,8 @@ export class GanttChartComponent implements OnDestroy {
       const xPos = x(year);
       svg.append('text').attr('x', xPos + 10).attr('y', 20)
         .text(d3.timeFormat('%Y')(year))
-        .attr('class', 'text-[10px] font-bold fill-slate-500 tracking-widest');
-      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', '#e2e8f0');
+        .attr('class', 'text-[10px] font-bold fill-slate-500 dark:fill-slate-400 tracking-widest');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 0).attr('y2', 25).attr('stroke', 'var(--chart-stroke)');
     });
 
     // Bottom: Months
@@ -605,8 +618,8 @@ export class GanttChartComponent implements OnDestroy {
         .attr('x', xPos + (width / 2))
         .attr('y', 42).attr('text-anchor', 'middle')
         .text(d3.timeFormat('%b')(month)) // "Jan"
-        .attr('class', 'text-[10px] font-medium fill-slate-400');
-      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', '#f1f5f9');
+        .attr('class', 'text-[10px] font-medium fill-slate-400 dark:fill-slate-500');
+      svg.append('line').attr('x1', xPos).attr('x2', xPos).attr('y1', 25).attr('y2', 50).attr('stroke', 'var(--chart-grid)');
     });
   }
 
@@ -624,7 +637,7 @@ export class GanttChartComponent implements OnDestroy {
       svg.append('line')
         .attr('x1', lineX).attr('x2', lineX)
         .attr('y1', 0).attr('y2', height)
-        .attr('stroke', '#f8fafc') // very subtle
+        .attr('stroke', 'var(--chart-grid)') // very subtle
         .attr('stroke-dasharray', this.viewMode() === 'Day' ? '0' : '4,4'); // Dashed for week/month separators
     });
   }
