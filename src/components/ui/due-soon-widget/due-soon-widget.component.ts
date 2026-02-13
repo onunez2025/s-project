@@ -1,6 +1,5 @@
-import { Component, computed, input, inject } from '@angular/core';
+import { Component, computed, input, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { Project, Activity, DataService } from '../../../services/data.service';
 
 interface UrgentTask {
@@ -39,7 +38,7 @@ interface UrgentTask {
         </div>
 
         <div *ngFor="let task of urgentTasks()" 
-             (click)="goToProject(task.projectId)"
+             (click)="onTaskClick(task.projectId)"
              class="group bg-white border border-slate-200 rounded-lg p-3 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer relative overflow-hidden">
              
              <!-- Indicator Bar -->
@@ -70,85 +69,71 @@ interface UrgentTask {
     </div>
   `
 })
+])
 export class DueSoonWidgetComponent {
     dataService = inject(DataService);
-    router = inject(Router);
 
-    // We access internal signals if public interaction is needed, but assuming dataService has a getter or we reuse filteredProjects
-    // Since activities are often loaded within projects or separate, let's verify if there is a global 'allActivities' list.
-    // If not, we might need to compute it from 'projects' input or service.
-    // Strategy: Flatten from projects() since that's the main source of truth loaded.
+    selectTask = output<number>();
 
-    projects = this.dataService.projects; // Accessing the signal directly
+    projects = this.dataService.projects;
 
     urgentTasks = computed(() => {
         const allProjects = this.projects();
+        const projects = this.dataService.filteredProjects();
+        const allActivities = this.dataService.activities();
         const tasks: UrgentTask[] = [];
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        // If projects have activities loaded within them (nested), we iterate. 
-        // If not, we might need another way. Assuming nested structure based on typical patterns or we look at DataService.
-        // Re-reading DataService snippet: Activity is an interface. `_projects` is `Project[]`.
-        // Does Project have `activities: Activity[]`? Let's assume yes from previous context or generic patterns.
-        // If not, I'll need to adapt.
-        // Waiting for grep result to be 100% sure where _activities is. 
-        // BUT for now, I will write this assuming Project has activities OR I can flatten from a service call if needed.
-        // Actually, safely, I should check if DataService has `activities()` signal.
+        // Filter activities belonging to visible projects
+        const visibleProjectIds = new Set(projects.map(p => p.id));
 
-        // Let's assume for a moment we are using the filtered projects to only show relevant tasks? 
-        // Or GLOBALLY urgent tasks for this user? GLOBAL is better for a widget.
+        for (const act of allActivities) {
+            if (!visibleProjectIds.has(act.projectId)) continue;
+            if (act.status === 'REALIZADA') continue;
+            if (!act.estimatedEndDate && !act.startDate) continue;
 
-        for (const p of allProjects) {
-            if (p.status === 'FINALIZADO') continue;
+            const project = projects.find(p => p.id === act.projectId);
+            if (!project || project.status === 'FINALIZADO') continue;
 
-            // Check types. If p.activities exists
-            if ((p as any).activities) {
-                const activities = (p as any).activities as Activity[];
-                for (const act of activities) {
-                    if (act.status === 'REALIZADA') continue;
-                    if (!act.estimatedEndDate && !act.startDate) continue;
+            // Use estimated end date, fall back to start date
+            const targetDateStr = act.estimatedEndDate || act.startDate;
+            const targetDate = new Date(targetDateStr);
+            targetDate.setHours(0, 0, 0, 0);
 
-                    // Use estimated end date, fall back to start date
-                    const targetDateStr = act.estimatedEndDate || act.startDate;
-                    const targetDate = new Date(targetDateStr);
-                    targetDate.setHours(0, 0, 0, 0);
+            const diffTime = targetDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                    const diffTime = targetDate.getTime() - today.getTime();
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            // Filter: Only show if due within next 7 days or overdue
+            if (diffDays <= 7) {
+                let color: 'bg-red-500' | 'bg-yellow-500' | 'bg-green-500' = 'bg-green-500';
+                let text = 'En tiempo';
 
-                    // Filter: Only show if due within next 7 days or overdue
-                    if (diffDays <= 7) {
-                        let color: 'bg-red-500' | 'bg-yellow-500' | 'bg-green-500' = 'bg-green-500';
-                        let text = 'En tiempo';
-
-                        if (diffDays < 0) {
-                            color = 'bg-red-500';
-                            text = 'Vencido';
-                        } else if (diffDays <= 3) {
-                            color = 'bg-yellow-500';
-                            text = 'Próximo';
-                        }
-
-                        tasks.push({
-                            id: act.id,
-                            description: act.description,
-                            projectName: p.name,
-                            projectId: p.id,
-                            endDate: targetDateStr,
-                            daysLeft: diffDays,
-                            statusColor: color,
-                            statusText: text
-                        });
-                    }
+                if (diffDays < 0) {
+                    color = 'bg-red-500';
+                    text = 'Vencido';
+                } else if (diffDays <= 3) {
+                    color = 'bg-yellow-500';
+                    text = 'Próximo';
                 }
+
+                tasks.push({
+                    id: act.id,
+                    description: act.description,
+                    projectName: project.name,
+                    projectId: project.id,
+                    endDate: targetDateStr,
+                    daysLeft: diffDays,
+                    statusColor: color,
+                    statusText: text
+                });
             }
         }
 
         return tasks.sort((a, b) => a.daysLeft - b.daysLeft).slice(0, 10); // Top 10
     });
 
-    goToProject(projectId: number) {
-        this.router.navigate(['/dashboard/project', projectId]);
+    onTaskClick(projectId: number) {
+        this.selectTask.emit(projectId);
     }
 }

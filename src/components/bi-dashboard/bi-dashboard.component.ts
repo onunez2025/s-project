@@ -202,7 +202,7 @@ import * as d3 from 'd3';
     
       <!-- Right Sidebar (Tasks) -->
       <div class="w-full xl:w-80 shrink-0">
-          <app-due-soon-widget></app-due-soon-widget>
+          <app-due-soon-widget (selectTask)="selectProject.emit($event)"></app-due-soon-widget>
       </div>
 
     </div>
