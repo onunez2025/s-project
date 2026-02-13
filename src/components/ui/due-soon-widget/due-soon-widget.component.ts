@@ -68,8 +68,8 @@ interface UrgentTask {
       </div>
     </div>
   `
+        `
 })
-])
 export class DueSoonWidgetComponent {
     dataService = inject(DataService);
 
