@@ -688,6 +688,30 @@ export class DataService {
     await this.loadProjects();
   }
 
+  async updateProjectDates(id: number, newStart: string, newEnd: string) {
+    // 1. Optimistic UI Update
+    const projects = this._projects();
+    const index = projects.findIndex(p => p.id === id);
+    if (index !== -1) {
+      const updated = { ...projects[index], startDate: newStart, endDate: newEnd };
+      const newProjects = [...projects];
+      newProjects[index] = updated;
+      this._projects.set(newProjects);
+    }
+
+    // 2. Persist to DB
+    const { error } = await this.supabase
+      .from('projects')
+      .update({ start_date: newStart, end_date: newEnd })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error updating project dates:', error);
+      // Revert if error (reload)
+      await this.loadProjects();
+    }
+  }
+
   async finalizeProject(projectId: number) {
     const today = new Date().toISOString().split('T')[0];
     await this.supabase.from('projects').update({

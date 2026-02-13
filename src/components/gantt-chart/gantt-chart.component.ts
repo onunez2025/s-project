@@ -323,7 +323,8 @@ export class GanttChartComponent implements OnDestroy {
       const xEnd = x(new Date(d.endDate));
       const width = Math.max(xEnd - xStart, 8);
 
-      const group = svgBody.append('g');
+      const group = svgBody.append('g')
+        .attr('class', 'bar-group'); // Class for selection if needed
 
       let color = '#cbd5e1';
       if (d.status === 'FINALIZADO') color = '#10b981';
@@ -338,26 +339,82 @@ export class GanttChartComponent implements OnDestroy {
         .attr('rx', 6)
         .attr('fill', color)
         .style('filter', 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))')
-        .style('cursor', 'pointer');
+        .style('cursor', 'grab');
+
+      // Drag Behavior
+      const drag = d3.drag<SVGRectElement, unknown>()
+        .on('start', function () {
+          d3.select(this).style('cursor', 'grabbing').style('opacity', 0.7);
+        })
+        .on('drag', (event) => {
+          // Move the rect visually
+          const newX = event.x;
+          d3.select(event.sourceEvent.target).attr('x', newX);
+
+          // Update Tooltip with Shadow Dates
+          const newDate = x.invert(newX);
+          const duration = (new Date(d.endDate).getTime() - new Date(d.startDate).getTime());
+          const newEndDate = new Date(newDate.getTime() + duration);
+
+          const tt = this.tooltip.nativeElement;
+          document.getElementById('tt-dates')!.textContent =
+            `${d3.timeFormat('%Y-%m-%d')(newDate)} - ${d3.timeFormat('%Y-%m-%d')(newEndDate)}`;
+          document.getElementById('tt-progress')!.textContent = 'Soltar para guardar';
+
+          tt.style.opacity = '1';
+          tt.style.left = (event.sourceEvent.clientX + 10) + 'px';
+          tt.style.top = (event.sourceEvent.clientY + 10) + 'px';
+        })
+        .on('end', (event) => {
+          d3.select(event.sourceEvent.target).style('cursor', 'grab').style('opacity', 1);
+          this.tooltip.nativeElement.style.opacity = '0';
+
+          const finalX = parseFloat(d3.select(event.sourceEvent.target).attr('x'));
+          const newStartDate = x.invert(finalX);
+
+          // Snap to Day
+          newStartDate.setHours(0, 0, 0, 0);
+
+          // Calculate End Date keeping duration
+          const originalDuration = new Date(d.endDate).getTime() - new Date(d.startDate).getTime();
+          const newEndDate = new Date(newStartDate.getTime() + originalDuration);
+
+          // Format strings
+          const startStr = d3.timeFormat('%Y-%m-%d')(newStartDate);
+          const endStr = d3.timeFormat('%Y-%m-%d')(newEndDate);
+
+          if (startStr !== d.startDate) {
+            this.dataService.updateProjectDates(d.id, startStr, endStr);
+          } else {
+            // If moved but mapped to same day (jitter), redraw to snap back
+            this.drawGantt();
+          }
+        });
+
+      rect.call(drag);
 
       rect.on('mousemove', (evt) => {
-        const tt = this.tooltip.nativeElement;
-        document.getElementById('tt-dates')!.textContent = `${d.startDate} - ${d.endDate}`;
-        document.getElementById('tt-progress')!.textContent = `Progreso: ${d.progress}%`;
+        // Only show tooltip if NOT dragging (d3.drag prevents click/hover propagation issues usually, but good check)
+        if (evt.buttons === 0) {
+          const tt = this.tooltip.nativeElement;
+          document.getElementById('tt-dates')!.textContent = `${d.startDate} - ${d.endDate}`;
+          document.getElementById('tt-progress')!.textContent = `Progreso: ${d.progress}%`;
 
-        tt.style.opacity = '1';
-        tt.style.left = (evt.clientX + 10) + 'px';
-        tt.style.top = (evt.clientY + 10) + 'px';
+          tt.style.opacity = '1';
+          tt.style.left = (evt.clientX + 10) + 'px';
+          tt.style.top = (evt.clientY + 10) + 'px';
+        }
       })
         .on('mouseleave', () => {
-          this.tooltip.nativeElement.style.opacity = '0';
+          if (d3.event && d3.event.buttons === 0) {
+            this.tooltip.nativeElement.style.opacity = '0';
+          }
         })
         .on('click', () => {
           this.projectSelected.emit(d.id);
         });
 
       // Label (Only if enough space)
-      // UPDATED: Now shows label for FINALIZADO as well
       if (width > 30) {
         let labelText = '';
         let labelClass = '';
