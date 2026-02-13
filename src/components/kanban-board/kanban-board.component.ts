@@ -9,7 +9,7 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="flex flex-col h-full overflow-hidden">
+    <div class="flex flex-col h-full overflow-hidden animate-fade-in">
       <!-- Header / Filters -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
          <div>

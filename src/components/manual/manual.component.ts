@@ -8,7 +8,7 @@ import { DataService } from '../../services/data.service';
    standalone: true,
    imports: [CommonModule],
    template: `
-    <div class="flex h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
+    <div class="flex h-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative animate-fade-in">
             <!-- Sidenav Menu -->
       <div class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col shrink-0">
         <div class="p-6 border-b border-slate-200">

@@ -12,7 +12,7 @@ type ViewMode = 'CARDS' | 'GANTT';
   standalone: true,
   imports: [CommonModule, ProjectFormComponent, GanttChartComponent],
   template: `
-    <div class="h-full flex flex-col">
+    <div class="h-full flex flex-col animate-fade-in">
       <!-- Header / Filters -->
       <div class="flex flex-col xl:flex-row justify-between items-end xl:items-center gap-4 mb-8">
         <div class="flex items-center gap-3">
@@ -222,13 +222,7 @@ type ViewMode = 'CARDS' | 'GANTT';
       }
     </div>
   `,
-  styles: [`
-    .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  `]
+  styles: []
 })
 export class DashboardComponent {
   dataService = inject(DataService);

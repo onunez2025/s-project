@@ -5,10 +5,10 @@ import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angu
 import { DataService, User } from '../../services/data.service';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  template: `
+   selector: 'app-profile',
+   standalone: true,
+   imports: [CommonModule, ReactiveFormsModule, FormsModule],
+   template: `
     <div class="h-full flex flex-col items-center justify-start py-10 animate-fade-in">
       
       <div class="w-full max-w-2xl">
@@ -71,77 +71,74 @@ import { DataService, User } from '../../services/data.service';
       </div>
     </div>
   `,
-  styles: [`
-    .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  `]
+   styles: []
 })
 export class ProfileComponent {
-  dataService = inject(DataService);
-  fb = inject(FormBuilder);
-  
-  currentUser = this.dataService.currentUser;
-  currentAvatar = signal('');
-  isSaving = signal(false);
+   dataService = inject(DataService);
+   fb = inject(FormBuilder);
 
-  profileForm = this.fb.group({
-    name: ['', Validators.required],
-    email: [{value: '', disabled: true}],
-    password: ['', [Validators.minLength(4)]]
-  });
+   currentUser = this.dataService.currentUser;
+   currentAvatar = signal('');
+   isSaving = signal(false);
 
-  constructor() {
-    const user = this.currentUser();
-    if (user) {
-       this.currentAvatar.set(user.avatar);
-       this.profileForm.patchValue({
-          name: user.name,
-          email: user.email
-       });
-    }
-  }
+   profileForm = this.fb.group({
+      name: ['', Validators.required],
+      email: [{ value: '', disabled: true }],
+      password: ['', [Validators.minLength(4)]]
+   });
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-         this.currentAvatar.set(e.target.result);
-         this.profileForm.markAsDirty();
-      };
-      reader.readAsDataURL(file);
-    }
-  }
+   constructor() {
+      const user = this.currentUser();
+      if (user) {
+         this.currentAvatar.set(user.avatar);
+         this.profileForm.patchValue({
+            name: user.name,
+            email: user.email
+         });
+      }
+   }
 
-  onSubmit() {
-     if (this.profileForm.valid) {
-        this.isSaving.set(true);
-        const user = this.currentUser();
-        if (!user) return;
+   onFileSelected(event: any) {
+      const file = event.target.files[0];
+      if (file) {
+         const reader = new FileReader();
+         reader.onload = (e: any) => {
+            this.currentAvatar.set(e.target.result);
+            this.profileForm.markAsDirty();
+         };
+         reader.readAsDataURL(file);
+      }
+   }
 
-        const val = this.profileForm.value;
-        const updatedUser: User = {
-           ...user,
-           name: val.name!,
-           avatar: this.currentAvatar()
-        };
-        
-        if (val.password) {
-           updatedUser.password = val.password;
-        }
+   onSubmit() {
+      if (this.profileForm.valid) {
+         this.isSaving.set(true);
+         const user = this.currentUser();
+         if (!user) return;
 
-        // Simulate API delay
-        setTimeout(() => {
-           this.dataService.updateUser(updatedUser);
-           this.isSaving.set(false);
-           alert('Perfil actualizado correctamente.');
-           this.profileForm.reset({ 
-              name: updatedUser.name, 
-              email: updatedUser.email, 
-              password: '' 
-           });
-           this.profileForm.markAsPristine();
-        }, 800);
-     }
-  }
+         const val = this.profileForm.value;
+         const updatedUser: User = {
+            ...user,
+            name: val.name!,
+            avatar: this.currentAvatar()
+         };
+
+         if (val.password) {
+            updatedUser.password = val.password;
+         }
+
+         // Simulate API delay
+         setTimeout(() => {
+            this.dataService.updateUser(updatedUser);
+            this.isSaving.set(false);
+            alert('Perfil actualizado correctamente.');
+            this.profileForm.reset({
+               name: updatedUser.name,
+               email: updatedUser.email,
+               password: ''
+            });
+            this.profileForm.markAsPristine();
+         }, 800);
+      }
+   }
 }
