@@ -252,14 +252,9 @@ export class KanbanBoardComponent {
     let activities = this.dataService.getAllActivities();
 
     // 1. Filter by User Hierarchy logic
-    if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') {
-      // Managers see everything in their scope (filteredProjects logic already handles scope mostly, but let's be safe)
-      const visibleProjectIds = this.dataService.filteredProjects().map(p => p.id);
-      activities = activities.filter(a => visibleProjectIds.includes(a.projectId));
-    } else {
-      // Assistants only see THEIR tasks
-      activities = activities.filter(a => a.responsibleId === user.id);
-    }
+    // 1. Filter by User Hierarchy logic -> NOW STRICTLY 'MY TASKS'
+    // The user requested that this view ONLY shows tasks assigned to the user, regardless of role.
+    activities = activities.filter(a => a.responsibleId === user.id);
 
     // 2. Filter by Selected Project Dropdown
     if (this.selectedProjectId() !== 0) {
