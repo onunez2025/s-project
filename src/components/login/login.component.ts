@@ -79,7 +79,7 @@ import { DataService } from '../../services/data.service';
                    </svg>
                    Iniciando Sesión...
                 } @else {
-                   Ingresar al Ambiente QAS
+                   Ingresar
                 }
              </button>
 

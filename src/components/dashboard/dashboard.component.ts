@@ -135,7 +135,7 @@ type ViewMode = 'CARDS' | 'GANTT';
 
               <!-- Content -->
               <div class="mb-6 flex-1">
-                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
                 <!-- Display Joined Area Names -->
                 <p class="text-slate-500 text-sm mb-3 font-medium">{{ getProjectAreas(proj) }}</p>
                 <p class="text-slate-400 text-sm line-clamp-2 leading-relaxed h-10">{{ proj.description || 'Sin descripción.' }}</p>

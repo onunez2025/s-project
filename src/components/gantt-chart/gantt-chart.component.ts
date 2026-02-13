@@ -66,7 +66,7 @@ type TimeScale = 'Day' | 'Week' | 'Month';
       <div class="flex flex-1 overflow-hidden relative">
          
          <!-- LEFT PANEL: Table Info (Fixed Width) -->
-         <div class="w-[320px] flex-shrink-0 border-r border-slate-200 flex flex-col bg-white z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+         <div class="w-[420px] flex-shrink-0 border-r border-slate-200 flex flex-col bg-white z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
             
             <!-- Table Header -->
             <div class="h-[50px] border-b border-slate-100 flex items-center px-6 bg-slate-50/80 shrink-0">
@@ -94,7 +94,7 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                                } @else {
                                  <div class="h-2 w-2 rounded-full bg-slate-300 shrink-0"></div>
                                }
-                               <span class="text-sm font-bold text-slate-700 truncate group-hover:text-blue-700 transition-colors cursor-pointer" [title]="p.name">{{ p.name }}</span>
+                               <span class="text-sm font-bold text-slate-700 group-hover:text-blue-700 transition-colors cursor-pointer leading-tight" [title]="p.name">{{ p.name }}</span>
                              </div>
                              <div class="text-[10px] text-slate-400 truncate pl-4 flex gap-2">
                                 <span>{{ p.status.replace('_', ' ') }}</span>
