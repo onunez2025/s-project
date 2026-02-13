@@ -2,6 +2,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService, User } from './services/data.service';
+import { ThemeService } from './services/theme.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
@@ -22,11 +23,11 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
   template: `
     @if (dataService.isAuthenticated()) {
       <!-- Main Application Layout -->
-      <div class="h-screen w-full flex bg-[#F3F4F6] font-sans overflow-hidden">
+      <div class="h-screen w-full flex bg-slate-50 dark:bg-slate-950 font-sans overflow-hidden text-slate-900 dark:text-slate-100 transition-colors duration-300">
         
         <!-- Sidebar -->
-        <aside class="w-72 bg-[#0F172A] text-slate-300 hidden md:flex flex-col shadow-2xl z-20 transition-all font-medium relative h-full">
-          <div class="h-20 flex items-center px-8 border-b border-slate-800/50 bg-[#0F172A] shrink-0">
+        <aside class="w-72 bg-slate-900 dark:bg-slate-950 border-r border-transparent dark:border-slate-800 text-slate-300 hidden md:flex flex-col shadow-2xl z-20 transition-all font-medium relative h-full">
+          <div class="h-20 flex items-center px-8 border-b border-slate-800/50 bg-slate-900 dark:bg-slate-950 shrink-0">
             <div class="flex items-center gap-2">
               <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">S</div>
               <span class="text-2xl font-bold tracking-tight text-white">
@@ -152,8 +153,23 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
                 <div class="fixed inset-0 z-20 cursor-default" (click)="showUserMenu.set(false)"></div>
              }
 
+             <!-- Theme Toggle -->
+             <button (click)="themeService.toggleTheme()" 
+                class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200 hover:bg-slate-800 text-slate-400 w-full text-left mt-8 mb-4">
+                <div class="mr-3 group-hover:text-yellow-400 transition-colors">
+                  @if (themeService.theme() === 'dark') {
+                    <!-- Sun Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                  } @else {
+                    <!-- Moon Icon -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                  }
+                </div>
+                <span class="font-medium text-sm text-slate-400 group-hover:text-slate-200">{{ themeService.theme() === 'dark' ? 'Modo Claro' : 'Modo Oscuro' }}</span>
+             </button>
+
              <!-- Trigger Bar -->
-             <div (click)="showUserMenu.set(!showUserMenu())" class="p-6 border-t border-slate-800/50 bg-[#0F172A] cursor-pointer hover:bg-slate-800/50 transition-colors group z-30 relative">
+             <div (click)="showUserMenu.set(!showUserMenu())" class="p-6 border-t border-slate-800/50 bg-slate-900 dark:bg-slate-950 cursor-pointer hover:bg-slate-800/50 transition-colors group z-30 relative">
                 <div class="flex items-center gap-3">
                   <div class="relative">
                      <img [src]="dataService.currentUser()?.avatar" class="h-10 w-10 rounded-full bg-slate-700 border-2 border-slate-600 object-cover group-hover:border-blue-500 transition-colors">
@@ -184,7 +200,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
           </header>
 
           <!-- Desktop Header Bar -->
-          <header class="hidden md:flex h-16 bg-white border-b border-slate-100 items-center justify-between px-8 shrink-0 z-10">
+          <header class="hidden md:flex h-16 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 items-center justify-between px-8 shrink-0 z-10 transition-colors duration-300">
              <div class="flex items-center gap-4 text-slate-500">
                <span class="text-sm font-medium">Dashboard</span>
                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
@@ -257,5 +273,6 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
 })
 export class AppComponent {
   dataService = inject(DataService);
+  themeService = inject(ThemeService);
   showUserMenu = signal(false);
 }

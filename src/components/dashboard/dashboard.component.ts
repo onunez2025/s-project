@@ -17,8 +17,8 @@ type ViewMode = 'CARDS' | 'GANTT';
       <div class="flex flex-col xl:flex-row justify-between items-end xl:items-center gap-4 mb-8">
         <div class="flex items-center gap-3">
           <div>
-            <h2 class="text-3xl font-bold text-slate-800">Proyectos</h2>
-            <p class="text-slate-500 mt-1">Gestiona y supervisa tus proyectos activos</p>
+            <h2 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Proyectos</h2>
+            <p class="text-slate-500 dark:text-slate-400 mt-1">Gestiona y supervisa tus proyectos activos</p>
           </div>
           <button (click)="goToManual.emit()" class="text-slate-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-red-50 mt-1" title="Ayuda">
              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,7 +94,7 @@ type ViewMode = 'CARDS' | 'GANTT';
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-10 animate-fade-in">
           @for (proj of displayProjects(); track proj.id) {
             <!-- Card Component -->
-            <div (click)="onSelect.emit(proj.id)" class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
+            <div (click)="onSelect.emit(proj.id)" class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 dark:border-slate-700 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
               
               <!-- Top Status Bar (Color Coded) -->
               <div class="absolute top-0 left-0 w-full h-1"
@@ -142,7 +142,7 @@ type ViewMode = 'CARDS' | 'GANTT';
 
               <!-- Content -->
               <div class="mb-6 flex-1">
-                <h3 class="text-lg font-bold text-slate-800 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 line-clamp-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
                 <!-- Display Joined Area Names -->
                 <p class="text-slate-500 text-sm mb-3 font-medium">{{ getProjectAreas(proj) }}</p>
                 <p class="text-slate-400 text-sm line-clamp-2 leading-relaxed h-10">{{ proj.description || 'Sin descripción.' }}</p>
