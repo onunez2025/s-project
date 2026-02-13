@@ -51,11 +51,11 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-move hover:shadow-md transition-all active:cursor-grabbing group"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
-                     [class.border-l-4]="isOverdue(act)"
-                     [class.border-l-red-500]="isOverdue(act)">
+                     [class.border-l-4]="getUrgencyColor(act) !== ''"
+                     [ngClass]="getUrgencyColor(act)">
                    
                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100 truncate max-w-[120px]">
+                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-50 text-slate-600 border border-slate-200 truncate max-w-[120px]">
                         {{ getProjectName(act.projectId) }}
                       </span>
                       @if (hasFiles(act.projectId)) {
@@ -70,8 +70,8 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                         <img [src]="getUser(act.responsibleId)?.avatar" class="w-6 h-6 rounded-full bg-slate-200" title="Responsable">
                         <span class="text-xs text-slate-500 font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
                      </div>
-                     <span class="text-[10px] font-bold" [class.text-red-500]="isOverdue(act)" [class.text-slate-400]="!isOverdue(act)">
-                        {{ isOverdue(act) ? 'Vencida' : act.estimatedEndDate }}
+                     <span class="text-[10px] font-bold select-none" [ngClass]="getUrgencyTextClass(act)">
+                        {{ getUrgencyLabel(act) }}
                      </span>
                    </div>
                 </div>
@@ -230,10 +230,43 @@ export class KanbanBoardComponent {
     return this.dataService.getFilesByProject(projectId).length > 0;
   }
 
-  isOverdue(act: Activity): boolean {
-    if (act.status === 'REALIZADA' || !act.estimatedEndDate) return false;
-    const today = new Date().toISOString().split('T')[0];
-    return act.estimatedEndDate < today;
+  getUrgencyColor(act: Activity): 'border-l-red-500' | 'border-l-yellow-500' | 'border-l-green-500' | '' {
+    if (act.status === 'REALIZADA' || !act.estimatedEndDate) return '';
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Parse estimatedEndDate (assuming YYYY-MM-DD string)
+    // We append 'T00:00:00' to ensure local time or treat as UTC? 
+    // Standard practice here: assume string is YYYY-MM-DD
+    const [year, month, day] = act.estimatedEndDate.split('-').map(Number);
+    const targetDate = new Date(year, month - 1, day);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const diffTime = targetDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return 'border-l-red-500'; // Overdue
+    if (diffDays <= 3) return 'border-l-yellow-500'; // Due Soon (<= 3 days)
+    if (diffDays <= 7) return 'border-l-green-500'; // Upcoming (<= 7 days)
+
+    return ''; // Normal
+  }
+
+  getUrgencyTextClass(act: Activity): string {
+    const colorClass = this.getUrgencyColor(act);
+    if (colorClass === 'border-l-red-500') return 'text-red-500';
+    if (colorClass === 'border-l-yellow-500') return 'text-yellow-600';
+    if (colorClass === 'border-l-green-500') return 'text-green-600';
+    return 'text-slate-400';
+  }
+
+  getUrgencyLabel(act: Activity): string {
+    const colorClass = this.getUrgencyColor(act);
+    if (colorClass === 'border-l-red-500') return 'Vencida';
+    if (colorClass === 'border-l-yellow-500') return 'Próxima';
+    if (colorClass === 'border-l-green-500') return 'Esta semana';
+    return act.estimatedEndDate || '';
   }
 
   // --- Drag & Drop Logic ---
