@@ -22,19 +22,11 @@ export class ThemeService {
     }
 
     private loadTheme() {
-        const saved = localStorage.getItem('sole_theme_preference') as Theme;
-        if (saved) {
-            this.theme.set(saved);
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            this.theme.set('dark');
-        }
+        // Always set to light
+        this.theme.set('light');
     }
 
     private applyTheme(theme: Theme) {
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+        document.documentElement.classList.remove('dark');
     }
 }

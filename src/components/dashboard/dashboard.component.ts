@@ -87,7 +87,7 @@ type ViewMode = 'CARDS' | 'GANTT';
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-10 animate-fade-in">
           @for (proj of displayProjects(); track proj.id) {
             <!-- Card Component -->
-            <div (click)="onSelect.emit(proj.id)" class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 dark:border-slate-700 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
+            <div (click)="onSelect.emit(proj.id)" class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
               
               <!-- Top Status Bar (Color Coded) -->
               <div class="absolute top-0 left-0 w-full h-1"
