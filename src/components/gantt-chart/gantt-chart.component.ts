@@ -327,7 +327,7 @@ export class GanttChartComponent implements OnDestroy {
 
       let color = '#cbd5e1';
       if (d.status === 'FINALIZADO') color = '#10b981';
-      else if (d.status === 'EN_PROCESO') color = '#3b82f6';
+      else if (d.status === 'EN_PROCESO') color = '#ef4444'; // Red-500
 
       // Bar
       const rect = group.append('rect')
@@ -364,7 +364,7 @@ export class GanttChartComponent implements OnDestroy {
 
         if (d.status === 'EN_PROCESO') {
           labelText = 'En Curso';
-          labelClass = 'text-[10px] font-bold fill-blue-600 uppercase tracking-wide';
+          labelClass = 'text-[10px] font-bold fill-red-700 uppercase tracking-wide';
         } else if (d.status === 'PLANIFICACION') {
           labelText = 'Plan';
           labelClass = 'text-[10px] font-bold fill-slate-400 uppercase tracking-wide';
