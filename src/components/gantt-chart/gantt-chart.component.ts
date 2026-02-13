@@ -90,7 +90,7 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                                @if(p.status === 'FINALIZADO') {
                                  <div class="h-2 w-2 rounded-full bg-green-500 shrink-0"></div>
                                } @else if (p.status === 'EN_PROCESO') {
-                                 <div class="h-2 w-2 rounded-full bg-blue-500 shrink-0 animate-pulse"></div>
+                                 <div class="h-2 w-2 rounded-full bg-red-500 shrink-0 animate-pulse"></div>
                                } @else {
                                  <div class="h-2 w-2 rounded-full bg-slate-300 shrink-0"></div>
                                }
