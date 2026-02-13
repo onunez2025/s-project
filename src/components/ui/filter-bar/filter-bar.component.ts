@@ -123,7 +123,13 @@ export class FilterBarComponent {
     selectedAreaId: number | null = null;
     selectedUserId: number | null = null;
 
+    isDropdownOpen = false;
+
     private searchDebounce: any;
+
+    toggleDropdown() {
+        this.isDropdownOpen = !this.isDropdownOpen;
+    }
 
     onSearchChange(val: string) {
         this.searchText = val;
