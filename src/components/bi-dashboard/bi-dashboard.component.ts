@@ -3,17 +3,21 @@ import { Component, inject, signal, computed, effect, ViewChild, ElementRef, out
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataService, Project, Currency, ImpactIndicator } from '../../services/data.service';
+import { DueSoonWidgetComponent } from '../ui/due-soon-widget/due-soon-widget.component';
 import * as d3 from 'd3';
 
 @Component({
    selector: 'app-bi-dashboard',
    standalone: true,
-   imports: [CommonModule, FormsModule],
+   imports: [CommonModule, FormsModule, DueSoonWidgetComponent],
    template: `
-    <div class="w-full flex flex-col space-y-6 animate-fade-in pb-20">
+    <div class="flex flex-col xl:flex-row h-full gap-6 animate-fade-in pb-20">
       
-      <!-- Filters Bar -->
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center z-20 sticky top-0 md:relative">
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col space-y-6 min-w-0">
+      
+       <!-- Filters Bar -->
+       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center z-20 sticky top-0 md:relative">
          <div class="flex items-center gap-2">
             <h2 class="font-bold text-slate-700 text-lg">Dashboard Ejecutivo</h2>
             <span class="px-2 py-0.5 rounded-md bg-red-50 text-red-700 text-xs font-bold border border-red-100">BI</span>
@@ -194,6 +198,13 @@ import * as d3 from 'd3';
             </table>
          </div>
       </div>
+      </div>
+    
+      <!-- Right Sidebar (Tasks) -->
+      <div class="w-full xl:w-80 shrink-0">
+          <app-due-soon-widget></app-due-soon-widget>
+      </div>
+
     </div>
   `,
    styles: [`
