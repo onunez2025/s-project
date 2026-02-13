@@ -526,6 +526,18 @@ export class DataService {
     this.recalculateProjectActualStart(activity.projectId);
   }
 
+  async updateActivity(activity: Partial<Activity> & { id: number }) {
+    const payload: any = {};
+    if (activity.description !== undefined) payload.description = activity.description;
+    if (activity.responsibleId !== undefined) payload.responsible_id = activity.responsibleId;
+    if (activity.startDate !== undefined) payload.start_date = activity.startDate;
+    if (activity.estimatedEndDate !== undefined) payload.estimated_end_date = activity.estimatedEndDate;
+    if (activity.projectId !== undefined) payload.project_id = activity.projectId;
+
+    await this.supabase.from('activities').update(payload).eq('id', activity.id);
+    await this.loadActivities();
+  }
+
   async deleteActivity(activityId: number) {
     const activity = this._activities().find(a => a.id === activityId);
     if (!activity) return;
