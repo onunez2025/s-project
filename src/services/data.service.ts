@@ -979,4 +979,41 @@ export class DataService {
       await this.loadManualAssets();
     }
   }
+
+  // --- Dependencies ---
+
+  async loadDependencies() {
+    const { data } = await this.supabase.from('project_dependencies').select('*');
+    if (data) {
+      const mapped: ProjectDependency[] = data.map((d: any) => ({
+        id: d.id,
+        sourceProjectId: d.source_project_id,
+        targetProjectId: d.target_project_id,
+        type: d.type
+      }));
+      this._dependencies.set(mapped);
+    }
+  }
+
+  getAllDependencies() { return this._dependencies(); }
+
+  async addDependency(sourceId: number, targetId: number) {
+    // Prevent duplicates
+    const exists = this._dependencies().some(d => d.sourceProjectId === sourceId && d.targetProjectId === targetId);
+    if (exists) return;
+
+    const { error } = await this.supabase.from('project_dependencies').insert({
+      source_project_id: sourceId,
+      target_project_id: targetId,
+      type: 'finish_to_start'
+    });
+
+    if (error) console.error('Error adding dependency:', error);
+    await this.loadDependencies();
+  }
+
+  async deleteDependency(id: number) {
+    await this.supabase.from('project_dependencies').delete().eq('id', id);
+    await this.loadDependencies();
+  }
 }
