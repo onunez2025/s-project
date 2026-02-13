@@ -494,7 +494,7 @@ export class DataService {
     if (newStatus === 'PENDIENTE') {
       updatePayload.actual_start_date = null;
       updatePayload.actual_end_date = null;
-    } else if (newStatus === 'EN_PROGRESO') {
+    } else if (newStatus === 'EN_PROCESO') {
       if (!activity.actualStartDate) updatePayload.actual_start_date = today;
       updatePayload.actual_end_date = null;
     } else if (newStatus === 'REALIZADA') {

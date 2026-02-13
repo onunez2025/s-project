@@ -828,7 +828,7 @@ export class ProjectDetailComponent {
 
   startActivity(act: Activity) {
     if (this.canEditActivity(act)) {
-      this.dataService.updateActivityStatus(act.id, 'EN_PROGRESO');
+      this.dataService.updateActivityStatus(act.id, 'EN_PROCESO');
     }
   }
 
