@@ -113,6 +113,13 @@ export interface ManualAsset {
   imageUrl: string;
 }
 
+export interface ProjectDependency {
+  id: number;
+  sourceProjectId: number;
+  targetProjectId: number;
+  type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
+}
+
 export interface Project {
   id: number;
   name: string;
@@ -146,6 +153,7 @@ export class DataService {
   private _messages = signal<ProjectMessage[]>([]);
   private _notifications = signal<AppNotification[]>([]);
   private _manualAssets = signal<ManualAsset[]>([]);
+  private _dependencies = signal<ProjectDependency[]>([]);
 
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
@@ -175,6 +183,7 @@ export class DataService {
     await this.loadAllMessages();
     await this.loadNotifications();
     await this.loadManualAssets();
+    await this.loadDependencies();
     this.setupRealtimeSubscriptions();
     this.checkSession();
   }
@@ -222,6 +231,9 @@ export class DataService {
               break;
             case 'app_manual_assets':
               this.loadManualAssets();
+              break;
+            case 'project_dependencies':
+              this.loadDependencies();
               break;
           }
         }

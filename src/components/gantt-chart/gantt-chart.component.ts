@@ -441,7 +441,10 @@ export class GanttChartComponent implements OnDestroy {
       }
     });
 
-    // 4. Today Line
+    // 4. Dependencies (Arrows)
+    this.drawDependencies(svgBody, x, data);
+
+    // 5. Today Line
     const today = new Date();
     if (today >= minDate && today <= maxDate) {
       this.todayX = x(today);
@@ -462,6 +465,74 @@ export class GanttChartComponent implements OnDestroy {
         .attr('cx', this.todayX).attr('cy', 25)
         .attr('r', 3).attr('fill', '#3b82f6');
     }
+  }
+
+  private drawDependencies(svg: any, x: any, projects: Project[]) {
+    // Define Arrow Marker
+    svg.append('defs').append('marker')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '0 0 10 10')
+      .attr('refX', 8) // Offset to not overlap with rect slightly
+      .attr('refY', 5)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M 0 0 L 10 5 L 0 10 z')
+      .attr('fill', '#94a3b8');
+
+    const dependencies = this.dataService.getAllDependencies();
+    const barHeight = 24;
+
+    dependencies.forEach(dep => {
+      const source = projects.find(p => p.id === dep.sourceProjectId);
+      const target = projects.find(p => p.id === dep.targetProjectId);
+
+      if (!source || !target) return;
+
+      const sourceIdx = projects.findIndex(p => p.id === source.id);
+      const targetIdx = projects.findIndex(p => p.id === target.id);
+
+      if (sourceIdx === -1 || targetIdx === -1) return;
+
+      // Coordinates
+      const x1 = x(new Date(source.endDate));
+      const y1 = (sourceIdx * this.rowHeight) + (this.rowHeight / 2);
+
+      const x2 = x(new Date(target.startDate));
+      const y2 = (targetIdx * this.rowHeight) + (this.rowHeight / 2);
+
+      // Path Logic
+      // If target is after source (visually right), draw simple curve
+      // If target is before (visually left), needs loop
+
+      const path = d3.path();
+      path.moveTo(x1, y1);
+
+      const deltaX = x2 - x1;
+      const deltaY = y2 - y1;
+
+      if (deltaX > 20) {
+        // Simple S-curve
+        const cp1x = x1 + (deltaX / 2);
+        const cp2x = x1 + (deltaX / 2);
+        path.bezierCurveTo(cp1x, y1, cp2x, y2, x2, y2);
+      } else {
+        // Loop back or tight S
+        path.lineTo(x1 + 10, y1);
+        path.lineTo(x1 + 10, y2 - (deltaY > 0 ? 10 : -10)); // Go visually towards Y
+        path.lineTo(x2 - 10, y2);
+        path.lineTo(x2, y2);
+      }
+
+      svg.append('path')
+        .attr('d', path.toString())
+        .attr('stroke', '#94a3b8')
+        .attr('stroke-width', 1.5)
+        .attr('fill', 'none')
+        .attr('marker-end', 'url(#arrowhead)')
+        .style('pointer-events', 'none'); // Don't block interactions
+    });
   }
 
   // --- Header Helpers ---
