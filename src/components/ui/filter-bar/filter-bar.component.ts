@@ -34,29 +34,37 @@ export interface FilterState {
       </div>
 
       <!-- Filters Group -->
-      <div class="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
         
         <!-- Status Filter -->
-        <div class="relative group">
-            <button class="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+        <div class="relative">
+            <button 
+                (click)="toggleDropdown()" 
+                class="flex items-center gap-2 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+                [class.ring-2]="isDropdownOpen"
+                [class.ring-blue-500]="isDropdownOpen">
                 <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Estado</span>
                 <span *ngIf="selectedStatus.length > 0" class="ml-1 bg-blue-100 text-blue-800 text-xs font-bold px-1.5 rounded-full">{{ selectedStatus.length }}</span>
             </button>
+            
+            <!-- Backdrop for closing -->
+            <div *ngIf="isDropdownOpen" (click)="isDropdownOpen = false" class="fixed inset-0 z-40 cursor-default"></div>
+
             <!-- Dropdown -->
-            <div class="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-lg shadow-lg hidden group-hover:block z-50 p-2">
+            <div *ngIf="isDropdownOpen" class="absolute right-0 top-full mt-1 w-48 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 animate-fade-in">
                 <div class="flex flex-col gap-1">
-                    <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer">
+                    <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer select-none">
                         <input type="checkbox" [checked]="selectedStatus.includes('PLANIFICACION')" (change)="toggleStatus('PLANIFICACION')" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                         <span class="text-sm text-slate-600">Planificación</span>
                     </label>
-                    <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer">
+                    <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer select-none">
                         <input type="checkbox" [checked]="selectedStatus.includes('EN_PROCESO')" (change)="toggleStatus('EN_PROCESO')" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                         <span class="text-sm text-slate-600">En Proceso</span>
                     </label>
-                    <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer">
+                    <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer select-none">
                         <input type="checkbox" [checked]="selectedStatus.includes('FINALIZADO')" (change)="toggleStatus('FINALIZADO')" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                         <span class="text-sm text-slate-600">Finalizado</span>
                     </label>
