@@ -287,6 +287,13 @@ export class DashboardComponent {
       );
     }
 
+    // 5. SORT BY DEADLINE (ASC)
+    projects.sort((a, b) => {
+      const dateA = new Date(a.endDate).getTime();
+      const dateB = new Date(b.endDate).getTime();
+      return dateA - dateB;
+    });
+
     return projects;
   });
 
