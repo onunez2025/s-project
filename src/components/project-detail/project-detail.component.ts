@@ -708,8 +708,15 @@ export class ProjectDetailComponent {
       // Force the browser to completely bypass Angular's routing 
       // by setting location for absolute paths or utilizing a raw <a> click securely.
       try {
-        const isRelative = file.url.startsWith('/');
-        const finalUrl = isRelative ? window.location.origin + file.url : file.url;
+        let finalUrl = file.url;
+        if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+          if (finalUrl.startsWith('/')) {
+            finalUrl = window.location.origin + finalUrl;
+          } else {
+            // Handles cases where DB data implies a domain but lacks the http protocol
+            finalUrl = 'https://' + finalUrl;
+          }
+        }
 
         // window.open with _blank will not use Angular Router
         window.open(finalUrl, '_blank', 'noopener,noreferrer');
