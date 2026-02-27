@@ -525,9 +525,15 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                         <p class="text-[10px] text-slate-400">{{ file.uploadDate }}</p>
                      </div>
                      <div class="flex flex-col gap-1">
-                        <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
-                           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4 4m4 4V4"></path></svg>
-                        </a>
+                        @if (file.url && file.url !== '#') {
+                           <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4 4m4 4V4"></path></svg>
+                           </a>
+                        } @else {
+                           <button (click)="alertNoUrl()" class="text-slate-300 hover:text-red-500 p-1 cursor-not-allowed" title="Archivo no disponible">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                           </button>
+                        }
                         @if (canManageActivities()) {
                            <button (click)="deleteFile(file.id)" class="text-slate-400 hover:text-red-500 p-1" title="Eliminar">
                               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -702,6 +708,10 @@ export class ProjectDetailComponent {
   files = computed(() => {
     return this.dataService.getFilesByProject(this.projectId());
   });
+
+  alertNoUrl() {
+    alert('Este archivo es de prueba (Mock) y no tiene un enlace real de descarga en la base de datos.');
+  }
 
   indicators = computed(() => {
     return this.dataService.getIndicatorsByProject(this.projectId());
