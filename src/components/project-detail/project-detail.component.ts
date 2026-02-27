@@ -705,22 +705,17 @@ export class ProjectDetailComponent {
 
   downloadFile(file: ProjectFile) {
     if (file.url) {
-      // Create a temporary anchor element
-      const a = document.createElement('a');
+      // Force the browser to completely bypass Angular's routing 
+      // by setting location for absolute paths or utilizing a raw <a> click securely.
+      try {
+        const isRelative = file.url.startsWith('/');
+        const finalUrl = isRelative ? window.location.origin + file.url : file.url;
 
-      // Force absolute URL to bypass SPA routing for relative mock files
-      const url = file.url.startsWith('/')
-        ? `${window.location.origin}${file.url}`
-        : file.url;
-
-      a.href = url;
-      a.target = '_blank';
-      a.download = file.name || 'download'; // Try to force download with filename
-
-      // Append, click, and remove
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+        // window.open with _blank will not use Angular Router
+        window.open(finalUrl, '_blank', 'noopener,noreferrer');
+      } catch (err) {
+        console.error('Error opening file url:', err);
+      }
     } else {
       console.error('No URL found for file:', file);
       alert('Error: No se pudo encontrar el enlace de descarga del archivo.');
