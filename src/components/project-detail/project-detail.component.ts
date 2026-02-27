@@ -525,9 +525,9 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                         <p class="text-[10px] text-slate-400">{{ file.uploadDate }}</p>
                      </div>
                      <div class="flex flex-col gap-1">
-                        <button (click)="downloadFile(file)" class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
+                        <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4 4m4 4V4"></path></svg>
-                        </button>
+                        </a>
                         @if (canManageActivities()) {
                            <button (click)="deleteFile(file.id)" class="text-slate-400 hover:text-red-500 p-1" title="Eliminar">
                               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -702,32 +702,6 @@ export class ProjectDetailComponent {
   files = computed(() => {
     return this.dataService.getFilesByProject(this.projectId());
   });
-
-  downloadFile(file: ProjectFile) {
-    if (file.url) {
-      // Force the browser to completely bypass Angular's routing 
-      // by setting location for absolute paths or utilizing a raw <a> click securely.
-      try {
-        let finalUrl = file.url;
-        if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
-          if (finalUrl.startsWith('/')) {
-            finalUrl = window.location.origin + finalUrl;
-          } else {
-            // Handles cases where DB data implies a domain but lacks the http protocol
-            finalUrl = 'https://' + finalUrl;
-          }
-        }
-
-        // window.open with _blank will not use Angular Router
-        window.open(finalUrl, '_blank', 'noopener,noreferrer');
-      } catch (err) {
-        console.error('Error opening file url:', err);
-      }
-    } else {
-      console.error('No URL found for file:', file);
-      alert('Error: No se pudo encontrar el enlace de descarga del archivo.');
-    }
-  }
 
   indicators = computed(() => {
     return this.dataService.getIndicatorsByProject(this.projectId());
