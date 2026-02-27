@@ -525,7 +525,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                         <p class="text-[10px] text-slate-400">{{ file.uploadDate }}</p>
                      </div>
                      <div class="flex flex-col gap-1">
-                        <button class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
+                        <button (click)="downloadFile(file)" class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4 4m4 4V4"></path></svg>
                         </button>
                         @if (canManageActivities()) {
@@ -702,6 +702,15 @@ export class ProjectDetailComponent {
   files = computed(() => {
     return this.dataService.getFilesByProject(this.projectId());
   });
+
+  downloadFile(file: ProjectFile) {
+    if (file.url) {
+      window.open(file.url, '_blank');
+    } else {
+      console.error('No URL found for file:', file);
+      alert('Error: No se pudo encontrar el enlace de descarga del archivo.');
+    }
+  }
 
   indicators = computed(() => {
     return this.dataService.getIndicatorsByProject(this.projectId());
