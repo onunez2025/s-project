@@ -705,7 +705,22 @@ export class ProjectDetailComponent {
 
   downloadFile(file: ProjectFile) {
     if (file.url) {
-      window.open(file.url, '_blank');
+      // Create a temporary anchor element
+      const a = document.createElement('a');
+
+      // Force absolute URL to bypass SPA routing for relative mock files
+      const url = file.url.startsWith('/')
+        ? `${window.location.origin}${file.url}`
+        : file.url;
+
+      a.href = url;
+      a.target = '_blank';
+      a.download = file.name || 'download'; // Try to force download with filename
+
+      // Append, click, and remove
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } else {
       console.error('No URL found for file:', file);
       alert('Error: No se pudo encontrar el enlace de descarga del archivo.');
