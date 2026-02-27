@@ -500,10 +500,19 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                 <div class="border-2 border-dashed border-blue-200 rounded-2xl bg-blue-50/50 p-10 flex flex-col items-center justify-center text-center hover:bg-blue-50 transition-all cursor-pointer group"
                      (click)="fileInput.click()">
                    <div class="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
-                      <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                      @if (isUploading()) {
+                         <svg class="animate-spin h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24">
+                           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                         </svg>
+                      } @else {
+                         <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                      }
                    </div>
-                   <h4 class="text-lg font-bold text-slate-700">Arrastra archivos aquí o haz clic para subir</h4>
-                   <p class="text-slate-500 text-sm mt-1">Soporta PDF, Imágenes y Excel (Simulado)</p>
+                   <h4 class="text-lg font-bold text-slate-700">
+                     {{ isUploading() ? 'Subiendo archivo...' : 'Arrastra archivos aquí o haz clic para subir' }}
+                   </h4>
+                   <p class="text-slate-500 text-sm mt-1">Soporta PDF, Imágenes y Excel</p>
                    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)">
                 </div>
              }
@@ -654,6 +663,7 @@ export class ProjectDetailComponent {
 
   activeTab = signal<DetailTab>('BOARD');
   showEditForm = signal(false);
+  isUploading = signal(false);
 
   // Local state for Adding Activity
   isAddingActivity = signal(false);
@@ -916,23 +926,39 @@ export class ProjectDetailComponent {
     }
   }
 
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      let type: FileType = 'OTRO';
-      if (file.type.includes('pdf')) type = 'PDF';
-      else if (file.type.includes('image')) type = 'IMG';
-      else if (file.type.includes('sheet') || file.type.includes('excel')) type = 'EXCEL';
+      this.isUploading.set(true);
+      try {
+        let type: FileType = 'OTRO';
+        if (file.type.includes('pdf')) type = 'PDF';
+        else if (file.type.includes('image')) type = 'IMG';
+        else if (file.type.includes('sheet') || file.type.includes('excel')) type = 'EXCEL';
 
-      this.dataService.addFile({
-        projectId: this.projectId(),
-        name: file.name,
-        type: type,
-        url: '#', // Mock
-        uploadDate: new Date().toISOString().split('T')[0],
-        uploadedBy: this.currentUser().id
-      });
-      alert('Archivo subido con éxito');
+        const publicUrl = await this.dataService.uploadFileToStorage(file, this.projectId());
+
+        if (publicUrl) {
+          await this.dataService.addFile({
+            projectId: this.projectId(),
+            name: file.name,
+            type: type,
+            url: publicUrl,
+            uploadDate: new Date().toISOString().split('T')[0],
+            uploadedBy: this.currentUser().id
+          });
+          alert('Archivo subido con éxito');
+        } else {
+          alert('Hubo un error al subir el archivo al servidor.');
+        }
+      } catch (err) {
+        console.error('Error uploading file:', err);
+        alert('Hubo un error inesperado al subir el archivo.');
+      } finally {
+        this.isUploading.set(false);
+        // Reset the file input so the same file could be uploaded again if needed
+        event.target.value = '';
+      }
     }
   }
 

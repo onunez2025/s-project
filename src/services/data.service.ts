@@ -572,6 +572,32 @@ export class DataService {
 
   getFilesByProject(projectId: number) { return this._files().filter(f => f.projectId === projectId); }
 
+  async uploadFileToStorage(file: File, projectId: number): Promise<string | null> {
+    const timestamp = new Date().getTime();
+    // Normalize filename to prevent spaces/special chars from breaking URLs easily
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const fileName = `projects/${projectId}/${timestamp}_${safeName}`;
+
+    const { data, error } = await this.supabase.storage
+      .from('project-assets')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('Error uploading to Supabase Storage:', error);
+      return null;
+    }
+
+    // Get public URL
+    const { data: publicUrlData } = this.supabase.storage
+      .from('project-assets')
+      .getPublicUrl(fileName);
+
+    return publicUrlData.publicUrl;
+  }
+
   async addFile(file: Omit<ProjectFile, 'id'>) {
     const payload = {
       project_id: file.projectId,
