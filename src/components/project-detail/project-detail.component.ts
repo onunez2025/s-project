@@ -266,6 +266,10 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                           </div>
                           <!-- Only show delete if user has permission AND activity is NOT done -->
                           @if (canEditActivity(act) && act.status !== 'REALIZADA') {
+                            <!-- Edit Button -->
+                            <button (click)="openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 p-2 transition-all">
+                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
                             <button (click)="deleteActivity(act.id)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 p-2 transition-all">
                               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
@@ -630,6 +634,53 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
             </div>
          }
 
+         @if (isEditingActivity()) {
+             <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
+                <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-200">
+                   <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                       <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                       Editar Tarea
+                   </h3>
+                   
+                   <div class="space-y-4">
+                       <div>
+                         <label class="block text-xs font-bold text-slate-500 mb-1">Descripción</label>
+                         <input type="text" [(ngModel)]="editActivityDesc" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900">
+                       </div>
+                       
+                       <div class="grid grid-cols-2 gap-3">
+                          <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1">Inicio Plan</label>
+                            <input type="date" [(ngModel)]="editActivityStart" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                          </div>
+                          <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1">Fin Plan</label>
+                            <input type="date" [(ngModel)]="editActivityEnd" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                          </div>
+                       </div>
+
+                       <div>
+                         <label class="block text-xs font-bold text-slate-500 mb-1">Responsable</label>
+                         <select [(ngModel)]="editActivityResp" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                            <!-- Show same options as create -->
+                            @for(c of p.areaConfig; track c.areaId) {
+                               <option [value]="c.leaderId">{{ getUser(c.leaderId)?.name }} (Líder {{ getAreaName(c.areaId) }})</option>
+                            }
+                            @for (memberId of p.teamIds; track memberId) {
+                              <option [value]="memberId">{{ getUser(memberId)?.name }}</option>
+                            }
+                         </select>
+                       </div>
+
+                       <div class="flex items-center gap-3 pt-4">
+                          <button (click)="closeEditModal()" class="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
+                          <button (click)="saveEditActivity()" [disabled]="!editActivityDesc() || !editActivityStart() || !editActivityEnd() || !editActivityResp()" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Guardar Cambios</button>
+                       </div>
+                   </div>
+                </div>
+             </div>
+         }
+
          @if (showEditForm()) {
            <app-project-form 
               [projectToEdit]="p"
@@ -671,6 +722,14 @@ export class ProjectDetailComponent {
   newActivityStart = signal('');
   newActivityEnd = signal('');
   newActivityResp = signal<number>(0);
+
+  // Local state for Editing Activity
+  isEditingActivity = signal(false);
+  editingActivityId = signal<number | null>(null);
+  editActivityDesc = signal('');
+  editActivityStart = signal('');
+  editActivityEnd = signal('');
+  editActivityResp = signal<number>(0);
 
   // Local state for Adding Expense
   newExpenseDesc = signal('');
@@ -811,13 +870,13 @@ export class ProjectDetailComponent {
     return acts.length > 0 && acts.every(a => a.status === 'REALIZADA');
   });
 
-  // SECURITY: Can only edit activity if I am the responsible user OR the leader of the specific area of the responsible user
+  // SECURITY: Can only edit activity if I am the responsible user OR the leader of the specific area of the responsible user, OR Admin/Gerente/Jefe
   canEditActivity(act: Activity): boolean {
     const project = this.project();
     if (!project || project.status === 'FINALIZADO') return false;
 
     const user = this.currentUser();
-    if (user.role === 'ADMIN') return true;
+    if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') return true;
     if (act.responsibleId === user.id) return true;
 
     const responsibleUser = this.dataService.getUserById(act.responsibleId);
@@ -844,6 +903,38 @@ export class ProjectDetailComponent {
 
   closeEditForm() {
     this.showEditForm.set(false);
+  }
+
+  openEditModal(act: Activity) {
+    this.editingActivityId.set(act.id);
+    this.editActivityDesc.set(act.description);
+    this.editActivityStart.set(act.startDate);
+    this.editActivityEnd.set(act.estimatedEndDate);
+    this.editActivityResp.set(act.responsibleId);
+    this.isEditingActivity.set(true);
+  }
+
+  closeEditModal() {
+    this.isEditingActivity.set(false);
+    this.editingActivityId.set(null);
+  }
+
+  saveEditActivity() {
+    const id = this.editingActivityId();
+    if (id !== null && this.editActivityDesc() && this.editActivityResp() && this.editActivityStart() && this.editActivityEnd()) {
+      if (new Date(this.editActivityEnd()) < new Date(this.editActivityStart())) {
+        alert('La fecha de fin planificada no puede ser anterior a la fecha de inicio.');
+        return;
+      }
+      this.dataService.updateActivity({
+        id,
+        description: this.editActivityDesc(),
+        responsibleId: +this.editActivityResp(),
+        startDate: this.editActivityStart(),
+        estimatedEndDate: this.editActivityEnd(),
+      });
+      this.closeEditModal();
+    }
   }
 
   startActivity(act: Activity) {
