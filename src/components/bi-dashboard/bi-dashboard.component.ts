@@ -315,7 +315,7 @@ export class BiDashboardComponent {
     return this.filteredProjects().reduce((acc, p) => {
        const indicators = this.dataService.getIndicatorsByProject(p.id);
        const monthlySavings = indicators.reduce((sum, ind) => {
-          const savings = (ind.currentValue - ind.projectedValue) * ind.frequencyPerMonth * ind.unitCost;
+          const savings = (ind.currentValue - ind.projectedValue) * ind.frequency * ind.unitCost;
           return sum + savings;
        }, 0);
        return acc + monthlySavings;
@@ -342,7 +342,7 @@ export class BiDashboardComponent {
      proj.forEach(p => {
         const indicators = this.dataService.getIndicatorsByProject(p.id);
         const monthlySavings = indicators.reduce((sum, ind) => {
-           const savings = (ind.currentValue - ind.projectedValue) * ind.frequencyPerMonth * ind.unitCost;
+           const savings = (ind.currentValue - ind.projectedValue) * ind.frequency * ind.unitCost;
            return sum + savings;
         }, 0);
         
@@ -363,7 +363,7 @@ export class BiDashboardComponent {
   getProjectPayback(p: Project) {
      const indicators = this.dataService.getIndicatorsByProject(p.id);
      const monthlySavings = indicators.reduce((sum, ind) => {
-        const savings = (ind.currentValue - ind.projectedValue) * ind.frequencyPerMonth * ind.unitCost;
+        const savings = (ind.currentValue - ind.projectedValue) * ind.frequency * ind.unitCost;
         return sum + savings;
      }, 0);
      return monthlySavings > 0 ? (p.budget / monthlySavings).toFixed(1) : '∞';

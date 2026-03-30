@@ -624,8 +624,6 @@ iv>
               </div>
            </div>
         }
- </div>
-        }
 
         @if (activeTab() === 'CONVERSATIONS') {
             <div class="max-w-3xl mx-auto w-full animate-fade-in">

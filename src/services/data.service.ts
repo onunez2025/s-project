@@ -472,6 +472,7 @@ export class DataService {
   // --- CRUD Operations (Writing to DB) ---
 
   getAllAreas() { return this._areas(); }
+  getAllProjects() { return this._projects(); }
   getAllUsers() { return this._users(); }
   getAllActivities() { return this._activities(); }
   getAllExpenses() { return this._expenses(); }
