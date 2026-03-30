@@ -31,7 +31,7 @@ import { ThemeService } from '../../services/theme.service';
                 <div class="flex flex-col w-fit gap-2">
                    <span class="text-2xl font-bold text-slate-100 tracking-tight">Gerencia de Atención al Cliente</span>
                    <img 
-                       src="/Logo - Grupo Sole - Transparente blanco-.png" 
+                       src="/logo-grupo-sole-white.png" 
                        alt="Logo Grupo Sole" 
                        class="h-auto max-w-[12rem] object-contain"
                    >
