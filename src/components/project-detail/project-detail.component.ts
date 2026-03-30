@@ -19,45 +19,45 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
       <div class="flex flex-col h-full animate-fade-in gap-6 pb-10">
         
         <!-- Modern Header -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="bg-card rounded-lg p-5 border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm">
           <div class="flex items-start gap-4">
-             <button (click)="back.emit()" class="group mt-1 p-2 rounded-lg hover:bg-slate-100 transition-colors">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400 group-hover:text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+             <button (click)="back.emit()" class="group mt-1 p-1.5 rounded-md hover:bg-muted transition-colors border border-border">
+               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-muted-foreground group-hover:text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                </svg>
              </button>
              <div>
                <div class="flex items-center gap-3">
-                 <h1 class="text-2xl font-bold text-slate-900" [attr.title]="p.name">{{ p.name }}</h1>
-                 <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border"
-                    [class.bg-red-50]="p.status === 'EN_PROCESO'"
-                    [class.text-red-700]="p.status === 'EN_PROCESO'"
-                    [class.border-red-100]="p.status === 'EN_PROCESO'"
-                    [class.bg-green-50]="p.status === 'FINALIZADO'"
-                    [class.text-green-700]="p.status === 'FINALIZADO'"
-                    [class.border-green-100]="p.status === 'FINALIZADO'"
-                    [class.bg-slate-50]="p.status === 'PLANIFICACION'"
-                    [class.text-slate-600]="p.status === 'PLANIFICACION'"
-                    [class.border-slate-100]="p.status === 'PLANIFICACION'">
+                 <h1 class="text-xl font-bold tracking-tight text-foreground" [attr.title]="p.name">{{ p.name }}</h1>
+                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tighter border"
+                    [class.bg-destructive/10]="p.status === 'EN_PROCESO'"
+                    [class.text-destructive]="p.status === 'EN_PROCESO'"
+                    [class.border-destructive/20]="p.status === 'EN_PROCESO'"
+                    [class.bg-emerald-500/10]="p.status === 'FINALIZADO'"
+                    [class.text-emerald-500]="p.status === 'FINALIZADO'"
+                    [class.border-emerald-500/20]="p.status === 'FINALIZADO'"
+                    [class.bg-muted]="p.status === 'PLANIFICACION'"
+                    [class.text-muted-foreground]="p.status === 'PLANIFICACION'"
+                    [class.border-border]="p.status === 'PLANIFICACION'">
                    {{ p.status.replace('_', ' ') }}
                  </span>
                </div>
-               <p class="text-slate-600 mt-1 max-w-2xl">{{ p.description }}</p>
+               <p class="text-muted-foreground text-xs font-medium mt-0.5 max-w-2xl">{{ p.description }}</p>
              </div>
           </div>
 
           <!-- Header Actions -->
           <div class="flex items-center gap-3">
              @if (p.status === 'FINALIZADO') {
-                <div class="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-xl border border-green-100 font-bold text-sm">
-                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                   Proyecto Cerrado
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 font-bold text-[10px] uppercase tracking-wider">
+                   <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                   Cerrado
                 </div>
              }
 
              @if (canManageActivities()) {
-                <button (click)="openEditForm()" class="flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-all shadow-sm">
-                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button (click)="openEditForm()" class="flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-md border border-input text-foreground hover:bg-muted transition-all shadow-sm">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                    </svg>
                    Editar
@@ -65,16 +65,15 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
 
                 <button (click)="finishProject()" 
                         [disabled]="!isProjectReadyToFinish()"
-                        class="flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl shadow-sm transition-all"
-                        [class.bg-blue-600]="isProjectReadyToFinish()"
-                        [class.text-white]="isProjectReadyToFinish()"
-                        [class.hover:bg-red-700]="isProjectReadyToFinish()"
-                        [class.shadow-blue-600/20]="isProjectReadyToFinish()"
-                        [class.bg-slate-100]="!isProjectReadyToFinish()"
-                        [class.text-slate-400]="!isProjectReadyToFinish()"
+                        class="flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-md shadow-sm transition-all"
+                        [class.bg-primary]="isProjectReadyToFinish()"
+                        [class.text-primary-foreground]="isProjectReadyToFinish()"
+                        [class.hover:bg-primary/90]="isProjectReadyToFinish()"
+                        [class.bg-muted]="!isProjectReadyToFinish()"
+                        [class.text-muted-foreground]="!isProjectReadyToFinish()"
                         [class.cursor-not-allowed]="!isProjectReadyToFinish()"
                         [title]="isProjectReadyToFinish() ? 'Finalizar Proyecto' : 'Completa todas las actividades para finalizar'">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   Finalizar
@@ -83,53 +82,48 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
           </div>
         </div>
 
-        <!-- TABS Navigation (Redesigned for visibility) -->
+        <!-- TABS Navigation -->
         <div class="flex items-center justify-between">
-           <div class="bg-white rounded-2xl p-2 shadow-sm border border-slate-100 flex flex-wrap gap-2">
+           <div class="bg-card rounded-md p-1 border border-border flex flex-wrap gap-1">
               <button (click)="activeTab.set('BOARD')" 
-                      class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-red-50]="activeTab() === 'BOARD'"
-                      [class.text-red-700]="activeTab() === 'BOARD'"
-                      [class.text-slate-600]="activeTab() !== 'BOARD'"
-                      [class.hover:bg-slate-50]="activeTab() !== 'BOARD'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                      class="px-4 py-1.5 text-xs font-bold rounded-sm transition-all flex items-center gap-2"
+                      [class.bg-primary]="activeTab() === 'BOARD'"
+                      [class.text-primary-foreground]="activeTab() === 'BOARD'"
+                      [class.text-muted-foreground]="activeTab() !== 'BOARD'"
+                      [class.hover:bg-muted]="activeTab() !== 'BOARD'">
                 Tablero
               </button>
               <button (click)="activeTab.set('EXPENSES')" 
-                      class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-red-50]="activeTab() === 'EXPENSES'"
-                      [class.text-red-700]="activeTab() === 'EXPENSES'"
-                      [class.text-slate-600]="activeTab() !== 'EXPENSES'"
-                      [class.hover:bg-slate-50]="activeTab() !== 'EXPENSES'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                Control de Gastos
+                      class="px-4 py-1.5 text-xs font-bold rounded-sm transition-all flex items-center gap-2"
+                      [class.bg-primary]="activeTab() === 'EXPENSES'"
+                      [class.text-primary-foreground]="activeTab() === 'EXPENSES'"
+                      [class.text-muted-foreground]="activeTab() !== 'EXPENSES'"
+                      [class.hover:bg-muted]="activeTab() !== 'EXPENSES'">
+                Gastos
               </button>
               <button (click)="activeTab.set('PAYBACK')" 
-                      class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-red-50]="activeTab() === 'PAYBACK'"
-                      [class.text-red-700]="activeTab() === 'PAYBACK'"
-                      [class.text-slate-600]="activeTab() !== 'PAYBACK'"
-                      [class.hover:bg-slate-50]="activeTab() !== 'PAYBACK'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
-                Análisis de Retorno
+                      class="px-4 py-1.5 text-xs font-bold rounded-sm transition-all flex items-center gap-2"
+                      [class.bg-primary]="activeTab() === 'PAYBACK'"
+                      [class.text-primary-foreground]="activeTab() === 'PAYBACK'"
+                      [class.text-muted-foreground]="activeTab() !== 'PAYBACK'"
+                      [class.hover:bg-muted]="activeTab() !== 'PAYBACK'">
+                Payback
               </button>
               <button (click)="activeTab.set('FILES')" 
-                      class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-red-50]="activeTab() === 'FILES'"
-                      [class.text-red-700]="activeTab() === 'FILES'"
-                      [class.text-slate-600]="activeTab() !== 'FILES'"
-                      [class.hover:bg-slate-50]="activeTab() !== 'FILES'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                      class="px-4 py-1.5 text-xs font-bold rounded-sm transition-all flex items-center gap-2"
+                      [class.bg-primary]="activeTab() === 'FILES'"
+                      [class.text-primary-foreground]="activeTab() === 'FILES'"
+                      [class.text-muted-foreground]="activeTab() !== 'FILES'"
+                      [class.hover:bg-muted]="activeTab() !== 'FILES'">
                 Archivos
               </button>
               <button (click)="activeTab.set('CONVERSATIONS')" 
-                      class="px-5 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2"
-                      [class.bg-red-50]="activeTab() === 'CONVERSATIONS'"
-                      [class.text-red-700]="activeTab() === 'CONVERSATIONS'"
-                      [class.text-slate-600]="activeTab() !== 'CONVERSATIONS'"
-                      [class.hover:bg-slate-50]="activeTab() !== 'CONVERSATIONS'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                Conversaciones
+                      class="px-4 py-1.5 text-xs font-bold rounded-sm transition-all flex items-center gap-2"
+                      [class.bg-primary]="activeTab() === 'CONVERSATIONS'"
+                      [class.text-primary-foreground]="activeTab() === 'CONVERSATIONS'"
+                      [class.text-muted-foreground]="activeTab() !== 'CONVERSATIONS'"
+                      [class.hover:bg-muted]="activeTab() !== 'CONVERSATIONS'">
+                Chat
               </button>
            </div>
            
@@ -148,115 +142,109 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
             <div class="lg:col-span-2 space-y-6">
               <!-- Quick Stats -->
               <div class="grid grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                   <p class="text-xs font-bold text-slate-400 uppercase">Actividades</p>
-                   <p class="text-xl font-bold text-slate-800">{{ activities().length }}</p>
+                <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Actividades</p>
+                   <p class="text-xl font-bold text-foreground">{{ activities().length }}</p>
                 </div>
-                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                   <p class="text-xs font-bold text-slate-400 uppercase">Progreso</p>
+                 <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Progreso</p>
                    <div class="flex items-center gap-2">
-                     <p class="text-xl font-bold text-blue-600">{{ p.progress }}%</p>
-                     <div class="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-blue-500 rounded-full" [style.width.%]="p.progress"></div>
+                     <p class="text-xl font-bold text-primary">{{ p.progress }}%</p>
+                     <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div class="h-full bg-primary rounded-full transition-all duration-500" [style.width.%]="p.progress"></div>
                      </div>
                    </div>
                 </div>
-                 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                   <p class="text-xs font-bold text-slate-400 uppercase">Líderes</p>
+                 <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Líderes</p>
                    <div class="flex items-center gap-1 mt-1">
                       @for(c of p.areaConfig; track c.areaId) {
-                         <img [src]="getUser(c.leaderId)?.avatar" class="h-6 w-6 rounded-full border border-white -ml-2 first:ml-0" [title]="getUser(c.leaderId)?.name">
+                         <img [src]="getUser(c.leaderId)?.avatar" class="h-6 w-6 rounded-full border border-background -ml-2 first:ml-0" [title]="getUser(c.leaderId)?.name">
                       }
                    </div>
                 </div>
               </div>
-
-              <!-- Tasks Card -->
-              <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-[400px]">
-                 <div class="p-5 border-b border-slate-50 flex justify-between items-center">
-                   <h3 class="font-bold text-slate-800 text-lg">Mis Tareas</h3>
+              <!-- Tasks Card -->
+              <div class="bg-card rounded-lg shadow-sm border border-border flex flex-col min-h-[400px] overflow-hidden">
+                 <div class="p-4 border-b border-border flex justify-between items-center bg-muted/30">
+                   <h3 class="font-bold text-foreground text-sm uppercase tracking-tight">Mis Tareas</h3>
                    @if (canAddActivities()) {
-                     <button (click)="isAddingActivity.set(!isAddingActivity())" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg transition-colors border border-blue-200">
+                     <button (click)="isAddingActivity.set(!isAddingActivity())" class="text-[10px] bg-primary text-primary-foreground hover:bg-primary/90 font-bold px-3 py-1 rounded-md transition-colors shadow-sm">
                        {{ isAddingActivity() ? 'Cancelar' : '+ Nueva Tarea' }}
                      </button>
                    }
                  </div>
 
-                 <div class="p-5 flex-1 bg-slate-50/30">
+                 <div class="p-4 flex-1">
                    @if (isAddingActivity()) {
-                     <div class="bg-white p-4 rounded-xl mb-4 border border-blue-100 shadow-sm animate-fade-in">
-                       <div class="mb-3">
-                          <label class="block text-xs font-bold text-slate-500 mb-1">Descripción</label>
-                          <input type="text" [(ngModel)]="newActivityDesc" placeholder="¿Qué hay que hacer?" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all text-slate-900">
-                       </div>
-                       <div class="grid grid-cols-2 gap-3 mb-3">
-                          <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Inicio Plan</label>
-                            <input type="date" [(ngModel)]="newActivityStart" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
-                          </div>
-                          <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1">Fin Plan</label>
-                            <input type="date" [(ngModel)]="newActivityEnd" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
-                          </div>
-                       </div>
-                       <div class="mb-4">
-                         <label class="block text-xs font-bold text-slate-500 mb-1">Responsable</label>
-                         <select [(ngModel)]="newActivityResp" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
-                           <option [value]="0">Asignar a...</option>
-                           <!-- Leaders -->
-                           @for(c of p.areaConfig; track c.areaId) {
-                              <option [value]="c.leaderId">{{ getUser(c.leaderId)?.name }} (Líder {{ getAreaName(c.areaId) }})</option>
-                           }
-                           <!-- Team -->
-                           @for (memberId of p.teamIds; track memberId) {
-                             <option [value]="memberId">{{ getUser(memberId)?.name }}</option>
-                           }
-                         </select>
-                       </div>
-                       <button (click)="addActivity()" [disabled]="!newActivityDesc() || !newActivityStart() || !newActivityEnd() || !newActivityResp()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm shadow-md shadow-blue-500/20 transition-all">Guardar Tarea</button>
+                     <div class="bg-muted/50 p-4 rounded-md mb-4 border border-border shadow-sm animate-in fade-in slide-in-from-top-2">
+                        <div class="mb-3">
+                           <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Descripción</label>
+                           <input type="text" [(ngModel)]="newActivityDesc" placeholder="¿Qué hay que hacer?" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                           <div>
+                             <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Inicio Plan</label>
+                             <input type="date" [(ngModel)]="newActivityStart" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
+                           </div>
+                           <div>
+                             <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Fin Plan</label>
+                             <input type="date" [(ngModel)]="newActivityEnd" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
+                           </div>
+                        </div>
+                        <div class="mb-4">
+                          <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Responsable</label>
+                          <select [(ngModel)]="newActivityResp" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
+                            <option [value]="0">Asignar a...</option>
+                            <!-- Leaders -->
+                            @for(c of p.areaConfig; track c.areaId) {
+                               <option [value]="c.leaderId">{{ getUser(c.leaderId)?.name }} (Líder {{ getAreaName(c.areaId) }})</option>
+                            }
+                            <!-- Team -->
+                            @for (memberId of p.teamIds; track memberId) {
+                              <option [value]="memberId">{{ getUser(memberId)?.name }}</option>
+                            }
+                          </select>
+                        </div>
+                        <button (click)="addActivity()" [disabled]="!newActivityDesc() || !newActivityStart() || !newActivityEnd() || !newActivityResp()" class="w-full bg-primary text-primary-foreground font-bold py-2 rounded-md text-xs shadow-sm hover:bg-primary/90 transition-all uppercase tracking-wider">Guardar Tarea</button>
                      </div>
                    }
 
-                   <div class="space-y-3">
+                   <div class="space-y-2">
                      @for (act of activities(); track act.id) {
-                       <div class="group flex items-center justify-between p-4 rounded-xl border transition-all duration-200"
-                            [class.bg-white]="true"
-                            [class.border-slate-100]="act.status !== 'REALIZADA'"
-                            [class.border-green-100]="act.status === 'REALIZADA'"
-                            [class.shadow-sm]="true"
-                            [class.hover:shadow-md]="true">
-                          <div class="flex items-center gap-4 flex-1">
+                       <div class="group flex items-center justify-between p-3 rounded-md border border-border bg-card/50 transition-all duration-200 hover:border-primary/30 hover:bg-muted/30">
+                          <div class="flex items-center gap-3 flex-1">
                             <div class="flex-shrink-0">
                                @if (act.status === 'PENDIENTE') {
                                  <button (click)="startActivity(act)" [disabled]="!canEditActivity(act)" 
-                                    class="w-8 h-8 rounded-full border-2 border-slate-300 text-slate-300 flex items-center justify-center hover:border-blue-500 hover:text-blue-500 hover:bg-blue-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-7 h-7 rounded-full border border-input text-muted-foreground flex items-center justify-center hover:border-primary hover:text-primary hover:bg-primary/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Iniciar Tarea">
-                                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                  </button>
                                } @else if (act.status === 'EN_PROCESO') {
                                  <button (click)="completeActivity(act)" [disabled]="!canEditActivity(act)"
-                                    class="w-8 h-8 rounded-full border-2 border-blue-500 text-blue-500 flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 hover:text-white transition-all animate-pulse disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-7 h-7 rounded-full border border-primary text-primary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all animate-pulse disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Terminar Tarea">
-                                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                  </button>
                                } @else {
-                                 <div class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center shadow-green-500/30 shadow-md">
-                                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                 <div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-sm">
+                                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                  </div>
                                }
                             </div>
                             <div class="flex flex-col">
-                               <span class="text-sm font-semibold text-slate-900 transition-all" 
+                               <span class="text-xs font-bold text-foreground transition-all" 
                                  [class.line-through]="act.status === 'REALIZADA'" 
-                                 [class.text-slate-400]="act.status === 'REALIZADA'">
+                                 [class.text-muted-foreground]="act.status === 'REALIZADA'">
                                  {{ act.description }}
                                </span>
-                               <div class="flex items-center gap-2 mt-1">
-                                  <div class="flex items-center gap-1.5 bg-slate-100 px-2 py-0.5 rounded-md">
-                                    <img [src]="getUser(act.responsibleId)?.avatar" class="h-3.5 w-3.5 rounded-full">
-                                    <span class="text-[10px] text-slate-600 font-medium">{{ getUser(act.responsibleId)?.name }}</span>
+                               <div class="flex items-center gap-2 mt-0.5">
+                                  <div class="flex items-center gap-1.5 bg-muted px-2 py-0.5 rounded-md">
+                                    <img [src]="getUser(act.responsibleId)?.avatar" class="h-3 w-3 rounded-full">
+                                    <span class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">{{ getUser(act.responsibleId)?.name }}</span>
                                   </div>
-                                  <span class="text-[10px] text-slate-400">
+                                  <span class="text-[9px] text-muted-foreground font-medium italic">
                                      @if(act.status === 'REALIZADA') { Finalizado: {{act.actualEndDate}} }
                                      @else if(act.status === 'EN_PROCESO') { En Curso desde: {{act.actualStartDate}} }
                                      @else { Vence: {{act.estimatedEndDate}} }
@@ -264,78 +252,76 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                                </div>
                             </div>
                           </div>
-                          <!-- Only show delete if user has permission AND activity is NOT done -->
-                          @if (canEditActivity(act) && act.status !== 'REALIZADA') {
-                            <!-- Edit Button -->
-                            <button (click)="openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 p-2 transition-all">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                            </button>
-                            <button (click)="deleteActivity(act.id)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 p-2 transition-all">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                          }
+                          <!-- Actions -->
+                          <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            @if (canEditActivity(act) && act.status !== 'REALIZADA') {
+                              <button (click)="openEditModal(act)" class="text-muted-foreground hover:text-primary p-1.5 transition-all">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                              </button>
+                              <button (click)="deleteActivity(act.id)" class="text-muted-foreground hover:text-destructive p-1.5 transition-all">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                              </button>
+                            }
+                          </div>
                        </div>
                      } @empty {
                        <div class="text-center py-10">
-                          <div class="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                             <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                          </div>
-                          <p class="text-slate-500 font-medium">No hay tareas pendientes</p>
-                          <p class="text-sm text-slate-400">Comienza agregando una nueva actividad</p>
+                           <p class="text-muted-foreground text-xs font-bold uppercase tracking-widest">No hay tareas pendientes</p>
                        </div>
                      }
                    </div>
                  </div>
               </div>
+iv>
             </div>
 
             <!-- Right Column: Info & Team -->
             <div class="space-y-6">
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                 <h3 class="font-bold text-slate-800 text-lg mb-4 border-b border-slate-50 pb-2">Detalles</h3>
+              <div class="bg-card rounded-lg p-5 shadow-sm border border-border">
+                 <h3 class="font-bold text-foreground text-sm uppercase tracking-tight mb-4 border-b border-border pb-2">Detalles</h3>
                  <div class="space-y-4">
                    <div class="flex justify-between items-center">
-                     <span class="text-sm text-slate-500 font-medium">Áreas Participantes</span>
-                     <span class="text-sm font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded-md">{{ p.areaConfig.length }}</span>
+                     <span class="text-xs text-muted-foreground font-medium">Áreas Participantes</span>
+                     <span class="text-xs font-bold text-foreground bg-muted px-2 py-0.5 rounded-sm">{{ p.areaConfig.length }}</span>
                    </div>
                    <div class="flex justify-between items-center">
-                     <span class="text-sm text-slate-500 font-medium">Presupuesto</span>
-                     <span class="text-sm font-bold text-slate-800">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number }}</span>
+                     <span class="text-xs text-muted-foreground font-medium">Presupuesto</span>
+                     <span class="text-xs font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number }}</span>
                    </div>
                    <div class="space-y-2 pt-2">
-                     <div class="flex justify-between text-xs">
-                       <span class="text-slate-400">Inicio Plan</span>
-                       <span class="text-slate-600 font-medium">{{ p.startDate }}</span>
+                     <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                       <span class="text-muted-foreground">Inicio Plan</span>
+                       <span class="text-foreground">{{ p.startDate }}</span>
                      </div>
-                     <div class="flex justify-between text-xs">
-                       <span class="text-slate-400">Fin Plan</span>
-                       <span class="text-slate-600 font-medium">{{ p.endDate }}</span>
+                     <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                       <span class="text-muted-foreground">Fin Plan</span>
+                       <span class="text-foreground">{{ p.endDate }}</span>
                      </div>
-                     <div class="h-px bg-slate-100 my-2"></div>
-                     <div class="flex justify-between text-xs">
-                       <span class="text-slate-400">Inicio Real</span>
-                       <span class="font-bold" [class.text-blue-600]="p.actualStartDate" [class.text-slate-300]="!p.actualStartDate">{{ p.actualStartDate || '--' }}</span>
+                     <div class="h-px bg-border my-2"></div>
+                     <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                       <span class="text-muted-foreground">Inicio Real</span>
+                       <span class="font-bold" [class.text-primary]="p.actualStartDate" [class.text-muted-foreground/30]="!p.actualStartDate">{{ p.actualStartDate || '--' }}</span>
                      </div>
-                      <div class="flex justify-between text-xs">
-                       <span class="text-slate-400">Fin Real</span>
-                       <span class="font-bold" [class.text-green-600]="p.actualEndDate" [class.text-slate-300]="!p.actualEndDate">{{ p.actualEndDate || '--' }}</span>
+                      <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                       <span class="text-muted-foreground">Fin Real</span>
+                       <span class="font-bold" [class.text-emerald-500]="p.actualEndDate" [class.text-muted-foreground/30]="!p.actualEndDate">{{ p.actualEndDate || '--' }}</span>
                      </div>
                    </div>
                  </div>
               </div>
 
               <!-- Lideres y Equipo -->
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                 <h3 class="font-bold text-slate-800 text-lg mb-4 border-b border-slate-50 pb-2">Liderazgo y Equipo</h3>
+              <div class="bg-card rounded-lg p-5 shadow-sm border border-border">
+                 <h3 class="font-bold text-foreground text-sm uppercase tracking-tight mb-4 border-b border-border pb-2">Equipo</h3>
                  
                  <!-- Leaders Loop -->
-                 <div class="space-y-4 mb-6">
+                 <div class="space-y-3 mb-6">
                     @for(config of p.areaConfig; track config.areaId) {
-                       <div class="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100">
-                         <img [src]="getUser(config.leaderId)?.avatar" class="h-10 w-10 rounded-full object-cover">
+                       <div class="flex items-center gap-3 p-2 rounded-md bg-muted/30 border border-border">
+                         <img [src]="getUser(config.leaderId)?.avatar" class="h-8 w-8 rounded-full object-cover">
                          <div>
-                            <p class="text-sm font-bold text-slate-800">{{ getUser(config.leaderId)?.name }}</p>
-                            <p class="text-xs text-blue-600 font-medium">Líder {{ getAreaName(config.areaId) }}</p>
+                            <p class="text-[11px] font-bold text-foreground leading-none">{{ getUser(config.leaderId)?.name }}</p>
+                            <p class="text-[9px] text-primary font-bold uppercase tracking-tighter mt-1">Líder {{ getAreaName(config.areaId) }}</p>
                          </div>
                        </div>
                     }
@@ -343,18 +329,18 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
 
                  <!-- Team Members -->
                  <div>
-                   <p class="text-xs font-bold text-slate-400 uppercase mb-2">Miembros ({{ p.teamIds.length }})</p>
-                   <div class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-1">Miembros ({{ p.teamIds.length }})</p>
+                   <div class="space-y-1 max-h-60 overflow-y-auto custom-scrollbar">
                      @for (memberId of p.teamIds; track memberId) {
-                       <div class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
-                          <img [src]="getUser(memberId)?.avatar" class="h-8 w-8 rounded-full bg-slate-200">
+                       <div class="flex items-center gap-3 p-2 hover:bg-muted/50 rounded-md transition-colors">
+                          <img [src]="getUser(memberId)?.avatar" class="h-6 w-6 rounded-full bg-muted">
                           <div>
-                             <p class="text-sm font-medium text-slate-700">{{ getUser(memberId)?.name }}</p>
-                             <p class="text-[10px] text-slate-400">{{ getUser(memberId)?.subRole }} - {{ getJoinedAreaNames(getUser(memberId)) }}</p>
+                             <p class="text-[11px] font-bold text-foreground leading-none">{{ getUser(memberId)?.name }}</p>
+                             <p class="text-[9px] text-muted-foreground font-medium mt-1">{{ getUser(memberId)?.subRole }} - {{ getJoinedAreaNames(getUser(memberId)) }}</p>
                           </div>
                        </div>
                      } @empty {
-                        <p class="text-xs text-slate-400 italic p-2">No hay miembros adicionales asignados.</p>
+                        <p class="text-[10px] text-muted-foreground italic p-2">Sin miembros adicionales.</p>
                      }
                    </div>
                  </div>
@@ -368,34 +354,34 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
              
              <!-- Expense Summary Cards -->
              <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-               <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-600 flex justify-between items-center">
+               <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 border-primary flex justify-between items-center border-t border-r border-b border-border">
                  <div>
-                   <p class="text-xs font-bold text-slate-400 uppercase">Presupuesto Inicial</p>
-                   <p class="text-xl font-bold text-slate-800">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.2-2' }}</p>
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Presupuesto Inicial</p>
+                   <p class="text-xl font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.2-2' }}</p>
                  </div>
-                 <div class="h-10 w-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
-                   <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                 <div class="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                   <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                  </div>
                </div>
 
-               <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-purple-600 flex justify-between items-center">
+               <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 border-purple-500 flex justify-between items-center border-t border-r border-b border-border">
                  <div>
-                   <p class="text-xs font-bold text-slate-400 uppercase">Gasto Acumulado (Est.)</p>
-                   <p class="text-xl font-bold text-slate-800">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalSpent() | number:'1.2-2' }}</p>
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Gasto Acumulado (Est.)</p>
+                   <p class="text-xl font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalSpent() | number:'1.2-2' }}</p>
                  </div>
-                 <div class="h-10 w-10 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                 <div class="h-10 w-10 bg-purple-50/10 rounded-full flex items-center justify-center text-purple-500">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                  </div>
                </div>
 
-               <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 flex justify-between items-center"
-                    [class.border-green-500]="remainingBudget() >= 0"
-                    [class.border-red-500]="remainingBudget() < 0">
+               <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 flex justify-between items-center border-t border-r border-b border-border"
+                    [class.border-emerald-500]="remainingBudget() >= 0"
+                    [class.border-destructive]="remainingBudget() < 0">
                  <div>
-                   <p class="text-xs font-bold text-slate-400 uppercase">Presupuesto Restante</p>
+                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Presupuesto Restante</p>
                    <p class="text-xl font-bold" 
-                      [class.text-green-600]="remainingBudget() >= 0"
-                      [class.text-red-600]="remainingBudget() < 0">
+                      [class.text-emerald-600]="remainingBudget() >= 0"
+                      [class.text-destructive]="remainingBudget() < 0">
                      {{ p.currency === 'PEN' ? 'S/' : '$' }} {{ remainingBudget() | number:'1.2-2' }}
                    </p>
                  </div>
@@ -452,20 +438,20 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                               class="block w-full rounded-xl border-slate-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 text-sm font-medium outline-none">
                      </div>
                      <button (click)="addExpense()" [disabled]="!newExpenseDesc() || !newExpenseAmount() || !newExpenseDate()" 
-                             class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:shadow-none mt-2">
+                             class="w-full bg-primary text-primary-foreground font-bold py-2.5 rounded-md hover:bg-primary/90 shadow-sm transition-all disabled:opacity-50 mt-2 text-xs uppercase tracking-widest">
                         Guardar Gasto
                      </button>
                   </div>
                </div>
 
-             <div class="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+             <div class="lg:col-span-3 bg-card rounded-lg shadow-sm border border-border overflow-hidden">
                 <div class="overflow-x-auto">
-                  <table class="min-w-full divide-y divide-slate-100">
-                    <thead class="bg-slate-50">
+                  <table class="min-w-full divide-y divide-border">
+                    <thead class="bg-muted/50">
                       <tr>
-                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Descripción</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Categoría</th>
-                        <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Monto</th>
+                        <th class="px-6 py-3 text-left text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Descripción</th>
+                        <th class="px-6 py-3 text-left text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Categoría</th>
+                        <th class="px-6 py-3 text-right text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Monto</th>
                         <th class="px-6 py-3"></th>
                       </tr>
                     </thead>
@@ -501,131 +487,144 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
            <div class="grid grid-cols-1 gap-6 animate-fade-in">
              <!-- Drag & Drop Zone -->
              @if (canManageFilesAndExpenses()) {
-                <div class="border-2 border-dashed border-blue-200 rounded-2xl bg-blue-50/50 p-10 flex flex-col items-center justify-center text-center hover:bg-blue-50 transition-all cursor-pointer group"
+                <div class="border border-dashed border-primary/30 rounded-lg bg-primary/5 p-8 flex flex-col items-center justify-center text-center hover:bg-primary/10 transition-all cursor-pointer group"
                      (click)="fileInput.click()">
-                   <div class="h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+                   <div class="h-12 w-12 bg-card rounded-md border border-border flex items-center justify-center shadow-sm mb-3 group-hover:scale-110 transition-transform">
                       @if (isUploading()) {
-                         <svg class="animate-spin h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24">
+                         <svg class="animate-spin h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24">
                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                          </svg>
                       } @else {
-                         <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                         <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                       }
                    </div>
-                   <h4 class="text-lg font-bold text-slate-700">
-                     {{ isUploading() ? 'Subiendo archivo...' : 'Arrastra archivos aquí o haz clic para subir' }}
+                   <h4 class="text-sm font-bold text-foreground">
+                     {{ isUploading() ? 'Subiendo archivo...' : 'Sube archivos importantes aquí' }}
                    </h4>
-                   <p class="text-slate-500 text-sm mt-1">Soporta PDF, Imágenes y Excel</p>
+                   <p class="text-muted-foreground text-[10px] mt-1 font-medium italic">Soporta PDF, Imágenes y Excel</p>
                    <input #fileInput type="file" class="hidden" (change)="onFileSelected($event)">
                 </div>
              }
              <!-- File Grid -->
              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 @for (file of files(); track file.id) {
-                  <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
-                     <!-- Icon based on type -->
-                     <div class="h-12 w-12 flex-shrink-0 rounded-lg flex items-center justify-center font-bold text-white text-xs"
-                          [class.bg-red-500]="file.type === 'PDF'"
-                          [class.bg-blue-500]="file.type === 'IMG'"
-                          [class.bg-green-600]="file.type === 'EXCEL'"
-                          [class.bg-slate-500]="file.type === 'OTRO'">
-                        {{ file.type }}
-                     </div>
-                     <div class="flex-1 min-w-0">
-                        <h5 class="text-sm font-bold text-slate-800 truncate">{{ file.name }}</h5>
-                        <p class="text-xs text-slate-500">Subido por {{ getUser(file.uploadedBy)?.name }}</p>
-                        <p class="text-[10px] text-slate-400">{{ file.uploadDate }}</p>
-                     </div>
-                     <div class="flex flex-col gap-1">
-                        @if (file.url && file.url !== '#') {
-                           <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-blue-600 p-1" title="Descargar">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4 4m4 4V4"></path></svg>
-                           </a>
-                        } @else {
-                           <button (click)="alertNoUrl()" class="text-slate-300 hover:text-red-500 p-1 cursor-not-allowed" title="Archivo no disponible">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                           </button>
-                        }
-                        @if (canManageActivities()) {
-                           <button (click)="deleteFile(file.id)" class="text-slate-400 hover:text-red-500 p-1" title="Eliminar">
-                              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                           </button>
-                        }
-                     </div>
-                  </div>
+                   <div class="bg-card p-3 rounded-lg border border-border shadow-sm hover:border-primary/30 transition-all flex items-center gap-3">
+                      <!-- Icon based on type -->
+                      <div class="h-10 w-10 flex-shrink-0 rounded-md flex items-center justify-center font-black text-white text-[10px]"
+                           [class.bg-red-500]="file.type === 'PDF'"
+                           [class.bg-blue-500]="file.type === 'IMG'"
+                           [class.bg-emerald-600]="file.type === 'EXCEL'"
+                           [class.bg-muted-foreground]="file.type === 'OTRO'">
+                         {{ file.type }}
+                      </div>
+                      <div class="flex-1 min-w-0">
+                         <h5 class="text-xs font-bold text-foreground truncate">{{ file.name }}</h5>
+                         <p class="text-[9px] text-muted-foreground font-medium truncate">Por {{ getUser(file.uploadedBy)?.name }} • {{ file.uploadDate }}</p>
+                      </div>
+                      <div class="flex flex-col gap-1">
+                         @if (file.url && file.url !== '#') {
+                            <a [href]="file.url" target="_blank" rel="noopener noreferrer" class="text-muted-foreground hover:text-primary p-1" title="Descargar">
+                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4 4m4 4V4"></path></svg>
+                            </a>
+                         } @else {
+                            <button (click)="alertNoUrl()" class="text-muted-foreground/30 hover:text-destructive p-1 cursor-not-allowed" title="Archivo no disponible">
+                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </button>
+                         }
+                         @if (canManageActivities()) {
+                            <button (click)="deleteFile(file.id)" class="text-muted-foreground hover:text-destructive p-1" title="Eliminar">
+                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                         }
+                      </div>
+                   </div>
                 }
              </div>
            </div>
         }
 
         @if (activeTab() === 'PAYBACK') {
-           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in">
-              <div class="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
-                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in font-bold">
+              <div class="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 uppercase tracking-tighter">
+                 <div class="bg-card p-5 rounded-lg shadow-sm border border-border flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
-                      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Inversión Total (CAPEX)</p>
-                      <p class="text-2xl font-bold text-slate-800 mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.0-0' }}</p>
+                      <p class="text-[10px] text-muted-foreground tracking-widest">Inversión (CAPEX)</p>
+                      <p class="text-xl font-black text-foreground mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.0-0' }}</p>
                     </div>
                  </div>
-                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-blue-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+                 <div class="bg-card p-5 rounded-lg shadow-sm border border-primary/20 flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
-                      <p class="text-xs font-bold text-blue-500 uppercase tracking-wide">Ahorro Mensual (OPEX)</p>
-                      <p class="text-2xl font-bold text-blue-700 mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalMonthlySavings() | number:'1.0-0' }}</p>
+                      <p class="text-[10px] text-primary tracking-widest">Ahorro Mensual</p>
+                      <p class="text-xl font-black text-primary mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalMonthlySavings() | number:'1.0-0' }}</p>
                     </div>
                  </div>
-                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-green-100 flex flex-col justify-between h-32 relative overflow-hidden group">
+                 <div class="bg-card p-5 rounded-lg shadow-sm border border-emerald-500/20 flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
-                      <p class="text-xs font-bold text-green-600 uppercase tracking-wide">Ahorro Anual Est.</p>
-                      <p class="text-2xl font-bold text-green-700 mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ roiAnnual() | number:'1.0-0' }}</p>
+                      <p class="text-[10px] text-emerald-500 tracking-widest">Ahorro Anual</p>
+                      <p class="text-xl font-black text-emerald-500 mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ roiAnnual() | number:'1.0-0' }}</p>
                     </div>
                  </div>
-                 <div class="bg-slate-800 p-5 rounded-2xl shadow-lg shadow-slate-800/20 flex flex-col justify-between h-32 relative overflow-hidden text-white">
+                 <div class="bg-foreground p-5 rounded-lg shadow-sm flex flex-col justify-between h-28 relative overflow-hidden text-background">
                     <div>
-                      <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Payback (Retorno)</p>
-                      <p class="text-2xl font-bold mt-1">
-                        {{ paybackMonths() === Infinity ? '∞' : (paybackMonths() | number:'1.1-1') }} <span class="text-sm font-normal text-slate-400">Meses</span>
+                      <p class="text-[10px] opacity-70 tracking-widest">Payback (Retorno)</p>
+                      <p class="text-xl font-black mt-1">
+                        {{ paybackMonths() === Infinity ? '∞' : (paybackMonths() | number:'1.1-1') }} <span class="text-xs font-medium opacity-50 ml-1">Meses</span>
                       </p>
                     </div>
                  </div>
               </div>
               
                <div class="xl:col-span-2 space-y-6">
-                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                    <h3 class="font-bold text-slate-800 mb-4">Proyección</h3>
-                    <div #paybackChart class="w-full h-[300px] bg-slate-50 rounded-xl relative overflow-hidden"></div>
+                 <div class="bg-card rounded-lg shadow-sm border border-border p-6">
+                    <h3 class="text-xs uppercase tracking-widest text-muted-foreground mb-6">Proyección de Retorno</h3>
+                    <div #paybackChart class="w-full h-[300px] bg-muted/20 rounded-md relative overflow-hidden"></div>
                  </div>
                </div>
 
               <div class="xl:col-span-1">
-                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 sticky top-6">
-                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide mb-4">Agregar Indicador</h3>
+                 <div class="bg-card rounded-lg shadow-sm border border-border p-5 sticky top-6">
+                    <h3 class="font-bold text-foreground text-[10px] uppercase tracking-widest mb-6 px-1">Indicador de Impacto</h3>
                      <div class="space-y-4">
                        <div>
-                          <label class="block text-xs font-bold text-slate-500 mb-1">Nombre</label>
-                          <input type="text" [(ngModel)]="newIndName" class="w-full rounded-xl border border-slate-200 p-2 text-sm outline-none text-slate-900">
+                          <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Nombre</label>
+                          <input type="text" [(ngModel)]="newIndName" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                        </div>
                        <div>
-                          <label class="block text-xs font-bold text-slate-500 mb-1">Categoría</label>
-                          <select [(ngModel)]="newIndCategory" (change)="updateUnitLabel()" class="w-full rounded-xl border border-slate-200 p-2 text-sm outline-none text-slate-900">
+                          <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Categoría</label>
+                          <select [(ngModel)]="newIndCategory" (change)="updateUnitLabel()" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                                <option value="HORAS_HOMBRE">Horas Hombre</option>
                                <option value="INSUMOS">Insumos</option>
                                <option value="RIESGOS">Riesgos</option>
                           </select>
                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                          <input type="number" [(ngModel)]="newIndCurrent" placeholder="Actual" class="w-full rounded-xl border border-slate-200 p-2 text-sm outline-none text-slate-900">
-                          <input type="number" [(ngModel)]="newIndProjected" placeholder="Proy" class="w-full rounded-xl border border-slate-200 p-2 text-sm outline-none text-slate-900">
+                        <div class="grid grid-cols-2 gap-3 uppercase tracking-tighter">
+                          <div>
+                             <label class="block text-[9px] font-bold text-muted-foreground mb-1 ml-0.5">Actual</label>
+                             <input type="number" [(ngModel)]="newIndCurrent" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
+                          </div>
+                          <div>
+                             <label class="block text-[9px] font-bold text-muted-foreground mb-1 ml-0.5">Proyectado</label>
+                             <input type="number" [(ngModel)]="newIndProjected" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
+                          </div>
                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                          <input type="number" [(ngModel)]="newIndFreq" placeholder="Freq" class="w-full rounded-xl border border-slate-200 p-2 text-sm outline-none text-slate-900">
-                          <input type="number" [(ngModel)]="newIndCost" placeholder="Costo Unit" class="w-full rounded-xl border border-slate-200 p-2 text-sm outline-none text-slate-900">
+                        <div class="grid grid-cols-2 gap-3 uppercase tracking-tighter">
+                          <div>
+                             <label class="block text-[9px] font-bold text-muted-foreground mb-1 ml-0.5">Frecuencia</label>
+                             <input type="number" [(ngModel)]="newIndFreq" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
+                          </div>
+                          <div>
+                             <label class="block text-[9px] font-bold text-muted-foreground mb-1 ml-0.5">Costo Unit.</label>
+                             <input type="number" [(ngModel)]="newIndCost" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
+                          </div>
                        </div>
-                       <button (click)="addIndicator()" class="w-full bg-slate-800 text-white font-bold py-2 rounded-xl">Agregar</button>
-                    </div>
+                       <button (click)="addIndicator()" class="w-full bg-primary text-primary-foreground font-black py-2.5 rounded-md text-xs uppercase tracking-widest shadow-sm hover:bg-primary/90 transition-all mt-4">Registrar</button>
+                     </div>
                  </div>
               </div>
            </div>
+        }
+ </div>
         }
 
         @if (activeTab() === 'CONVERSATIONS') {
@@ -673,8 +672,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                        </div>
 
                        <div class="flex items-center gap-3 pt-4">
-                          <button (click)="closeEditModal()" class="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
-                          <button (click)="saveEditActivity()" [disabled]="!editActivityDesc() || !editActivityStart() || !editActivityEnd() || !editActivityResp()" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Guardar Cambios</button>
+                          <button (click)="closeEditModal()" class="flex-1 py-2 border border-border text-muted-foreground rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all">Cancelar</button>
+                          <button (click)="saveEditActivity()" [disabled]="!editActivityDesc() || !editActivityStart() || !editActivityEnd() || !editActivityResp()" class="flex-1 py-2 bg-primary text-primary-foreground rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-primary/90 transition-all disabled:opacity-50">Guardar</button>
                        </div>
                    </div>
                 </div>

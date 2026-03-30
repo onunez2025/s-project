@@ -9,46 +9,51 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="flex flex-col h-full overflow-hidden animate-fade-in">
+    <div class="flex flex-col h-full overflow-hidden animate-fade-in pb-4">
       <!-- Header / Filters -->
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
          <div>
-           <h2 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Mis Tareas</h2>
-           <p class="text-slate-500 dark:text-slate-400 mt-1">Gestión visual de actividades (Kanban)</p>
+           <h2 class="text-2xl font-bold tracking-tight">Mis Tareas</h2>
+           <p class="text-muted-foreground text-xs font-medium">Organiza y completa tus actividades pendientes</p>
          </div>
          
-         <div class="relative w-full sm:w-64 animate-fade-in">
-           <select 
-             [(ngModel)]="selectedProjectId"
-             class="appearance-none w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-sm font-medium text-sm transition-all"
-           >
-             <option [value]="0">Todos los Proyectos</option>
-             @for (proj of myProjects(); track proj.id) {
-               <option [value]="proj.id">{{ proj.name }}</option>
-             }
-           </select>
-           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-           </div>
+         <div class="relative w-full sm:w-72">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path></svg>
+            </div>
+            <select 
+              [(ngModel)]="selectedProjectId"
+              class="w-full bg-input/50 border border-input text-foreground py-2 pl-9 pr-10 rounded-md focus:ring-1 focus:ring-primary focus:border-primary outline-none text-xs font-bold transition-all appearance-none"
+            >
+              <option [value]="0">Todos los Proyectos</option>
+              @for (proj of myProjects(); track proj.id) {
+                <option [value]="proj.id">{{ proj.name }}</option>
+              }
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground">
+               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
          </div>
       </div>
 
       <!-- Kanban Columns -->
-      <div class="flex-1 flex gap-6 overflow-x-auto pb-4">
+      <div class="flex-1 flex gap-4 overflow-x-auto pb-2 min-h-0">
         
         <!-- PENDIENTE -->
-        <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
+        <div class="flex-1 min-w-[320px] bg-muted/30 rounded-lg flex flex-col border border-border/50"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'PENDIENTE')">
-           <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
-             <div class="w-3 h-3 rounded-full bg-slate-400"></div>
-             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">Pendiente</h3>
-             <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ pendingActivities().length }}</span>
+           <div class="p-3 border-b border-border/50 flex items-center justify-between">
+             <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-muted-foreground/40"></div>
+                <h3 class="font-bold text-xs uppercase tracking-wider text-muted-foreground">Pendientes</h3>
+             </div>
+             <span class="bg-card text-muted-foreground px-2 py-0.5 rounded-full text-[10px] font-bold border border-border shadow-sm">{{ pendingActivities().length }}</span>
            </div>
            
-           <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+           <div class="flex-1 overflow-y-auto p-2 space-y-3 custom-scrollbar">
              @for (act of pendingActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative"
+                <div class="bg-card p-3.5 rounded-lg shadow-sm border hover:shadow-md transition-all active:cursor-grabbing group relative cursor-pointer"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
                      (click)="onCardClick(act)"
@@ -56,34 +61,36 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
                      [ngClass]="getUrgencyColor(act)">
                    
                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-50 text-slate-600 border border-slate-200 truncate max-w-[120px]">
-                        {{ getProjectName(act.projectId) }}
-                      </span>
-                      <div class="flex items-center gap-2">
-                        @if (canEdit(act)) {
-                            <button (click)="$event.stopPropagation(); openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                            </button>
-                            <button (click)="$event.stopPropagation(); deleteActivity(act.id)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition-all">
+                       <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border truncate max-w-[140px]">
+                         {{ getProjectName(act.projectId) }}
+                       </span>
+                       <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                         @if (canEdit(act)) {
+                             <button (click)="$event.stopPropagation(); openEditModal(act)" class="p-1 text-muted-foreground hover:text-primary transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                             </button>
+                             <button (click)="$event.stopPropagation(); deleteActivity(act.id)" class="p-1 text-muted-foreground hover:text-destructive transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        }
-                        @if (hasFiles(act.projectId)) {
-                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                        }
-                      </div>
+                             </button>
+                         }
+                       </div>
                    </div>
                    
-                   <p class="text-sm font-bold text-slate-700 mb-3 leading-snug">{{ act.description }}</p>
+                   <p class="text-sm font-medium mb-3 leading-snug">{{ act.description }}</p>
                    
-                   <div class="flex items-center justify-between mt-auto">
-                     <div class="flex items-center gap-2">
-                        <img [src]="getUser(act.responsibleId)?.avatar" class="w-6 h-6 rounded-full bg-slate-200" title="Responsable">
-                        <span class="text-xs text-slate-500 font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
-                     </div>
-                     <span class="text-[10px] font-bold select-none" [ngClass]="getUrgencyTextClass(act)">
-                        {{ getUrgencyLabel(act) }}
-                     </span>
+                   <div class="flex items-center justify-between mt-auto pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-2">
+                         <img [src]="getUser(act.responsibleId)?.avatar" class="w-5 h-5 rounded-full bg-muted object-cover border border-border">
+                         <span class="text-[10px] text-muted-foreground font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" [ngClass]="getUrgencyTextClass(act)">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                         </svg>
+                         <span class="text-[10px] font-bold" [ngClass]="getUrgencyTextClass(act)">
+                            {{ getUrgencyLabel(act) }}
+                         </span>
+                      </div>
                    </div>
                 </div>
              }
@@ -91,50 +98,50 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
         </div>
 
         <!-- EN PROCESO -->
-        <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
+        <div class="flex-1 min-w-[320px] bg-muted/30 rounded-lg flex flex-col border border-border/50"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'EN_PROCESO')">
-           <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
-             <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
-             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">En Proceso</h3>
-             <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ progressActivities().length }}</span>
+           <div class="p-3 border-b border-border/50 flex items-center justify-between">
+             <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                <h3 class="font-bold text-xs uppercase tracking-wider text-muted-foreground">En Proceso</h3>
+             </div>
+             <span class="bg-card text-muted-foreground px-2 py-0.5 rounded-full text-[10px] font-bold border border-border shadow-sm">{{ progressActivities().length }}</span>
            </div>
 
-           <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+           <div class="flex-1 overflow-y-auto p-2 space-y-3 custom-scrollbar">
              @for (act of progressActivities(); track act.id) {
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
+                <div class="bg-card p-3.5 rounded-lg shadow-sm border border-l-4 border-l-primary cursor-pointer hover:shadow-md transition-all active:cursor-grabbing group relative overflow-hidden"
                      draggable="true"
                      (dragstart)="onDragStart($event, act)"
                      (click)="onCardClick(act)">
-                   <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                    
-                   <div class="flex justify-between items-start mb-2 pl-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-100 truncate max-w-[120px]">
-                        {{ getProjectName(act.projectId) }}
-                      </span>
-                      <div class="flex items-center gap-2">
-                          @if (canEdit(act)) {
-                            <button (click)="$event.stopPropagation(); openEditModal(act)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-blue-500 transition-all z-10 relative">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                            </button>
-                            <button (click)="$event.stopPropagation(); deleteActivity(act.id)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition-all z-10 relative">
+                   <div class="flex justify-between items-start mb-2">
+                       <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 truncate max-w-[140px]">
+                         {{ getProjectName(act.projectId) }}
+                       </span>
+                       <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                           @if (canEdit(act)) {
+                             <button (click)="$event.stopPropagation(); openEditModal(act)" class="p-1 text-muted-foreground hover:text-primary transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                             </button>
+                             <button (click)="$event.stopPropagation(); deleteActivity(act.id)" class="p-1 text-muted-foreground hover:text-destructive transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                          }
-                          @if (hasFiles(act.projectId)) {
-                            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                          }
-                      </div>
+                             </button>
+                           }
+                       </div>
                    </div>
                    
-                   <p class="text-sm font-bold text-slate-700 mb-3 leading-snug pl-2">{{ act.description }}</p>
+                   <p class="text-sm font-medium mb-3 leading-snug">{{ act.description }}</p>
                    
-                   <div class="flex items-center justify-between mt-auto pl-2">
-                     <div class="flex items-center gap-2">
-                        <img [src]="getUser(act.responsibleId)?.avatar" class="w-6 h-6 rounded-full bg-slate-200">
-                        <span class="text-xs text-slate-500 font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
-                     </div>
-                     <span class="text-[10px] text-red-600 font-bold">En curso</span>
+                   <div class="flex items-center justify-between mt-auto pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-2">
+                         <img [src]="getUser(act.responsibleId)?.avatar" class="w-5 h-5 rounded-full bg-muted object-cover border border-border">
+                         <span class="text-[10px] text-muted-foreground font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                         <span class="text-[10px] text-primary font-bold">En curso</span>
+                      </div>
                    </div>
                 </div>
              }
@@ -142,43 +149,39 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
         </div>
 
         <!-- REALIZADA -->
-        <div class="flex-1 min-w-[300px] bg-slate-100/50 rounded-2xl flex flex-col border border-slate-200/60"
+        <div class="flex-1 min-w-[320px] bg-muted/30 rounded-lg flex flex-col border border-border/50"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event, 'REALIZADA')">
-           <div class="p-4 border-b border-slate-200/60 flex items-center gap-2">
-             <div class="w-3 h-3 rounded-full bg-green-500"></div>
-             <h3 class="font-bold text-red-900 uppercase tracking-wide text-sm">Realizada</h3>
-             <span class="ml-auto bg-white px-2 py-0.5 rounded-md text-xs font-bold text-slate-500 border border-slate-200">{{ doneActivities().length }}</span>
+           <div class="p-3 border-b border-border/50 flex items-center justify-between">
+             <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                <h3 class="font-bold text-xs uppercase tracking-wider text-muted-foreground">Realizadas</h3>
+             </div>
+             <span class="bg-card text-muted-foreground px-2 py-0.5 rounded-full text-[10px] font-bold border border-border shadow-sm">{{ doneActivities().length }}</span>
            </div>
 
-           <div class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
+           <div class="flex-1 overflow-y-auto p-2 space-y-3 custom-scrollbar">
              @for (act of doneActivities(); track act.id) {
-                <!-- Removed draggable="true" and (dragstart) to prevent moving completed items -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 cursor-pointer transition-all opacity-80 hover:opacity-100 group relative"
+                <div class="bg-card p-3.5 rounded-lg border border-border transition-all opacity-80 group relative cursor-pointer"
                      (click)="onCardClick(act)">
                    
                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-200 text-slate-600 border border-slate-300 truncate max-w-[120px]">
-                        {{ getProjectName(act.projectId) }}
-                      </span>
-                      <div class="h-5 w-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                       <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border truncate max-w-[140px]">
+                         {{ getProjectName(act.projectId) }}
+                       </span>
+                       <div class="h-4 w-4 rounded-full bg-green-500/10 text-green-600 flex items-center justify-center">
+                          <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                       </div>
+                   </div>
+                   
+                   <p class="text-sm font-medium text-muted-foreground line-through mb-3 leading-snug">{{ act.description }}</p>
+                   
+                   <div class="flex items-center justify-between mt-auto pt-2 border-t border-border/50">
+                      <div class="flex items-center gap-2 grayscale group-hover:grayscale-0 transition-all opacity-50 group-hover:opacity-100">
+                         <img [src]="getUser(act.responsibleId)?.avatar" class="w-5 h-5 rounded-full bg-muted object-cover border border-border">
+                         <span class="text-[10px] text-muted-foreground font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
                       </div>
-                   </div>
-                   
-                   <p class="text-sm font-medium text-slate-500 line-through mb-3 leading-snug">{{ act.description }}</p>
-                   
-                   <div class="flex items-center justify-between mt-auto">
-                     <div class="flex items-center gap-2 grayscale opacity-70">
-                        <img [src]="getUser(act.responsibleId)?.avatar" class="w-6 h-6 rounded-full bg-slate-200">
-                        <span class="text-xs text-slate-500 font-medium">{{ getUser(act.responsibleId)?.name.split(' ')[0] }}</span>
-                     </div>
-                     <span class="text-[10px] text-green-700 font-bold">{{ act.actualEndDate }}</span>
-                   </div>
-
-                   <!-- Optional Lock Icon to indicate fixed state -->
-                   <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                      <span class="text-[10px] text-green-600 font-bold">{{ act.actualEndDate }}</span>
                    </div>
                 </div>
              }
@@ -186,44 +189,49 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
         </div>
       </div>
       
-      <!-- Edit Modal -->
+      <!-- Edit Modal - Using EBM/Shadcn style centered modal -->
       @if (isEditing()) {
-          <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
-             <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-200">
-                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                    Editar Tarea
-                </h3>
+          <div class="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in px-4">
+             <div class="bg-card rounded-lg p-6 w-full max-w-md shadow-lg border border-border animate-in fade-in zoom-in-95">
+                <div class="flex justify-between items-start mb-4">
+                   <div>
+                      <h3 class="text-lg font-bold">Editar Actividad</h3>
+                      <p class="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase tracking-tighter">Modifica los detalles de la tarea asignada.</p>
+                   </div>
+                   <button (click)="closeEditModal()" class="p-1 rounded-md hover:bg-accent text-muted-foreground transition-colors">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                   </button>
+                </div>
                 
                 <div class="space-y-4">
                     <div>
-                      <label class="block text-xs font-bold text-slate-500 mb-1">Descripción</label>
-                      <input type="text" [(ngModel)]="editDesc" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900">
+                      <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Descripción</label>
+                      <input type="text" [(ngModel)]="editDesc" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-3">
                        <div>
-                         <label class="block text-xs font-bold text-slate-500 mb-1">Inicio</label>
-                         <input type="date" [(ngModel)]="editStart" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                         <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Inicio</label>
+                         <input type="date" [(ngModel)]="editStart" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                        </div>
                        <div>
-                         <label class="block text-xs font-bold text-slate-500 mb-1">Fin Estimado</label>
-                         <input type="date" [(ngModel)]="editEnd" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                         <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Fin Est.</label>
+                         <input type="date" [(ngModel)]="editEnd" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                        </div>
                     </div>
 
                     <div>
-                      <label class="block text-xs font-bold text-slate-500 mb-1">Responsable</label>
-                      <select [(ngModel)]="editResp" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:border-blue-500 outline-none text-slate-900">
+                      <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Responsable</label>
+                      <select [(ngModel)]="editResp" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                         @for (user of getAllUsers(); track user.id) {
                             <option [value]="user.id">{{ user.name }} ({{ user.subRole || user.role }})</option>
                         }
                       </select>
                     </div>
 
-                    <div class="flex items-center gap-3 pt-4">
-                       <button (click)="closeEditModal()" class="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors">Cancelar</button>
-                       <button (click)="saveEdit()" class="flex-1 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all">Guardar Cambios</button>
+                    <div class="flex items-center gap-3 pt-4 border-t border-border mt-6">
+                       <button (click)="closeEditModal()" class="flex-1 px-4 py-2 border border-border rounded-md text-xs font-bold hover:bg-accent transition-colors">Cancelar</button>
+                       <button (click)="saveEdit()" class="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-bold hover:bg-primary/90 transition-colors shadow-sm">Guardar Cambios</button>
                     </div>
                 </div>
              </div>
@@ -236,16 +244,10 @@ import { DataService, Activity, ActivityStatus, Project } from '../../services/d
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
   `]
 })
 export class KanbanBoardComponent {
   dataService = inject(DataService);
-
   selectedProjectId = signal<number>(0);
 
   constructor() { }
@@ -260,12 +262,10 @@ export class KanbanBoardComponent {
     const user = this.currentUser();
     let activities = this.dataService.getAllActivities();
 
-    // 1. Filter by User Hierarchy logic
-    // 1. Filter by User Hierarchy logic -> NOW STRICTLY 'MY TASKS'
-    // The user requested that this view ONLY shows tasks assigned to the user, regardless of role.
+    // STRICTLY 'MY TASKS'
     activities = activities.filter(a => a.responsibleId === user.id);
 
-    // 2. Filter by Selected Project Dropdown
+    // Filter by Selected Project
     if (this.selectedProjectId() !== 0) {
       activities = activities.filter(a => a.projectId === +this.selectedProjectId());
     }
@@ -273,7 +273,6 @@ export class KanbanBoardComponent {
     return activities;
   });
 
-  // Columns derived from filtered activities, SORTED by estimatedEndDate
   pendingActivities = computed(() => {
     return this.filteredActivities()
       .filter(a => a.status === 'PENDIENTE')
@@ -302,7 +301,6 @@ export class KanbanBoardComponent {
   isEditing = signal(false);
   editingActivity = signal<Activity | null>(null);
 
-  // Edit Form Signals
   editDesc = signal('');
   editStart = signal('');
   editEnd = signal('');
@@ -347,13 +345,46 @@ export class KanbanBoardComponent {
     if (act.status === 'REALIZADA') return false;
     const user = this.currentUser();
     if (!user) return false;
-
-    // Admin, Boss, Manager OR Responsible can edit
     if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') return true;
     return act.responsibleId === user.id;
   }
 
-  // --- Helpers ---
+  onDragStart(event: DragEvent, activity: Activity) {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('text/plain', JSON.stringify(activity.id));
+      event.dataTransfer.effectAllowed = 'move';
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  onDrop(event: DragEvent, newStatus: ActivityStatus) {
+    event.preventDefault();
+    if (event.dataTransfer) {
+      const id = +event.dataTransfer.getData('text/plain');
+      if (id) {
+        const activity = this.dataService.getAllActivities().find(a => a.id === id);
+        if (activity) {
+          const user = this.currentUser();
+          const canMove = (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') || (activity.responsibleId === user.id);
+          if (canMove) {
+            this.dataService.updateActivityStatus(id, newStatus);
+          } else {
+            alert('No tienes permisos para mover esta actividad.');
+          }
+        }
+      }
+    }
+  }
+
+  onCardClick(act: Activity) {
+    // Optional: navigate to project detail
+  }
 
   getProjectName(id: number) {
     return this.dataService.getProjectById(id)?.name || '...';
@@ -367,31 +398,18 @@ export class KanbanBoardComponent {
     return this.dataService.getAllUsers();
   }
 
-  hasFiles(projectId: number): boolean {
-    return this.dataService.getFilesByProject(projectId).length > 0;
-  }
-
-  getUrgencyColor(act: Activity): 'border-l-red-500' | 'border-l-yellow-500' | 'border-l-green-500' | '' {
+  getUrgencyColor(act: Activity): string {
     if (act.status === 'REALIZADA' || !act.estimatedEndDate) return '';
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    // Parse estimatedEndDate (assuming YYYY-MM-DD string)
-    // We append 'T00:00:00' to ensure local time or treat as UTC? 
-    // Standard practice here: assume string is YYYY-MM-DD
     const [year, month, day] = act.estimatedEndDate.split('-').map(Number);
     const targetDate = new Date(year, month - 1, day);
     targetDate.setHours(0, 0, 0, 0);
-
-    const diffTime = targetDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) return 'border-l-red-500'; // Overdue
-    if (diffDays <= 3) return 'border-l-yellow-500'; // Due Soon (<= 3 days)
-    if (diffDays <= 7) return 'border-l-green-500'; // Upcoming (<= 7 days)
-
-    return ''; // Normal
+    const diffDays = Math.ceil((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return 'border-l-red-500';
+    if (diffDays <= 3) return 'border-l-yellow-500';
+    if (diffDays <= 7) return 'border-l-green-500';
+    return '';
   }
 
   getUrgencyTextClass(act: Activity): string {
@@ -399,7 +417,7 @@ export class KanbanBoardComponent {
     if (colorClass === 'border-l-red-500') return 'text-red-500';
     if (colorClass === 'border-l-yellow-500') return 'text-yellow-600';
     if (colorClass === 'border-l-green-500') return 'text-green-600';
-    return 'text-slate-400';
+    return 'text-muted-foreground';
   }
 
   getUrgencyLabel(act: Activity): string {
@@ -408,44 +426,5 @@ export class KanbanBoardComponent {
     if (colorClass === 'border-l-yellow-500') return 'Próxima';
     if (colorClass === 'border-l-green-500') return 'Esta semana';
     return act.estimatedEndDate || '';
-  }
-
-  // --- Drag & Drop Logic ---
-
-  onDragStart(event: DragEvent, activity: Activity) {
-    if (event.dataTransfer) {
-      event.dataTransfer.setData('text/plain', JSON.stringify(activity.id));
-      event.dataTransfer.effectAllowed = 'move';
-    }
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault(); // Necessary to allow dropping
-    if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'move';
-    }
-  }
-
-  onDrop(event: DragEvent, newStatus: ActivityStatus) {
-    event.preventDefault();
-    if (event.dataTransfer) {
-      const id = +event.dataTransfer.getData('text/plain');
-      if (id) {
-        // Security Check: Can this user move this task?
-        // Logic: Assistants can move their own tasks. Managers can move any visible task.
-        const activity = this.dataService.getAllActivities().find(a => a.id === id);
-        if (activity) {
-          const user = this.currentUser();
-          const canMove = (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') || (activity.responsibleId === user.id);
-
-          if (canMove) {
-            // Call service to update state + cascade logic
-            this.dataService.updateActivityStatus(id, newStatus);
-          } else {
-            alert('No tienes permisos para mover esta actividad.');
-          }
-        }
-      }
-    }
   }
 }

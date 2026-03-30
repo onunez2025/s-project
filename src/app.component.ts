@@ -23,243 +23,263 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
   template: `
     @if (dataService.isAuthenticated()) {
       <!-- Main Application Layout -->
-      <div class="h-screen w-full flex bg-slate-50 dark:bg-slate-950 font-sans overflow-hidden text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      <div class="h-screen w-full flex bg-background text-foreground font-sans overflow-hidden transition-colors duration-300">
         
+        <!-- Mobile Sidebar Overlay -->
+        <div
+          class="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          [class.opacity-100]="sidebarOpen()"
+          [class.opacity-0]="!sidebarOpen()"
+          [class.pointer-events-none]="!sidebarOpen()"
+          (click)="sidebarOpen.set(false)">
+        </div>
+
         <!-- Sidebar -->
-        <aside class="w-72 bg-slate-900 dark:bg-slate-950 border-r border-transparent dark:border-slate-800 text-slate-300 hidden md:flex flex-col shadow-2xl z-20 transition-all font-medium relative h-full">
-          <div class="h-20 flex items-center px-8 border-b border-slate-800/50 bg-slate-900 dark:bg-slate-950 shrink-0">
-            <div class="flex items-center gap-2">
-              <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">S</div>
-              <span class="text-2xl font-bold tracking-tight text-white">
-                S-Project
-              </span>
+        <aside
+          class="fixed inset-y-0 left-0 z-50 w-64 border-r border-border transition-all duration-300 lg:static lg:translate-x-0 flex flex-col h-full"
+          [class.bg-card]="themeService.theme() === 'dark'"
+          [class.text-card-foreground]="themeService.theme() === 'dark'"
+          [class.bg-slate-50\/80]="themeService.theme() !== 'dark'"
+          [class.text-slate-800]="themeService.theme() !== 'dark'"
+          [class.translate-x-0]="sidebarOpen()"
+          [class.-translate-x-full]="!sidebarOpen()">
+          
+          <!-- Close button (mobile) -->
+          <div class="flex items-center justify-end p-4 lg:hidden">
+            <button (click)="sidebarOpen.set(false)" class="text-muted-foreground hover:text-foreground">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <!-- Header / Logo -->
+          <div class="p-6 flex items-center gap-3">
+            <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0 overflow-hidden shadow-sm">
+                S
+            </div>
+            <div>
+              <h1 class="font-bold text-lg leading-none tracking-tight">S-Project</h1>
+              <p class="text-xs text-muted-foreground">Gestión de Proyectost</p>
             </div>
           </div>
-          
-          <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto custom-scrollbar">
-            
-            <div class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Menu Principal</div>
+
+          <!-- User Profile Card -->
+          <div class="px-4 py-2">
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('PROFILE'); sidebarOpen.set(false)"
+               class="flex items-center gap-3 p-3 rounded-lg transition-all group border border-transparent"
+               [class.bg-primary/10]="dataService.currentView() === 'PROFILE'"
+               [class.border-primary/20]="dataService.currentView() === 'PROFILE'"
+               [class.shadow-sm]="dataService.currentView() === 'PROFILE'"
+               [class.bg-background/50]="dataService.currentView() !== 'PROFILE'"
+               [class.hover:bg-background]="dataService.currentView() !== 'PROFILE'"
+               [class.hover:shadow-md]="dataService.currentView() !== 'PROFILE'">
+              <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden shrink-0">
+                @if (dataService.currentUser()?.avatar) {
+                  <img [src]="dataService.currentUser()?.avatar" alt="Profile" class="w-full h-full object-cover">
+                } @else {
+                  {{ dataService.currentUser()?.name?.substring(0, 2).toUpperCase() || 'SP' }}
+                }
+              </div>
+              <div class="overflow-hidden">
+                <p class="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                  {{ dataService.currentUser()?.name || 'Usuario' }}
+                </p>
+                <p class="text-xs text-muted-foreground truncate">
+                  {{ dataService.currentUser()?.subRole || dataService.currentUser()?.role || 'Sin Rol' }}
+                </p>
+              </div>
+            </a>
+          </div>
+
+          <!-- Navigation -->
+          <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
             
             <!-- BI Dashboard -->
-            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('BI')" 
-               class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="dataService.currentView() === 'BI'"
-               [class.text-white]="dataService.currentView() === 'BI'"
-               [class.shadow-lg]="dataService.currentView() === 'BI'"
-               [class.shadow-blue-900/50]="dataService.currentView() === 'BI'"
-               [class.hover:bg-slate-800]="dataService.currentView() !== 'BI'"
-               [class.text-slate-400]="dataService.currentView() !== 'BI'">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('BI'); sidebarOpen.set(false)" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors"
+               [class.bg-primary]="dataService.currentView() === 'BI'"
+               [class.text-primary-foreground]="dataService.currentView() === 'BI'"
+               [class.shadow-sm]="dataService.currentView() === 'BI'"
+               [class.text-muted-foreground]="dataService.currentView() !== 'BI'"
+               [class.hover:bg-accent]="dataService.currentView() !== 'BI'"
+               [class.hover:text-accent-foreground]="dataService.currentView() !== 'BI'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
               </svg>
               Dashboard
             </a>
 
             <!-- Projects List -->
-            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('LIST')" 
-               class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
-               [class.text-white]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
-               [class.shadow-lg]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
-               [class.shadow-blue-900/50]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
-               [class.hover:bg-slate-800]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'"
-               [class.text-slate-400]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('LIST'); sidebarOpen.set(false)" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors"
+               [class.bg-primary]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.text-primary-foreground]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.shadow-sm]="dataService.currentView() === 'LIST' || dataService.currentView() === 'DETAIL'"
+               [class.text-muted-foreground]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'"
+               [class.hover:bg-accent]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'"
+               [class.hover:text-accent-foreground]="dataService.currentView() !== 'LIST' && dataService.currentView() !== 'DETAIL'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
               </svg>
               Proyectos
             </a>
             
             <!-- Mis Tareas (KANBAN) -->
-            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('KANBAN')" 
-               class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="dataService.currentView() === 'KANBAN'"
-               [class.text-white]="dataService.currentView() === 'KANBAN'"
-               [class.shadow-lg]="dataService.currentView() === 'KANBAN'"
-               [class.shadow-blue-900/50]="dataService.currentView() === 'KANBAN'"
-               [class.hover:bg-slate-800]="dataService.currentView() !== 'KANBAN'"
-               [class.text-slate-400]="dataService.currentView() !== 'KANBAN'">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-               </svg>
-               Mis Tareas
+            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('KANBAN'); sidebarOpen.set(false)" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors"
+               [class.bg-primary]="dataService.currentView() === 'KANBAN'"
+               [class.text-primary-foreground]="dataService.currentView() === 'KANBAN'"
+               [class.shadow-sm]="dataService.currentView() === 'KANBAN'"
+               [class.text-muted-foreground]="dataService.currentView() !== 'KANBAN'"
+               [class.hover:bg-accent]="dataService.currentView() !== 'KANBAN'"
+               [class.hover:text-accent-foreground]="dataService.currentView() !== 'KANBAN'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              </svg>
+              Mis Tareas
             </a>
 
-            <div class="px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-8">Soporte</div>
-
             <!-- Manual de Uso -->
-            <a href="#" (click)="$event.preventDefault(); dataService.goToManual()" 
-               class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-               [class.bg-blue-600]="dataService.currentView() === 'MANUAL'"
-               [class.text-white]="dataService.currentView() === 'MANUAL'"
-               [class.shadow-lg]="dataService.currentView() === 'MANUAL'"
-               [class.hover:bg-slate-800]="dataService.currentView() !== 'MANUAL'"
-               [class.text-slate-400]="dataService.currentView() !== 'MANUAL'">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-               </svg>
-               Manual de Uso
+            <a href="#" (click)="$event.preventDefault(); dataService.goToManual(); sidebarOpen.set(false)" 
+               class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors"
+               [class.bg-primary]="dataService.currentView() === 'MANUAL'"
+               [class.text-primary-foreground]="dataService.currentView() === 'MANUAL'"
+               [class.shadow-sm]="dataService.currentView() === 'MANUAL'"
+               [class.text-muted-foreground]="dataService.currentView() !== 'MANUAL'"
+               [class.hover:bg-accent]="dataService.currentView() !== 'MANUAL'"
+               [class.hover:text-accent-foreground]="dataService.currentView() !== 'MANUAL'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+              Manual de Uso
             </a>
 
             <!-- ADMIN ONLY MENU -->
             @if (dataService.currentUser()?.role === 'ADMIN') {
-              <div class="mt-8 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Administración</div>
+              <div class="pt-4 mt-4 border-t border-border">
+                <p class="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Administración</p>
+              </div>
               
-              <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('USERS')" 
-                 class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-                 [class.bg-blue-600]="dataService.currentView() === 'USERS'"
-                 [class.text-white]="dataService.currentView() === 'USERS'"
-                 [class.shadow-lg]="dataService.currentView() === 'USERS'"
-                 [class.hover:bg-slate-800]="dataService.currentView() !== 'USERS'"
-                 [class.text-slate-400]="dataService.currentView() !== 'USERS'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('USERS'); sidebarOpen.set(false)" 
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors"
+                 [class.bg-primary]="dataService.currentView() === 'USERS'"
+                 [class.text-primary-foreground]="dataService.currentView() === 'USERS'"
+                 [class.shadow-sm]="dataService.currentView() === 'USERS'"
+                 [class.text-muted-foreground]="dataService.currentView() !== 'USERS'"
+                 [class.hover:bg-accent]="dataService.currentView() !== 'USERS'"
+                 [class.hover:text-accent-foreground]="dataService.currentView() !== 'USERS'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                 </svg>
                 Equipos y Usuarios
               </a>
 
-              <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('AREAS')" 
-                 class="flex items-center px-4 py-3 rounded-xl transition-all group duration-200"
-                 [class.bg-blue-600]="dataService.currentView() === 'AREAS'"
-                 [class.text-white]="dataService.currentView() === 'AREAS'"
-                 [class.shadow-lg]="dataService.currentView() === 'AREAS'"
-                 [class.hover:bg-slate-800]="dataService.currentView() !== 'AREAS'"
-                 [class.text-slate-400]="dataService.currentView() !== 'AREAS'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('AREAS'); sidebarOpen.set(false)" 
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors"
+                 [class.bg-primary]="dataService.currentView() === 'AREAS'"
+                 [class.text-primary-foreground]="dataService.currentView() === 'AREAS'"
+                 [class.shadow-sm]="dataService.currentView() === 'AREAS'"
+                 [class.text-muted-foreground]="dataService.currentView() !== 'AREAS'"
+                 [class.hover:bg-accent]="dataService.currentView() !== 'AREAS'"
+                 [class.hover:text-accent-foreground]="dataService.currentView() !== 'AREAS'">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                 </svg>
                 Config Áreas
               </a>
             }
           </nav>
 
-          <!-- User Profile Bottom Section (Interactive) -->
-          <div class="relative shrink-0">
-             @if(showUserMenu()) {
-                <!-- Popover Menu -->
-                <div class="absolute bottom-full left-4 w-64 mb-2 bg-[#1E293B] rounded-xl shadow-xl border border-slate-700/50 overflow-hidden animate-fade-in z-30">
-                   <button (click)="dataService.currentView.set('PROFILE'); showUserMenu.set(false)" class="w-full text-left px-4 py-3 text-sm text-slate-300 hover:text-white hover:bg-slate-700/50 flex items-center gap-2 transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                      Mi Perfil
-                   </button>
-                   <div class="h-px bg-slate-700/50 mx-2"></div>
-                   <button (click)="dataService.logout()" class="w-full text-left px-4 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 flex items-center gap-2 transition-colors">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                      Cerrar Sesión
-                   </button>
-                </div>
-                
-                <!-- Overlay to close menu when clicking outside -->
-                <div class="fixed inset-0 z-20 cursor-default" (click)="showUserMenu.set(false)"></div>
-             }
+          <!-- Footer / Theme Toggle / Logout -->
+          <div class="p-4 border-t border-border space-y-2">
+            <button (click)="themeService.toggleTheme()"
+                    class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
+              @if (themeService.theme() === 'dark') {
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                Modo Claro
+              } @else {
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                Modo Oscuro
+              }
+            </button>
 
-             <!-- Theme Toggle REMOVED -->
-
-             <!-- Trigger Bar -->
-             <div (click)="showUserMenu.set(!showUserMenu())" class="p-6 border-t border-slate-800/50 bg-slate-900 dark:bg-slate-950 cursor-pointer hover:bg-slate-800/50 transition-colors group z-30 relative">
-                <div class="flex items-center gap-3">
-                  <div class="relative">
-                     <img [src]="dataService.currentUser()?.avatar" class="h-10 w-10 rounded-full bg-slate-700 border-2 border-slate-600 object-cover group-hover:border-blue-500 transition-colors">
-                     <div class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-[#0F172A]"></div>
-                  </div>
-                  <div class="overflow-hidden flex-1">
-                    <p class="text-sm font-semibold text-white truncate">{{ dataService.currentUser()?.name }}</p>
-                    <p class="text-xs text-slate-400 truncate">{{ dataService.currentUser()?.subRole || 'Administrador' }}</p>
-                  </div>
-                  <div class="text-slate-500 group-hover:text-white transition-colors">
-                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                  </div>
-                </div>
-             </div>
+            <button (click)="dataService.logout()"
+                    class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              Cerrar Sesión
+            </button>
           </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative h-full">
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
           
           <!-- Mobile Header -->
-          <header class="md:hidden bg-[#0F172A] border-b border-slate-800 h-16 flex items-center px-4 justify-between shadow-md z-30 shrink-0">
-             <span class="text-xl font-bold text-white">S-Project</span>
-             <div class="flex items-center gap-3">
-               <app-notification></app-notification>
-               <img [src]="dataService.currentUser()?.avatar" (click)="dataService.currentView.set('PROFILE')" class="h-8 w-8 rounded-full border border-slate-500 cursor-pointer">
-             </div>
+          <header class="flex items-center gap-4 px-4 py-3 border-b border-border bg-card lg:hidden sticky top-0 z-30">
+            <button (click)="sidebarOpen.set(true)" class="p-2 -ml-2 text-muted-foreground hover:bg-accent rounded-md">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-xs">S</div>
+              <span class="font-semibold text-lg">S-Project</span>
+            </div>
+            <div class="ml-auto flex items-center gap-2">
+              <app-notification></app-notification>
+            </div>
           </header>
 
-          <!-- Desktop Header Bar -->
-          <header class="hidden md:flex h-16 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 items-center justify-between px-8 shrink-0 z-10 transition-colors duration-300">
-             <div class="flex items-center gap-4 text-slate-500">
-               <span class="text-sm font-medium">Dashboard</span>
-               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-               <span class="text-sm font-bold text-slate-800">{{ dataService.currentView() }}</span>
-             </div>
-             
-             <div class="flex items-center gap-4">
-                <app-notification></app-notification>
-                <div class="h-8 w-px bg-slate-100"></div>
-                <!-- Profile Link / Quick Settings -->
-                <button (click)="dataService.currentView.set('PROFILE')" class="text-slate-400 hover:text-blue-600 transition-colors">
-                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                </button>
-             </div>
-          </header>
-
-          <div class="flex-1 overflow-auto p-4 sm:p-8 relative custom-scrollbar">
-             @switch (dataService.currentView()) {
-               @case ('BI') {
-                  <app-bi-dashboard 
-                     (selectProject)="dataService.goToDetail($event)"
-                     (goToProjects)="dataService.currentView.set('LIST')"
-                     (goToManual)="dataService.goToManual('projects')">
-                  </app-bi-dashboard>
-               }
-               @case ('LIST') {
-                 <app-dashboard 
-                    (onSelect)="dataService.goToDetail($event)"
-                    (goToManual)="dataService.goToManual('projects')"
-                 ></app-dashboard>
-               }
-               @case ('DETAIL') {
-                 <app-project-detail
-                    [projectId]="dataService.selectedProjectId()!"
-                    (back)="dataService.currentView.set('LIST')"
-                    (goToManual)="dataService.goToManual($event)"
-                 ></app-project-detail>
-               }
-               @case ('KANBAN') {
-                 <app-kanban-board></app-kanban-board>
-               }
-               @case ('USERS') {
-                 <app-user-management></app-user-management>
-               }
-               @case ('AREAS') {
-                 <app-area-management></app-area-management>
-               }
-               @case ('PROFILE') {
-                 <app-profile></app-profile>
-               }
-               @case ('MANUAL') {
-                 <app-manual [section]="dataService.manualSection()"></app-manual>
-               }
-             }
-          </div>
-        </main>
+          <!-- Content Area -->
+          <main class="flex-1 overflow-y-auto p-4 lg:p-8 flex flex-col">
+            <div class="flex-1 mx-auto max-w-7xl w-full flex flex-col min-h-0 animate-in fade-in zoom-in-95">
+              @switch (dataService.currentView()) {
+                @case ('BI') {
+                   <app-bi-dashboard 
+                      (selectProject)="dataService.goToDetail($event)"
+                      (goToProjects)="dataService.currentView.set('LIST')"
+                      (goToManual)="dataService.goToManual('projects')">
+                   </app-bi-dashboard>
+                }
+                @case ('LIST') {
+                  <app-dashboard 
+                     (onSelect)="dataService.goToDetail($event)"
+                     (goToManual)="dataService.goToManual('projects')"
+                  ></app-dashboard>
+                }
+                @case ('DETAIL') {
+                  <app-project-detail
+                     [projectId]="dataService.selectedProjectId()!"
+                     (back)="dataService.currentView.set('LIST')"
+                     (goToManual)="dataService.goToManual($event)"
+                  ></app-project-detail>
+                }
+                @case ('KANBAN') {
+                  <app-kanban-board></app-kanban-board>
+                }
+                @case ('USERS') {
+                  <app-user-management></app-user-management>
+                }
+                @case ('AREAS') {
+                  <app-area-management></app-area-management>
+                }
+                @case ('PROFILE') {
+                  <app-profile></app-profile>
+                }
+                @case ('MANUAL') {
+                  <app-manual [section]="dataService.manualSection()"></app-manual>
+                }
+              }
+            </div>
+          </main>
+        </div>
       </div>
     } @else {
       <!-- Login View -->
       <app-login></app-login>
     }
   `,
-  styles: [`
-     .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-     .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-     .animate-fade-in { animation: fadeIn 0.2s ease-out; }
-     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-  `]
+  styles: []
 })
 export class AppComponent {
   dataService = inject(DataService);
   themeService = inject(ThemeService);
-  showUserMenu = signal(false);
+  sidebarOpen = signal(false);
 }

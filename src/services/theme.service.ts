@@ -13,7 +13,7 @@ export class ThemeService {
         this.loadTheme();
         effect(() => {
             this.applyTheme(this.theme());
-            localStorage.setItem('sole_theme_preference', this.theme());
+            localStorage.setItem('sole_sprojects_theme', this.theme());
         });
     }
 
@@ -22,11 +22,19 @@ export class ThemeService {
     }
 
     private loadTheme() {
-        // Always set to light
-        this.theme.set('light');
+        const saved = localStorage.getItem('sole_sprojects_theme') as Theme | null;
+        if (saved === 'dark' || saved === 'light') {
+            this.theme.set(saved);
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            this.theme.set(prefersDark ? 'dark' : 'light');
+        }
     }
 
     private applyTheme(theme: Theme) {
-        document.documentElement.classList.remove('dark');
+        const root = document.documentElement;
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
     }
 }

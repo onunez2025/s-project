@@ -9,86 +9,92 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   template: `
-    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-end">
-      <div class="w-full max-w-2xl bg-white h-full shadow-2xl p-8 overflow-y-auto animate-slide-in flex flex-col relative">
+    <div class="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex justify-end">
+      <div class="w-full max-w-xl bg-card h-full shadow-2xl p-6 overflow-y-auto animate-slide-in flex flex-col relative border-l border-border">
         
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex justify-between items-center mb-6">
            <div>
-             <h3 class="text-2xl font-bold text-slate-800">
+             <h3 class="text-lg font-bold text-foreground uppercase tracking-widest">
                {{ projectToEdit() ? 'Editar Proyecto' : 'Nuevo Proyecto' }}
              </h3>
-             <p class="text-slate-500 text-sm mt-1">Configuración Multi-Área y Equipo</p>
+             <p class="text-muted-foreground text-[10px] font-bold uppercase tracking-tighter mt-1">Configuración Multi-Área y Equipo</p>
            </div>
-           <button (click)="cancel.emit()" class="h-10 w-10 rounded-full bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-blue-500 flex items-center justify-center transition-colors">
-             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <button (click)="cancel.emit()" class="h-8 w-8 rounded-full bg-muted hover:bg-destructive/10 text-muted-foreground hover:text-destructive flex items-center justify-center transition-all">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
              </svg>
            </button>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6 flex-1">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5 flex-1">
           
           <!-- Basic Info -->
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Nombre del Proyecto</label>
-            <input type="text" formControlName="name" placeholder="Ej. Implementación SAP"
-              class="block w-full rounded-xl border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 font-medium">
-            @if (form.get('name')?.touched && form.get('name')?.invalid) {
-              <p class="mt-1 text-xs text-blue-500 font-medium">El nombre es requerido.</p>
-            }
-          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 ml-0.5">Nombre del Proyecto</label>
+              <input type="text" formControlName="name" placeholder="Ej. Implementación SAP"
+                class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
+              @if (form.get('name')?.touched && form.get('name')?.invalid) {
+                <p class="mt-1 text-[10px] text-destructive font-bold uppercase tracking-tighter">El nombre es requerido.</p>
+              }
+            </div>
 
-          <div>
-            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Descripción</label>
-            <textarea formControlName="description" rows="2" class="block w-full rounded-xl border-slate-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 resize-none"></textarea>
+            <div>
+              <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5 ml-0.5">Descripción</label>
+              <textarea formControlName="description" rows="2" 
+                class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium resize-none"></textarea>
+            </div>
           </div>
 
           <!-- Budget Section -->
-          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-5">
-            <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-               <span class="w-1 h-4 bg-blue-500 rounded-full"></span>
+          <div class="p-4 bg-muted/30 rounded-lg border border-border space-y-4">
+            <h4 class="text-[10px] font-black text-foreground uppercase tracking-widest flex items-center gap-2">
+               <span class="w-1 h-3 bg-primary rounded-full"></span>
                Presupuesto y Tiempos
             </h4>
             
             <div class="grid grid-cols-2 gap-4">
                <div class="col-span-2 sm:col-span-1">
-                 <label class="block text-xs font-bold text-slate-500 mb-1">Presupuesto</label>
-                 <div class="flex rounded-xl shadow-sm">
-                   <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-200 bg-white text-slate-500 text-sm font-bold">
-                     {{ form.get('currency')?.value === 'PEN' ? 'S/' : '$' }}
-                   </span>
-                   <input type="number" formControlName="budget" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-r-xl border-slate-200 focus:ring-blue-500 focus:border-blue-500 border text-slate-900 font-bold bg-white">
+                 <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 ml-0.5 uppercase">Monto</label>
+                 <div class="flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center px-2.5 bg-muted border border-input border-r-0 rounded-l-md text-[10px] font-black uppercase text-foreground">
+                      {{ form.get('currency')?.value === 'PEN' ? 'S/' : '$' }}
+                    </span>
+                    <input type="number" formControlName="budget" 
+                           class="flex-1 px-3 py-2 bg-background border border-input rounded-r-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-bold">
                  </div>
                  @if(form.get('budget')?.touched && form.get('budget')?.invalid) {
-                    <p class="text-[10px] text-blue-500 mt-1">Debe ser mayor a 0</p>
+                    <p class="text-[10px] text-destructive mt-1 font-bold">Debe ser mayor a 0</p>
                  }
                </div>
                
                <div class="col-span-2 sm:col-span-1">
-                  <label class="block text-xs font-bold text-slate-500 mb-1">Moneda</label>
-                  <div class="flex bg-white rounded-xl border border-slate-200 p-1">
+                  <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 ml-0.5 uppercase">Moneda</label>
+                  <div class="flex bg-background rounded-md border border-input p-1 h-[34px]">
                     <label class="flex-1 text-center cursor-pointer">
                       <input type="radio" formControlName="currency" value="PEN" class="hidden peer">
-                      <span class="block py-1.5 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-red-100 peer-checked:text-red-700 transition-all">Soles</span>
+                      <span class="block py-1 text-[10px] font-black text-muted-foreground rounded-md peer-checked:bg-primary/10 peer-checked:text-primary transition-all uppercase">Soles</span>
                     </label>
                     <label class="flex-1 text-center cursor-pointer">
                       <input type="radio" formControlName="currency" value="USD" class="hidden peer">
-                      <span class="block py-1.5 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-red-100 peer-checked:text-red-700 transition-all">Dólares</span>
+                      <span class="block py-1 text-[10px] font-black text-muted-foreground rounded-md peer-checked:bg-primary/10 peer-checked:text-primary transition-all uppercase">Dólares</span>
                     </label>
                   </div>
                </div>
 
                <div>
-                 <label class="block text-xs font-bold text-slate-500 mb-1">Inicio</label>
-                 <input type="date" formControlName="startDate" class="block w-full rounded-xl border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-slate-900 font-medium text-sm">
+                 <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 ml-0.5 uppercase">Inicio</label>
+                 <input type="date" formControlName="startDate" 
+                        class="w-full px-3 py-1.5 bg-background border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                </div>
                <div>
-                 <label class="block text-xs font-bold text-slate-500 mb-1">Fin</label>
-                 <input type="date" formControlName="endDate" class="block w-full rounded-xl border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2 bg-white text-slate-900 font-medium text-sm">
+                 <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 ml-0.5 uppercase">Fin</label>
+                 <input type="date" formControlName="endDate" 
+                        class="w-full px-3 py-1.5 bg-background border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                </div>
                @if(form.errors?.['dateRange']) {
-                  <p class="col-span-2 text-center text-xs text-blue-500 font-bold bg-red-50 p-1 rounded">
+                  <p class="col-span-2 text-center text-[10px] text-destructive font-black bg-destructive/10 p-1.5 rounded uppercase tracking-tighter">
                      La fecha de fin debe ser posterior a la de inicio.
                   </p>
                }
@@ -96,25 +102,25 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
           </div>
 
           <!-- Multi-Area Configuration -->
-          <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-5">
-             <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-               <span class="w-1 h-4 bg-purple-500 rounded-full"></span>
+          <div class="p-4 bg-card rounded-lg border border-border shadow-sm space-y-4">
+             <h4 class="text-[10px] font-black text-foreground uppercase tracking-widest flex items-center gap-2">
+               <span class="w-1 h-3 bg-purple-500 rounded-full"></span>
                Áreas y Líderes
             </h4>
             
             <div>
-               <label class="block text-xs font-bold text-slate-500 mb-3">Selecciona Áreas Participantes</label>
+               <label class="block text-[10px] font-bold text-muted-foreground mb-2.5 uppercase tracking-wider">Participantes</label>
                <div class="flex flex-wrap gap-2">
                  @for (area of allAreas(); track area.id) {
                     <button type="button" 
                        (click)="toggleArea(area.id)"
-                       class="px-3 py-1.5 rounded-lg border text-sm font-medium transition-all"
-                       [class.bg-purple-50]="isAreaSelected(area.id)"
-                       [class.border-purple-200]="isAreaSelected(area.id)"
-                       [class.text-purple-700]="isAreaSelected(area.id)"
-                       [class.bg-white]="!isAreaSelected(area.id)"
-                       [class.border-slate-200]="!isAreaSelected(area.id)"
-                       [class.text-slate-600]="!isAreaSelected(area.id)">
+                       class="px-2.5 py-1 rounded border text-[10px] font-black uppercase transition-all tracking-tighter"
+                       [class.bg-purple-500/10]="isAreaSelected(area.id)"
+                       [class.border-purple-500/30]="isAreaSelected(area.id)"
+                       [class.text-purple-500]="isAreaSelected(area.id)"
+                       [class.bg-muted]="!isAreaSelected(area.id)"
+                       [class.border-border]="!isAreaSelected(area.id)"
+                       [class.text-muted-foreground]="!isAreaSelected(area.id)">
                        {{ area.name }}
                     </button>
                  }
@@ -123,12 +129,12 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
 
             <!-- Dynamic Leader Selectors per Selected Area -->
              @if (selectedAreaIds().length > 0) {
-               <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+               <div class="space-y-2.5 bg-muted/30 p-3 rounded-md border border-border">
                   @for (areaId of selectedAreaIds(); track areaId) {
                      <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-1">Líder para {{ getAreaName(areaId) }}</label>
+                        <label class="block text-[10px] font-bold text-muted-foreground mb-1 uppercase tracking-tighter">Líder para {{ getAreaName(areaId) }}</label>
                         <select [value]="getLeaderForArea(areaId)" (change)="setLeaderForArea(areaId, $any($event.target).value)" 
-                                class="block w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm p-2.5 focus:border-purple-500 outline-none">
+                                class="w-full px-3 py-2 bg-background border border-input rounded-md text-xs focus:ring-1 focus:ring-purple-500/50 outline-none font-bold">
                            <option [value]="0">Seleccionar Líder...</option>
                            @for (user of getPotentialLeaders(areaId); track user.id) {
                               <option [value]="user.id" [selected]="getLeaderForArea(areaId) === user.id">{{ user.name }} ({{ user.subRole || 'ADMIN' }})</option>
@@ -138,31 +144,31 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
                   }
                </div>
              } @else {
-               <p class="text-xs text-red-400 italic">Debes seleccionar al menos un área.</p>
+               <p class="text-[10px] text-destructive font-bold uppercase tracking-widest italic">Debes seleccionar al menos un área.</p>
              }
           </div>
 
           <!-- Team Section (Grouped by Area) -->
           @if (selectedAreaIds().length > 0) {
-            <div class="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-5">
-              <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                 <span class="w-1 h-4 bg-green-500 rounded-full"></span>
+            <div class="p-4 bg-card rounded-lg border border-border shadow-sm space-y-4">
+              <h4 class="text-[10px] font-black text-foreground uppercase tracking-widest flex items-center gap-2">
+                 <span class="w-1 h-3 bg-emerald-500 rounded-full"></span>
                  Equipo de Trabajo
               </h4>
               
-              <div class="max-h-60 overflow-y-auto custom-scrollbar space-y-4 pr-1">
+              <div class="max-h-48 overflow-y-auto custom-scrollbar space-y-3 pr-1">
                  @for (areaId of selectedAreaIds(); track areaId) {
-                    <div class="border-b border-slate-100 pb-3 last:border-0">
-                       <h5 class="text-xs font-bold text-slate-500 uppercase mb-2">{{ getAreaName(areaId) }} - Miembros Disponibles</h5>
+                    <div class="border-b border-border/50 pb-2.5 last:border-0">
+                       <h5 class="text-[10px] font-black text-muted-foreground uppercase mb-2 tracking-tighter">{{ getAreaName(areaId) }} - Miembros</h5>
                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           @for (user of getAvailableTeamMembers(areaId); track user.id) {
-                             <label class="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
+                             <label class="flex items-center space-x-3 p-1.5 rounded cursor-pointer hover:bg-muted transition-colors border border-transparent hover:border-border">
                                 <input type="checkbox" [checked]="isTeamMemberSelected(user.id)" (change)="toggleTeamMember(user.id)"
-                                       class="h-4 w-4 text-green-600 rounded focus:ring-green-500 border-slate-300">
-                                <span class="text-sm text-slate-700">{{ user.name }}</span>
+                                       class="h-3.5 w-3.5 text-emerald-600 rounded focus:ring-emerald-500 border-input bg-background/50">
+                                <span class="text-[11px] font-bold text-foreground/80 tracking-tighter">{{ user.name }}</span>
                              </label>
                           } @empty {
-                             <p class="text-xs text-slate-400 italic">No hay miembros adicionales disponibles.</p>
+                             <p class="text-[10px] text-muted-foreground italic">No hay miembros adicionales.</p>
                           }
                        </div>
                     </div>
@@ -173,9 +179,9 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
 
           <!-- Status Override (Only if Editing) -->
           @if (projectToEdit()) {
-             <div class="p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                <label class="block text-xs font-bold text-slate-500 mb-2">Estado Manual</label>
-                <select formControlName="status" class="block w-full rounded-xl border-slate-200 bg-white p-2 text-slate-900 text-sm outline-none">
+             <div class="p-4 bg-muted/30 rounded-lg border border-border">
+                <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 uppercase tracking-widest">Estado Manual</label>
+                <select formControlName="status" class="w-full px-3 py-2 bg-background border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
                    <option value="PLANIFICACION">Planificación</option>
                    <option value="EN_PROCESO">En Progreso</option>
                    <option value="FINALIZADO">Finalizado</option>
@@ -184,11 +190,13 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
           }
 
           <!-- Actions -->
-          <div class="pt-4 flex justify-end gap-3 sticky bottom-0 bg-white border-t border-slate-100 pb-2">
-             <button type="button" (click)="cancel.emit()" class="px-6 py-3 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors">
+          <div class="mt-auto pt-4 flex justify-end gap-3 sticky bottom-0 bg-card border-t border-border -mx-6 px-6 pb-2">
+             <button type="button" (click)="cancel.emit()" 
+                     class="px-5 py-2 border border-border rounded-md text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:bg-muted transition-all">
                Cancelar
              </button>
-             <button type="submit" [disabled]="form.invalid || !isValidConfig()" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-red-700 disabled:opacity-50 transition-colors shadow-lg shadow-blue-600/30">
+             <button type="submit" [disabled]="form.invalid || !isValidConfig()" 
+                     class="px-5 py-2 bg-primary text-primary-foreground rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 disabled:opacity-50 transition-all shadow-sm">
                {{ projectToEdit() ? 'Guardar Cambios' : 'Crear Proyecto' }}
              </button>
           </div>
@@ -199,7 +207,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
   `,
   styles: [`
     .animate-slide-in {
-      animation: slideIn 0.3s ease-out;
+      animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     @keyframes slideIn {
       from { transform: translateX(100%); opacity: 0; }
@@ -207,7 +215,7 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
     }
     .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
   `]
 })
 export class ProjectFormComponent {

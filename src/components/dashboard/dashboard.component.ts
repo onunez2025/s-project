@@ -15,65 +15,57 @@ type ViewMode = 'CARDS' | 'GANTT';
   template: `
     <div class="h-full flex flex-col animate-fade-in">
       <!-- Header / Filters -->
-      <div class="flex flex-col xl:flex-row justify-between items-end xl:items-center gap-4 mb-8 relative z-30">
+      <div class="flex flex-col xl:flex-row justify-between items-end xl:items-center gap-4 mb-6 relative z-30">
         <div class="flex items-center gap-3">
           <div>
-            <h2 class="text-3xl font-bold text-slate-800 dark:text-slate-100">Proyectos</h2>
-            <p class="text-slate-500 dark:text-slate-400 mt-1">Gestiona y supervisa tus proyectos activos</p>
+            <h2 class="text-2xl font-bold tracking-tight">Proyectos</h2>
+            <p class="text-muted-foreground text-xs font-medium">Gestiona y supervisa tus proyectos activos</p>
           </div>
-          <button (click)="goToManual.emit()" class="text-slate-400 hover:text-blue-600 transition-colors p-2 rounded-full hover:bg-red-50 mt-1" title="Ayuda">
-             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-             </svg>
-          </button>
         </div>
         
         <div class="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
           
-            <!-- Filters (New) -->
+            <!-- Filters -->
             <app-filter-bar 
-               class="w-full xl:w-auto animate-fade-in"
+               class="w-full xl:w-auto"
                [areas]="dataService.getAllAreas()"
                [users]="dataService.getAllUsers()"
                (filtersChanged)="onFiltersChanged($event)">
             </app-filter-bar>
 
           <!-- View Switcher -->
-          <div class="bg-slate-200 p-1 rounded-xl flex items-center shadow-inner">
+          <div class="bg-muted p-1 rounded-md flex items-center">
              <button (click)="viewMode.set('CARDS')" 
-               class="p-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 px-3"
-               [class.bg-white]="viewMode() === 'CARDS'"
-               [class.text-blue-600]="viewMode() === 'CARDS'"
+               class="p-2 rounded text-sm transition-all duration-200 flex items-center justify-center gap-2 px-3"
+               [class.bg-card]="viewMode() === 'CARDS'"
+               [class.text-primary]="viewMode() === 'CARDS'"
                [class.shadow-sm]="viewMode() === 'CARDS'"
-               [class.text-slate-500]="viewMode() !== 'CARDS'"
-               [class.hover:text-slate-700]="viewMode() !== 'CARDS'"
+               [class.text-muted-foreground]="viewMode() !== 'CARDS'"
                title="Vista de Tarjetas">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                </svg>
-               <span class="text-xs font-bold hidden sm:inline">Tarjetas</span>
+               <span class="text-xs font-medium hidden sm:inline">Tarjetas</span>
              </button>
              <button (click)="viewMode.set('GANTT')" 
-               class="p-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 px-3"
-               [class.bg-white]="viewMode() === 'GANTT'"
-               [class.text-blue-600]="viewMode() === 'GANTT'"
+               class="p-2 rounded text-sm transition-all duration-200 flex items-center justify-center gap-2 px-3"
+               [class.bg-card]="viewMode() === 'GANTT'"
+               [class.text-primary]="viewMode() === 'GANTT'"
                [class.shadow-sm]="viewMode() === 'GANTT'"
-               [class.text-slate-500]="viewMode() !== 'GANTT'"
-               [class.hover:text-slate-700]="viewMode() !== 'GANTT'"
+               [class.text-muted-foreground]="viewMode() !== 'GANTT'"
                title="Vista de Cronograma (Gantt)">
-               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4v4m8-4v4m-12 8v4m8-4v4" stroke-opacity="0.5" />
+               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                </svg>
-               <span class="text-xs font-bold hidden sm:inline">Gantt</span>
+               <span class="text-xs font-medium hidden sm:inline">Gantt</span>
              </button>
           </div>
           
           <!-- Create Button -->
           @if (canCreateProject()) {
-            <button (click)="openCreate()" class="w-full sm:w-auto bg-blue-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 whitespace-nowrap">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            <button (click)="openCreate()" class="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2.5 rounded-md text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
               Nuevo Proyecto
             </button>
@@ -84,58 +76,56 @@ type ViewMode = 'CARDS' | 'GANTT';
       <!-- Content Area -->
       @if (viewMode() === 'CARDS') {
         <!-- Card Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-10 animate-fade-in">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-10 animate-fade-in">
           @for (proj of displayProjects(); track proj.id) {
             <!-- Card Component -->
-            <div (click)="onSelect.emit(proj.id)" class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-xl hover:shadow-red-900/5 border border-slate-100 transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
+            <div (click)="onSelect.emit(proj.id)" class="bg-card rounded-lg p-5 shadow-sm border hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden">
               
-              <!-- Top Status Bar (Color Coded) -->
+              <!-- Top Status Bar -->
               <div class="absolute top-0 left-0 w-full h-1"
-                [class.bg-red-500]="proj.status === 'EN_PROCESO'"
+                [class.bg-blue-500]="proj.status === 'EN_PROCESO'"
                 [class.bg-green-500]="proj.status === 'FINALIZADO'"
-                [class.bg-slate-300]="proj.status === 'PLANIFICACION'"
+                [class.bg-muted-foreground/30]="proj.status === 'PLANIFICACION'"
               ></div>
 
               <!-- Header -->
-              <div class="flex justify-between items-start mb-4">
-                 <div class="h-12 w-12 rounded-xl flex items-center justify-center text-xl font-bold shadow-sm"
-                      [class.bg-red-50]="proj.status === 'EN_PROCESO'"
-                      [class.text-red-600]="proj.status === 'EN_PROCESO'"
+              <div class="flex justify-between items-start mb-3 mt-1">
+                 <div class="h-10 w-10 rounded-lg flex items-center justify-center text-lg font-bold"
+                      [class.bg-blue-50]="proj.status === 'EN_PROCESO'"
+                      [class.text-blue-600]="proj.status === 'EN_PROCESO'"
+                      [class.dark:bg-blue-900/20]="proj.status === 'EN_PROCESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-600]="proj.status === 'FINALIZADO'"
-                      [class.bg-slate-50]="proj.status === 'PLANIFICACION'"
-                      [class.text-slate-600]="proj.status === 'PLANIFICACION'">
+                      [class.dark:bg-green-900/20]="proj.status === 'FINALIZADO'"
+                      [class.bg-muted]="proj.status === 'PLANIFICACION'"
+                      [class.text-muted-foreground]="proj.status === 'PLANIFICACION'">
                    {{ proj.name.charAt(0) }}
                  </div>
                  
                  <div class="flex items-center gap-2">
-                   <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide border"
-                      [class.bg-red-50]="proj.status === 'EN_PROCESO'"
-                      [class.text-red-700]="proj.status === 'EN_PROCESO'"
-                      [class.border-red-100]="proj.status === 'EN_PROCESO'"
-                      [class.dark:bg-red-900/30]="proj.status === 'EN_PROCESO'"
-                      [class.dark:text-red-400]="proj.status === 'EN_PROCESO'"
-                      [class.dark:border-red-800]="proj.status === 'EN_PROCESO'"
+                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border"
+                      [class.bg-blue-50]="proj.status === 'EN_PROCESO'"
+                      [class.text-blue-700]="proj.status === 'EN_PROCESO'"
+                      [class.border-blue-100]="proj.status === 'EN_PROCESO'"
+                      [class.dark:bg-blue-900/30]="proj.status === 'EN_PROCESO'"
+                      [class.dark:text-blue-400]="proj.status === 'EN_PROCESO'"
+                      [class.dark:border-blue-800]="proj.status === 'EN_PROCESO'"
                       [class.bg-green-50]="proj.status === 'FINALIZADO'"
                       [class.text-green-700]="proj.status === 'FINALIZADO'"
                       [class.border-green-100]="proj.status === 'FINALIZADO'"
                       [class.dark:bg-green-900/30]="proj.status === 'FINALIZADO'"
                       [class.dark:text-green-400]="proj.status === 'FINALIZADO'"
                       [class.dark:border-green-800]="proj.status === 'FINALIZADO'"
-                      [class.bg-slate-50]="proj.status === 'PLANIFICACION'"
-                      [class.text-slate-600]="proj.status === 'PLANIFICACION'"
-                      [class.border-slate-100]="proj.status === 'PLANIFICACION'"
-                      [class.dark:bg-slate-700/50]="proj.status === 'PLANIFICACION'"
-                      [class.dark:text-slate-300]="proj.status === 'PLANIFICACION'"
-                      [class.dark:border-slate-600]="proj.status === 'PLANIFICACION'">
+                      [class.bg-muted]="proj.status === 'PLANIFICACION'"
+                      [class.text-muted-foreground]="proj.status === 'PLANIFICACION'"
+                      [class.border-border]="proj.status === 'PLANIFICACION'">
                      {{ proj.status.replace('_', ' ') }}
                    </span>
                    
-                   <!-- Edit Button (Contextual) -->
                    @if (canEditProject(proj)) {
-                     <button (click)="$event.stopPropagation(); openEdit(proj)" class="text-slate-300 hover:text-blue-600 p-1 transition-colors">
-                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                     <button (click)="$event.stopPropagation(); openEdit(proj)" class="text-muted-foreground hover:text-primary p-1 transition-colors">
+                       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                        </svg>
                      </button>
                    }
@@ -143,48 +133,43 @@ type ViewMode = 'CARDS' | 'GANTT';
               </div>
 
               <!-- Content -->
-              <div class="mb-6 flex-1">
-                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 group-hover:text-blue-600 transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
-                <!-- Display Joined Area Names -->
-                <p class="text-slate-500 text-sm mb-3 font-medium">{{ getProjectAreas(proj) }}</p>
-                <p class="text-slate-400 text-sm line-clamp-2 leading-relaxed h-10">{{ proj.description || 'Sin descripción.' }}</p>
+              <div class="mb-4 flex-1">
+                <h3 class="text-sm font-bold mb-1 group-hover:text-primary transition-colors" [attr.title]="proj.name">{{ proj.name }}</h3>
+                <p class="text-muted-foreground text-xs mb-2 font-medium">{{ getProjectAreas(proj) }}</p>
+                <p class="text-muted-foreground/70 text-xs line-clamp-2 leading-relaxed">{{ proj.description || 'Sin descripción.' }}</p>
               </div>
 
               <!-- Metrics -->
-              <div class="space-y-4">
+              <div class="space-y-3">
                 <!-- Progress -->
                 <div>
-                  <div class="flex justify-between text-xs font-semibold mb-1.5">
-                     <span class="text-slate-500">Progreso</span>
-                     <span class="text-slate-800">{{ proj.progress }}%</span>
+                  <div class="flex justify-between text-xs font-medium mb-1">
+                     <span class="text-muted-foreground">Progreso</span>
+                     <span class="font-bold">{{ proj.progress }}%</span>
                   </div>
-                  <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div class="w-full bg-muted/30 rounded-full h-2 overflow-hidden">
                     <div class="h-2 rounded-full transition-all duration-700"
-                         [class.bg-blue-500]="proj.status !== 'FINALIZADO'"
+                         [class.bg-primary]="proj.status !== 'FINALIZADO'"
                          [class.bg-green-500]="proj.status === 'FINALIZADO'"
                          [style.width.%]="proj.progress"></div>
                   </div>
                 </div>
 
-                <!-- Footer Info: Budget & Team -->
-                <div class="flex justify-between items-center border-t border-slate-50 pt-4">
+                <!-- Footer Info -->
+                <div class="flex justify-between items-center border-t border-border pt-3">
                    <div class="flex flex-col">
-                     <span class="text-[10px] text-slate-400 font-bold uppercase">Presupuesto</span>
-                     <span class="text-sm font-bold text-slate-700">{{ proj.currency === 'PEN' ? 'S/' : '$' }} {{ proj.budget | number }}</span>
+                     <span class="text-[10px] text-muted-foreground font-bold uppercase">Presupuesto</span>
+                     <span class="text-xs font-bold">{{ proj.currency === 'PEN' ? 'S/' : '$' }} {{ proj.budget | number }}</span>
                    </div>
-
-                   <!-- Avatars (Leaders) -->
                    <div class="flex -space-x-2 overflow-hidden pl-2 py-1">
                       @for(leaderId of getLeaderIds(proj); track leaderId) {
-                          <img [src]="getUserAvatar(leaderId)" class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover z-10" title="Líder">
+                          <img [src]="getUserAvatar(leaderId)" class="inline-block h-7 w-7 rounded-full ring-2 ring-card object-cover z-10" title="Líder">
                       }
-                      
-                      <!-- Team Members -->
                       @for(memberId of proj.teamIds.slice(0, 2); track memberId) {
-                         <img [src]="getUserAvatar(memberId)" class="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover bg-slate-200">
+                         <img [src]="getUserAvatar(memberId)" class="inline-block h-7 w-7 rounded-full ring-2 ring-card object-cover bg-muted">
                       }
                       @if(proj.teamIds.length > 2) {
-                         <div class="h-8 w-8 rounded-full ring-2 ring-white bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500">
+                         <div class="h-7 w-7 rounded-full ring-2 ring-card bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground">
                            +{{ proj.teamIds.length - 2 }}
                          </div>
                       }
@@ -194,13 +179,13 @@ type ViewMode = 'CARDS' | 'GANTT';
 
             </div>
           } @empty {
-             <div class="col-span-full flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-slate-300">
-               <div class="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+             <div class="col-span-full flex flex-col items-center justify-center py-20 bg-card rounded-lg border border-dashed border-border">
+               <div class="h-16 w-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                  <svg class="h-8 w-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                   </svg>
                </div>
-               <p class="text-slate-500 font-medium">No se encontraron proyectos.</p>
+               <p class="text-muted-foreground font-medium">No se encontraron proyectos.</p>
              </div>
           }
         </div>
@@ -259,35 +244,29 @@ export class DashboardComponent {
   }
 
   displayProjects = computed(() => {
-    let projects = this.dataService.filteredProjects(); // Start with security-layer filtered
+    let projects = this.dataService.filteredProjects();
     const filters = this.activeFilters();
 
-    // 1. Search Text
     if (filters.searchText) {
       const lower = filters.searchText.toLowerCase();
       projects = projects.filter(p => p.name.toLowerCase().includes(lower));
     }
 
-    // 2. Status
     if (filters.status.length > 0) {
       projects = projects.filter(p => filters.status.includes(p.status));
     }
 
-    // 3. Area
     if (filters.areaId) {
       projects = projects.filter(p => p.areaConfig.some(c => c.areaId === filters.areaId));
     }
 
-    // 4. User (Responsible/Leader)
     if (filters.userId) {
-      // Filter if user is Leader OR Team Member
       projects = projects.filter(p =>
         p.areaConfig.some(c => c.leaderId === filters.userId) ||
         p.teamIds.includes(filters.userId!)
       );
     }
 
-    // 5. SORT BY DEADLINE (ASC)
     projects.sort((a, b) => {
       const dateA = new Date(a.endDate).getTime();
       const dateB = new Date(b.endDate).getTime();
@@ -312,7 +291,6 @@ export class DashboardComponent {
     return this.dataService.getAllUsers().find(u => u.id === id)?.avatar || 'https://i.pravatar.cc/150';
   }
 
-  // --- Permission Logic ---
   canCreateProject(): boolean {
     const user = this.dataService.currentUser();
     return user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE';
@@ -321,13 +299,9 @@ export class DashboardComponent {
   canEditProject(proj: Project): boolean {
     const user = this.dataService.currentUser();
     if (proj.status === 'FINALIZADO') return false;
-
     if (user.role === 'ADMIN' || user.subRole === 'GERENTE' || user.subRole === 'JEFE') return true;
-
-    // Check if user is one of the leaders OR a team member
     if (proj.areaConfig.some(c => c.leaderId === user.id)) return true;
     if (proj.teamIds.includes(user.id)) return true;
-
     return false;
   }
 

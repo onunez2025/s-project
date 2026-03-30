@@ -18,15 +18,12 @@ interface UrgentTask {
     standalone: true,
     imports: [CommonModule],
     template: `
-    <div class="bg-white border-b xl:border-b-0 xl:border-r border-slate-200 h-full flex flex-col w-full xl:w-80 shrink-0 overflow-hidden animate-fade-in">
-      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
-          <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Próximos Vencimientos
+    <div class="bg-card border xl:border-border rounded-lg h-full flex flex-col w-full xl:w-80 shrink-0 overflow-hidden animate-fade-in shadow-sm">
+      <div class="px-5 py-3 border-b border-border flex items-center justify-between bg-muted/30">
+        <h3 class="font-bold text-foreground text-sm flex items-center gap-2">
+          Vencimientos
         </h3>
-        <span class="bg-slate-200 text-slate-600 text-xs font-bold px-2 py-1 rounded-full">{{ urgentTasks().length }}</span>
+        <span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/20">{{ urgentTasks().length }}</span>
       </div>
 
       <div class="flex-1 overflow-y-auto p-4 space-y-3">
@@ -39,32 +36,38 @@ interface UrgentTask {
 
         <div *ngFor="let task of urgentTasks()" 
              (click)="onTaskClick(task.projectId)"
-             class="group bg-white border border-slate-200 rounded-lg p-3 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer relative overflow-hidden">
+             class="group bg-card border border-border rounded-lg p-3 hover:shadow-md hover:border-primary transition-all cursor-pointer relative overflow-hidden">
              
              <!-- Indicator Bar -->
-             <div class="absolute left-0 top-0 bottom-0 w-1" [ngClass]="task.statusColor"></div>
+             <div class="absolute left-0 top-0 bottom-0 w-1" 
+                  [class.bg-destructive]="task.statusColor === 'bg-red-500'"
+                  [class.bg-amber-500]="task.statusColor === 'bg-yellow-500'"
+                  [class.bg-emerald-500]="task.statusColor === 'bg-green-500'"></div>
 
              <div class="pl-2">
                 <div class="flex justify-between items-start mb-1">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider truncate w-2/3" title="{{task.projectName}}">{{ task.projectName }}</span>
-                    <span class="text-xs font-medium px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 whitespace-nowrap">
+                    <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider truncate w-2/3" title="{{task.projectName}}">{{ task.projectName }}</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground whitespace-nowrap">
                         {{ task.daysLeft <= 0 ? (task.daysLeft === 0 ? 'Hoy' : 'Hace ' + (task.daysLeft * -1) + 'd') : 'En ' + task.daysLeft + 'd' }}
                     </span>
                 </div>
-                <h4 class="text-sm font-semibold text-slate-800 leading-tight mb-2 group-hover:text-blue-600 transition-colors">{{ task.description }}</h4>
-                <div class="flex items-center justify-between text-xs text-slate-500">
+                <h4 class="text-xs font-bold text-foreground leading-tight mb-2 group-hover:text-primary transition-colors">{{ task.description }}</h4>
+                <div class="flex items-center justify-between text-[10px] text-muted-foreground font-medium">
                     <span>{{ task.endDate | date:'dd MMM' }}</span>
-                    <span [ngClass]="task.statusColor" class="w-2 h-2 rounded-full inline-block"></span>
+                    <span class="w-2 h-2 rounded-full inline-block"
+                          [class.bg-destructive]="task.statusColor === 'bg-red-500'"
+                          [class.bg-amber-500]="task.statusColor === 'bg-yellow-500'"
+                          [class.bg-emerald-500]="task.statusColor === 'bg-green-500'"></span>
                 </div>
              </div>
         </div>
       </div>
       
       <!-- Footer / Legend -->
-      <div class="px-4 py-2 bg-slate-50 border-t border-slate-100 flex justify-between text-[10px] text-slate-500">
-        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Vencido</div>
-        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> < 3 días</div>
-        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> < 7 días</div>
+      <div class="px-4 py-2 bg-muted/30 border-t border-border flex justify-between text-[9px] font-bold text-muted-foreground uppercase tracking-tighter">
+        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-destructive"></span> Vencido</div>
+        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> < 3 días</div>
+        <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> < 7 días</div>
       </div>
     </div>
   `

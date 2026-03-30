@@ -11,51 +11,51 @@ type TimeScale = 'Day' | 'Week' | 'Month';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden font-sans">
+    <div class="flex flex-col h-full bg-card rounded-lg border border-border shadow-sm overflow-hidden font-sans">
       
       <!-- Toolbar -->
-      <div class="h-16 border-b border-slate-200 flex items-center justify-between px-6 bg-white shrink-0 z-20">
+      <div class="h-16 border-b border-border flex items-center justify-between px-6 bg-card shrink-0 z-20">
           <div class="flex items-center gap-4">
              <div>
-                <h3 class="font-bold text-slate-800 text-lg leading-tight">Cronograma</h3>
-                <span class="text-xs text-slate-500 font-medium">{{ projects().length }} Proyectos Activos</span>
+                <h3 class="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight">Cronograma</h3>
+                <span class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">{{ projects().length }} Proyectos Activos</span>
              </div>
              
              <!-- View Mode Switcher (New) -->
-             <div class="bg-slate-100 p-1 rounded-lg flex items-center ml-4">
+             <div class="bg-muted/50 p-1 rounded-md flex items-center ml-4">
                 <button (click)="changeViewMode('Day')" 
-                   class="px-3 py-1 text-xs font-bold rounded-md transition-all duration-200"
-                   [class.bg-white]="viewMode() === 'Day'"
+                   class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all duration-200"
+                   [class.bg-card]="viewMode() === 'Day'"
                    [class.shadow-sm]="viewMode() === 'Day'"
-                   [class.text-slate-800]="viewMode() === 'Day'"
-                   [class.text-slate-500]="viewMode() !== 'Day'"
-                   [class.hover:text-slate-700]="viewMode() !== 'Day'">
+                   [class.text-foreground]="viewMode() === 'Day'"
+                   [class.text-muted-foreground]="viewMode() !== 'Day'"
+                   [class.hover:text-foreground]="viewMode() !== 'Day'">
                    Día
                 </button>
                 <button (click)="changeViewMode('Week')" 
-                   class="px-3 py-1 text-xs font-bold rounded-md transition-all duration-200"
-                   [class.bg-white]="viewMode() === 'Week'"
+                   class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all duration-200"
+                   [class.bg-card]="viewMode() === 'Week'"
                    [class.shadow-sm]="viewMode() === 'Week'"
-                   [class.text-slate-800]="viewMode() === 'Week'"
-                   [class.text-slate-500]="viewMode() !== 'Week'"
-                   [class.hover:text-slate-700]="viewMode() !== 'Week'">
+                   [class.text-foreground]="viewMode() === 'Week'"
+                   [class.text-muted-foreground]="viewMode() !== 'Week'"
+                   [class.hover:text-foreground]="viewMode() !== 'Week'">
                    Semana
                 </button>
                 <button (click)="changeViewMode('Month')" 
-                   class="px-3 py-1 text-xs font-bold rounded-md transition-all duration-200"
-                   [class.bg-white]="viewMode() === 'Month'"
+                   class="px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md transition-all duration-200"
+                   [class.bg-card]="viewMode() === 'Month'"
                    [class.shadow-sm]="viewMode() === 'Month'"
-                   [class.text-slate-800]="viewMode() === 'Month'"
-                   [class.text-slate-500]="viewMode() !== 'Month'"
-                   [class.hover:text-slate-700]="viewMode() !== 'Month'">
+                   [class.text-foreground]="viewMode() === 'Month'"
+                   [class.text-muted-foreground]="viewMode() !== 'Month'"
+                   [class.hover:text-foreground]="viewMode() !== 'Month'">
                    Mes
                 </button>
              </div>
           </div>
 
           <div class="flex gap-2">
-              <button (click)="scrollToToday()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-colors">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button (click)="scrollToToday()" class="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm transition-all hover:bg-primary/90">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                  </svg>
                  Hoy
@@ -66,20 +66,20 @@ type TimeScale = 'Day' | 'Week' | 'Month';
       <div class="flex flex-1 overflow-hidden relative">
          
          <!-- LEFT PANEL: Table Info (Fixed Width) -->
-         <div class="w-[420px] flex-shrink-0 border-r border-slate-200 flex flex-col bg-white z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+         <div class="w-[420px] flex-shrink-0 border-r border-border flex flex-col bg-card z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
             
             <!-- Table Header -->
-            <div class="h-[50px] border-b border-slate-100 flex items-center px-6 bg-slate-50/80 shrink-0">
-               <div class="flex-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Proyecto</div>
-               <div class="w-16 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Líder</div>
+            <div class="h-[50px] border-b border-border flex items-center px-6 bg-muted/30 shrink-0">
+               <div class="flex-1 text-[9px] font-black text-muted-foreground uppercase tracking-widest">Proyecto</div>
+               <div class="w-16 text-[9px] font-black text-muted-foreground uppercase tracking-widest text-right">Líder</div>
             </div>
 
             <!-- Table Rows (Scrolls synced with Chart) -->
-            <div class="flex-1 overflow-hidden relative bg-white">
+            <div class="flex-1 overflow-hidden relative bg-card">
                <div class="overflow-hidden h-full" #leftSideContainer>
                   <div [style.height.px]="totalContentHeight()" class="relative">
                     @for (p of projects(); track p.id; let i = $index) {
-                       <div class="absolute w-full border-b border-slate-50 hover:bg-slate-50/80 transition-colors group flex items-center px-6 cursor-pointer"
+                       <div class="absolute w-full border-b border-border hover:bg-muted/30 transition-colors group flex items-center px-6 cursor-pointer"
                             (click)="projectSelected.emit(p.id)"
                             [style.top.px]="i * rowHeight"
                             [style.height.px]="rowHeight">
@@ -88,17 +88,17 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                           <div class="flex-1 min-w-0 pr-4">
                              <div class="flex items-center gap-2 mb-0.5">
                                @if(p.status === 'FINALIZADO') {
-                                 <div class="h-2 w-2 rounded-full bg-green-500 shrink-0"></div>
+                                 <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0"></div>
                                } @else if (p.status === 'EN_PROCESO') {
-                                 <div class="h-2 w-2 rounded-full bg-red-500 shrink-0 animate-pulse"></div>
+                                 <div class="h-1.5 w-1.5 rounded-full bg-primary shrink-0 animate-pulse"></div>
                                } @else {
-                                 <div class="h-2 w-2 rounded-full bg-slate-300 shrink-0"></div>
+                                 <div class="h-1.5 w-1.5 rounded-full bg-muted shrink-0"></div>
                                }
-                               <span class="text-sm font-bold text-slate-700 group-hover:text-blue-700 transition-colors cursor-pointer leading-tight" [title]="p.name">{{ p.name }}</span>
+                               <span class="text-[11px] font-black text-foreground uppercase tracking-tighter group-hover:text-primary transition-colors cursor-pointer leading-tight" [title]="p.name">{{ p.name }}</span>
                              </div>
-                             <div class="text-[10px] text-slate-400 truncate pl-4 flex gap-2">
+                             <div class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter truncate pl-3.5 flex gap-2">
                                 <span>{{ p.status.replace('_', ' ') }}</span>
-                                <span class="text-slate-300">•</span>
+                                <span class="text-border">•</span>
                                 <span>{{ getDuration(p) }} días</span>
                              </div>
                           </div>
@@ -108,7 +108,7 @@ type TimeScale = 'Day' | 'Week' | 'Month';
                             <div class="flex items-center -space-x-2 overflow-hidden">
                               @for(c of p.areaConfig; track c.areaId) {
                                 <img [src]="getUser(c.leaderId)?.avatar" 
-                                     class="h-7 w-7 rounded-full border-2 border-white shadow-sm ring-1 ring-slate-100" 
+                                     class="h-7 w-7 rounded-full border-2 border-card shadow-sm ring-1 ring-border" 
                                      [title]="getUser(c.leaderId)?.name">
                               }
                             </div>
@@ -121,15 +121,15 @@ type TimeScale = 'Day' | 'Week' | 'Month';
          </div>
 
          <!-- RIGHT PANEL: Gantt Chart (Scrollable) -->
-         <div class="flex-1 flex flex-col min-w-0 bg-white relative">
+         <div class="flex-1 flex flex-col min-w-0 bg-background relative">
             
             <!-- Timeline Header (Sticky Top) -->
-            <div class="h-[50px] border-b border-slate-100 bg-slate-50/80 overflow-hidden relative shrink-0" #timelineHeader>
+            <div class="h-[50px] border-b border-border bg-muted/20 overflow-hidden relative shrink-0" #timelineHeader>
                 <div #svgHeaderContainer></div>
             </div>
 
             <!-- Bars Container (Scrollable X & Y) -->
-            <div class="flex-1 overflow-auto custom-scrollbar relative scroll-smooth bg-white" #chartContainer (scroll)="syncScroll($event)">
+            <div class="flex-1 overflow-auto custom-scrollbar relative scroll-smooth bg-background" #chartContainer (scroll)="syncScroll($event)">
                  <div #svgBodyContainer [style.height.px]="totalContentHeight()"></div>
             </div>
          </div>
@@ -137,18 +137,18 @@ type TimeScale = 'Day' | 'Week' | 'Month';
       </div>
       
       <!-- Hover Tooltip -->
-      <div #tooltip class="fixed pointer-events-none opacity-0 bg-slate-800/95 backdrop-blur-sm text-white px-3 py-2 rounded-lg shadow-xl z-50 text-xs transition-opacity duration-200 pointer-events-none border border-slate-700">
-         <div class="font-bold mb-0.5" id="tt-dates"></div>
-         <div class="text-slate-300" id="tt-progress"></div>
+      <div #tooltip class="fixed pointer-events-none opacity-0 bg-background/95 backdrop-blur-md text-foreground px-4 py-3 rounded-lg shadow-2xl z-50 text-[10px] font-bold uppercase tracking-widest transition-opacity duration-200 border border-border">
+         <div class="mb-1" id="tt-dates"></div>
+         <div class="text-primary" id="tt-progress"></div>
       </div>
     </div>
   `,
   styles: [`
     :host { display: block; height: 100%; }
-    .custom-scrollbar::-webkit-scrollbar { width: 10px; height: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 5px; border: 2px solid #f8fafc; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.5); }
   `]
 })
 export class GanttChartComponent implements OnDestroy {
@@ -326,10 +326,10 @@ export class GanttChartComponent implements OnDestroy {
       const group = svgBody.append('g')
         .attr('class', 'bar-group'); // Class for selection if needed
 
-      let color = '#cbd5e1'; // Light mode fallback
-      if (d.status === 'FINALIZADO') color = '#10b981';
-      else if (d.status === 'EN_PROCESO') color = '#ef4444'; // Red-500
-      else color = '#94a3b8'; // Slate 400 for Planification
+      let color = 'hsl(var(--muted))'; 
+      if (d.status === 'FINALIZADO') color = 'hsl(var(--primary))';
+      else if (d.status === 'EN_PROCESO') color = 'hsl(var(--destructive))';
+      else color = 'hsl(var(--muted-foreground) / 0.5)'; 
 
       // Bar
       const rect = group.append('rect')
@@ -337,9 +337,9 @@ export class GanttChartComponent implements OnDestroy {
         .attr('y', yCenter - (barHeight / 2))
         .attr('width', width)
         .attr('height', barHeight)
-        .attr('rx', 6)
+        .attr('rx', 4)
         .attr('fill', color)
-        .style('filter', 'drop-shadow(0 2px 3px rgba(0,0,0,0.1))')
+        .style('filter', 'drop-shadow(0 4px 6px rgba(0,0,0,0.05))')
         .style('cursor', 'grab');
 
       // Drag Behavior

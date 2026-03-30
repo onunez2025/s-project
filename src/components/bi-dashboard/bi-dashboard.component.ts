@@ -17,490 +17,497 @@ import * as d3 from 'd3';
       <div class="flex-1 flex flex-col space-y-6 min-w-0">
       
        <!-- Filters Bar -->
-       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 justify-between items-center z-20 sticky top-0 md:relative">
-         <div class="flex items-center gap-2">
-            <h2 class="font-bold text-slate-700 text-lg">Dashboard Ejecutivo</h2>
-            <span class="px-2 py-0.5 rounded-md bg-red-50 text-red-700 text-xs font-bold border border-red-100">BI</span>
-            <button (click)="goToManual.emit()" class="text-slate-400 hover:text-blue-600 transition-colors p-1 ml-2 rounded-full hover:bg-slate-50" title="Ayuda sobre Proyectos">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </button>
+       <div class="bg-card p-4 rounded-lg shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center z-20 sticky top-0 md:relative">
+        <div class="flex items-center gap-3">
+            <h2 class="font-bold text-lg tracking-tight">Dashboard Ejecutivo</h2>
+            <span class="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-bold border border-primary/20 uppercase tracking-wider">BI</span>
          </div>
-         <div class="flex flex-wrap gap-3 w-full md:w-auto">
+         <div class="flex flex-wrap gap-2 w-full md:w-auto">
             <!-- Area Filter -->
-            <select [(ngModel)]="selectedArea" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 p-2 outline-none">
-              <option value="ALL">Todas las Áreas</option>
-              @for(area of areas(); track area.id) {
-                <option [value]="area.id">{{ area.name }}</option>
-              }
-            </select>
+            <div class="relative min-w-[160px]">
+               <select [(ngModel)]="selectedArea" class="w-full bg-input/50 border border-input text-foreground text-xs rounded-md focus:ring-2 focus:ring-primary focus:border-primary p-2 outline-none appearance-none pr-8 font-medium">
+                 <option value="ALL">Todas las Áreas</option>
+                 @for(area of areas(); track area.id) {
+                   <option [value]="area.id">{{ area.name }}</option>
+                 }
+               </select>
+               <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                  <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+               </div>
+            </div>
             
             <!-- Manager Filter -->
-            <select [(ngModel)]="selectedLeader" class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 p-2 outline-none">
-              <option value="ALL">Todos los Líderes</option>
-              @for(leader of leaders(); track leader.id) {
-                <option [value]="leader.id">{{ leader.name }}</option>
-              }
-            </select>
+            <div class="relative min-w-[160px]">
+               <select [(ngModel)]="selectedLeader" class="w-full bg-input/50 border border-input text-foreground text-xs rounded-md focus:ring-2 focus:ring-primary focus:border-primary p-2 outline-none appearance-none pr-8 font-medium">
+                 <option value="ALL">Todos los Líderes</option>
+                 @for(leader of leaders(); track leader.id) {
+                   <option [value]="leader.id">{{ leader.name }}</option>
+                 }
+               </select>
+               <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                  <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+               </div>
+            </div>
 
-            <!-- Date Range (Mock) -->
-            <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 p-2 outline-none">
-               <option>Últimos 12 Meses</option>
-               <option>Este Año (YTD)</option>
-               <option>Todo el Histórico</option>
-            </select>
-         </div>
-      </div>
-
-      <!-- KPI Cards Row -->
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-         <!-- Active Projects -->
-         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-32 relative overflow-hidden">
-            <div class="absolute right-0 top-0 p-4 opacity-10">
-               <svg class="w-20 h-20 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
-            </div>
-            <div>
-               <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Proyectos Activos</p>
-               <p class="text-3xl font-bold text-slate-800 mt-2">{{ kpiActiveProjects() }}</p>
-            </div>
-            <div class="text-xs font-medium text-slate-500">De {{ filteredProjects().length }} en total</div>
-         </div>
-
-         <!-- Monthly Savings -->
-         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-32 relative overflow-hidden">
-            <div class="absolute right-0 top-0 p-4 opacity-10">
-               <svg class="w-20 h-20 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4s0 0 0 0zm1 2h2v2H7v-2z" clip-rule="evenodd"/></svg>
-            </div>
-            <div>
-               <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Ahorro Mensual (Est.)</p>
-               <p class="text-3xl font-bold text-green-600 mt-2">S/ {{ kpiMonthlySavings() | number:'1.0-0' }}</p>
-            </div>
-            <div class="text-xs font-medium text-green-600 flex items-center gap-1">
-               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-               Proyección OPEX
+            <!-- Date Range -->
+            <div class="relative min-w-[140px]">
+               <select class="w-full bg-input/50 border border-input text-foreground text-xs rounded-md focus:ring-2 focus:ring-primary focus:border-primary p-2 outline-none appearance-none pr-8 font-medium">
+                  <option>Últimos 12 Meses</option>
+                  <option>Este Año (YTD)</option>
+                  <option>Todo el Histórico</option>
+               </select>
+               <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                  <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+               </div>
             </div>
          </div>
+       </div>
 
-         <!-- Budget Execution -->
-         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between h-32 relative overflow-hidden">
-             <div class="absolute right-0 top-0 p-4 opacity-10">
-               <svg class="w-20 h-20 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
-            </div>
-            <div>
-               <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Ejecución Presupuestal</p>
-               <p class="text-3xl font-bold text-slate-800 mt-2">{{ kpiBudgetExec() }}%</p>
-            </div>
-            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
-               <div class="bg-purple-500 h-full rounded-full" [style.width.%]="kpiBudgetExec()"></div>
-            </div>
-         </div>
-
-         <!-- Avg Payback -->
-         <div class="bg-slate-800 p-5 rounded-2xl shadow-lg shadow-slate-800/20 flex flex-col justify-between h-32 relative overflow-hidden text-white">
-            <div class="absolute right-0 top-0 p-4 opacity-10">
-               <svg class="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
-            </div>
-            <div>
-               <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Payback Promedio</p>
-               <p class="text-3xl font-bold mt-2">{{ kpiAvgPayback() }} <span class="text-sm font-normal text-slate-400">Meses</span></p>
-            </div>
-            <div class="text-xs font-medium text-slate-400">Retorno del Portafolio</div>
-         </div>
-      </div>
-
-      <!-- Charts Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[400px]">
-         
-         <!-- Budget Control Chart -->
-         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-[300px]">
-            <h3 class="font-bold text-slate-800 mb-6">Control Presupuestario por Área (S/.)</h3>
-            <div class="flex-1 relative" #budgetChartContainer></div>
-         </div>
-
-         <!-- Real Progress (Simplified Gantt/Bar) -->
-         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-[300px]">
-             <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-slate-800">Top 5 Proyectos - Avance Real</h3>
-                <button (click)="goToProjects.emit()" class="text-xs text-blue-600 font-bold hover:underline">Ver Todos</button>
+       <!-- KPI Cards Row -->
+       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <!-- Active Projects -->
+          <div class="bg-card p-5 rounded-lg shadow-sm border flex flex-col justify-between h-32 relative group overflow-hidden">
+             <div class="absolute -right-2 -top-2 p-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
+                <svg class="w-24 h-24 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
              </div>
-             
-             <!-- List View for Progress -->
-             <div class="flex-1 overflow-y-auto pr-2 space-y-5 custom-scrollbar max-h-[300px]">
-                @for(p of topProjectsByBudget(); track p.id) {
-                   <div class="group cursor-pointer" (click)="selectProject.emit(p.id)">
-                      <div class="flex justify-between items-center mb-1">
-                         <span class="text-sm font-bold text-slate-700 truncate max-w-[200px]" [title]="p.name">{{ p.name }}</span>
-                         <span class="text-xs font-bold" [class.text-green-600]="p.status === 'FINALIZADO'" [class.text-blue-600]="p.status !== 'FINALIZADO'">
-                            {{ p.progress }}%
-                         </span>
-                      </div>
-                      <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                         <div class="h-full rounded-full transition-all duration-1000 relative"
-                              [class.bg-green-500]="p.status === 'FINALIZADO'"
-                              [class.bg-blue-500]="p.status !== 'FINALIZADO'"
-                              [style.width.%]="p.progress">
-                            <div class="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]"></div>  
-                         </div>
-                      </div>
-                      <div class="flex justify-between mt-1 text-[10px] text-slate-400">
-                         <span>Presupuesto: {{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number }}</span>
-                         <span>{{ p.status.replace('_', ' ') }}</span>
-                      </div>
-                   </div>
-                } @empty {
-                   <p class="text-center text-slate-400 text-sm mt-10">No hay proyectos para mostrar.</p>
-                }
+             <div>
+                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Proyectos Activos</p>
+                <p class="text-3xl font-bold tracking-tight mt-1">{{ kpiActiveProjects() }}</p>
              </div>
-         </div>
-      </div>
+             <div class="text-[10px] font-medium text-muted-foreground">De {{ filteredProjects().length }} en total registrados</div>
+          </div>
 
-      <!-- Top Savings Indicators -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col mb-4">
-         <div class="p-6 border-b border-slate-50">
-            <h3 class="font-bold text-slate-800">Top Indicadores de Ahorro (Impacto)</h3>
-         </div>
-         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-100">
-               <thead class="bg-slate-50">
-                  <tr>
-                     <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Indicador</th>
-                     <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Proyecto Asociado</th>
-                     <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Categoría</th>
-                     <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Ahorro Mensual (Est.)</th>
-                  </tr>
-               </thead>
-               <tbody class="divide-y divide-slate-100">
-                  @for(item of topIndicators(); track item.indicator.id) {
-                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-6 py-4">
-                           <div class="text-sm font-bold text-slate-700">{{ item.indicator.name }}</div>
-                           <div class="text-[10px] text-slate-400">
-                              {{ item.indicator.currentValue }} -> {{ item.indicator.projectedValue }} {{ item.indicator.unitLabel }}
-                           </div>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-600 truncate max-w-[200px] cursor-pointer hover:text-blue-600" (click)="selectProject.emit(item.project.id)">
-                           {{ item.project.name }}
-                        </td>
-                        <td class="px-6 py-4">
-                           <span class="px-2 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">
-                              {{ item.indicator.category.replace('_', ' ') }}
-                           </span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                           <span class="text-sm font-bold text-green-600">S/ {{ item.savingsPEN | number:'1.0-0' }}</span>
-                        </td>
-                     </tr>
-                  } @empty {
-                     <tr><td colspan="4" class="px-6 py-8 text-center text-slate-400 italic">No se han registrado indicadores de impacto aún.</td></tr>
+          <!-- Monthly Savings -->
+          <div class="bg-card p-5 rounded-lg shadow-sm border flex flex-col justify-between h-32 relative group overflow-hidden">
+             <div class="absolute -right-2 -top-2 p-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
+                <svg class="w-24 h-24 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4s0 0 0 0zm1 2h2v2H7v-2z" clip-rule="evenodd"/></svg>
+             </div>
+             <div>
+                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Ahorro Mensual (Est.)</p>
+                <p class="text-3xl font-bold text-green-600 tracking-tight mt-1">S/ {{ kpiMonthlySavings() | number:'1.0-0' }}</p>
+             </div>
+             <div class="text-[10px] font-medium text-green-600 flex items-center gap-1">
+                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                Proyección OPEX
+             </div>
+          </div>
+
+          <!-- Budget Execution -->
+          <div class="bg-card p-5 rounded-lg shadow-sm border flex flex-col justify-between h-32 relative group overflow-hidden">
+              <div class="absolute -right-2 -top-2 p-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity pointer-events-none">
+                <svg class="w-24 h-24 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+             </div>
+             <div>
+                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Ejecución Presupuestal</p>
+                <p class="text-3xl font-bold tracking-tight mt-1">{{ kpiBudgetExec() }}%</p>
+             </div>
+             <div class="w-full bg-muted rounded-full h-1 mt-2 overflow-hidden">
+                <div class="bg-primary h-full rounded-full transition-all duration-1000" [style.width.%]="kpiBudgetExec()"></div>
+             </div>
+          </div>
+
+          <!-- Avg Payback -->
+          <div class="bg-slate-900 p-5 rounded-lg shadow-lg flex flex-col justify-between h-32 relative group overflow-hidden text-white">
+             <div class="absolute -right-2 -top-2 p-4 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity pointer-events-none">
+                <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+             </div>
+             <div>
+                <p class="text-[10px] font-bold text-white/60 uppercase tracking-wider">Payback Promedio</p>
+                <p class="text-3xl font-bold tracking-tight mt-1">{{ kpiAvgPayback() }} <span class="text-sm font-normal text-white/60">Meses</span></p>
+             </div>
+             <div class="text-[10px] font-medium text-white/60">Tiempo de recuperación de inversión</div>
+          </div>
+       </div>
+
+       <!-- Charts Grid -->
+       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-10">
+          
+          <!-- Bar Chart Area Spending -->
+           <div class="bg-card p-5 rounded-lg shadow-sm border">
+               <div class="flex justify-between items-center mb-6">
+                  <h3 class="font-bold text-sm">Gasto por Área</h3>
+                  <div class="h-8 w-8 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m0 0a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </div>
+               </div>
+               <div #barChart class="w-full h-[300px] relative">
+                  <!-- D3 renders here -->
+                  @if (filteredProjects().length === 0) {
+                     <div class="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm italic">No hay datos suficientes</div>
                   }
-               </tbody>
-            </table>
+               </div>
+           </div>
+
+           <!-- Donut Chart Split -->
+           <div class="bg-card p-5 rounded-lg shadow-sm border">
+               <div class="flex justify-between items-center mb-6">
+                  <h3 class="font-bold text-sm">Distribución por Estado</h3>
+                  <div class="h-8 w-8 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </div>
+               </div>
+               <div #donutChart class="w-full h-[300px] relative">
+                  <!-- D3 renders here -->
+                   @if (filteredProjects().length === 0) {
+                     <div class="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm italic">No hay datos suficientes</div>
+                  }
+               </div>
+           </div>
+
+           <!-- Project List Table -->
+           <div class="lg:col-span-2 bg-card rounded-lg shadow-sm border overflow-hidden">
+               <div class="p-4 border-b bg-muted/30 flex justify-between items-center">
+                  <h3 class="font-bold text-sm">Detalle de Proyectos</h3>
+                  <button class="text-[10px] font-bold text-primary hover:underline">Exportar Excel</button>
+               </div>
+               <div class="overflow-x-auto">
+                 <table class="w-full border-collapse">
+                   <thead>
+                     <tr class="bg-muted/30 text-left">
+                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Proyecto</th>
+                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Líder</th>
+                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Progreso</th>
+                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Presupuesto</th>
+                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Payback</th>
+                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Estado</th>
+                     </tr>
+                   </thead>
+                   <tbody class="divide-y divide-border/50">
+                     @for (p of sortedProjects(); track p.id) {
+                       <tr class="hover:bg-muted/20 transition-colors group">
+                         <td class="px-5 py-4 whitespace-nowrap">
+                            <div class="flex flex-col">
+                               <span class="text-sm font-bold truncate max-w-[200px]">{{ p.name }}</span>
+                               <span class="text-[10px] text-muted-foreground">ID: #{{ p.id }}</span>
+                            </div>
+                         </td>
+                         <td class="px-5 py-4 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                               <img [src]="getProjectLeader(p)?.avatar" class="h-6 w-6 rounded-full border border-border">
+                               <span class="text-xs font-medium">{{ getProjectLeader(p)?.name.split(' ')[0] }}</span>
+                            </div>
+                         </td>
+                         <td class="px-5 py-4 whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                               <div class="w-16 bg-muted rounded-full h-1.5 overflow-hidden">
+                                  <div class="h-full bg-primary rounded-full transition-all" [style.width.%]="p.progress"></div>
+                               </div>
+                               <span class="text-[10px] font-bold">{{ p.progress }}%</span>
+                            </div>
+                         </td>
+                         <td class="px-5 py-4 whitespace-nowrap text-xs font-bold">
+                            {{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.0-0' }}
+                         </td>
+                         <td class="px-5 py-4 whitespace-nowrap text-xs font-medium">
+                            {{ getProjectPayback(p) }} <span class="text-[10px] text-muted-foreground">meses</span>
+                         </td>
+                         <td class="px-5 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 rounded-md text-[10px] font-bold border uppercase tracking-wider"
+                               [class.bg-primary/10]="p.status === 'EN_PROCESO'"
+                               [class.text-primary]="p.status === 'EN_PROCESO'"
+                               [class.border-primary/20]="p.status === 'EN_PROCESO'"
+                               [class.bg-green-500/10]="p.status === 'FINALIZADO'"
+                               [class.text-green-600]="p.status === 'FINALIZADO'"
+                               [class.border-green-600/20]="p.status === 'FINALIZADO'"
+                               [class.bg-muted]="p.status === 'PLANIFICACION'"
+                               [class.text-muted-foreground]="p.status === 'PLANIFICACION'"
+                               [class.border-border]="p.status === 'PLANIFICACION'">
+                              {{ p.status.replace('_', ' ') }}
+                            </span>
+                         </td>
+                       </tr>
+                     }
+                   </tbody>
+                 </table>
+               </div>
+           </div>
+       </div>
+      </div>
+
+      <!-- Right Sidebar: Widgets (Due Soon etc) -->
+      <div class="xl:w-80 flex flex-col space-y-6">
+         <!-- Active User Overview -->
+         <div class="bg-card p-5 rounded-lg shadow-sm border">
+            <h3 class="font-bold text-sm mb-4">Mis Proyectos</h3>
+            <div class="space-y-4">
+               @for (p of myProjects(); track p.id) {
+                  <div class="flex items-center gap-3 group cursor-pointer">
+                     <div class="h-8 w-8 rounded bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                        {{ p.name.substring(0,2).toUpperCase() }}
+                     </div>
+                     <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold truncate group-hover:text-primary transition-colors">{{ p.name }}</p>
+                        <div class="w-full bg-muted rounded-full h-1 mt-1">
+                           <div class="bg-primary h-full rounded-full" [style.width.%]="p.progress"></div>
+                        </div>
+                     </div>
+                  </div>
+               }
+            </div>
          </div>
-      </div>
-      </div>
-    
-      <!-- Right Sidebar (Tasks) -->
-      <div class="w-full xl:w-80 shrink-0">
-          <app-due-soon-widget (selectTask)="selectProject.emit($event)"></app-due-soon-widget>
+
+         <!-- App Widget: Due Soon -->
+         <app-due-soon-widget></app-due-soon-widget>
       </div>
 
     </div>
   `,
-   styles: [`
-    .animate-fade-in { animation: fadeIn 0.5s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes shimmer { 100% { transform: translateX(100%); } }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-  `]
+  styles: []
 })
 export class BiDashboardComponent {
-   dataService = inject(DataService);
+  dataService = inject(DataService);
+  goToManual = output<void>();
 
-   selectProject = output<number>();
-   goToProjects = output<void>(); // To switch tab
-   goToManual = output<void>(); // New output for help context
+  // D3 Chart Refs
+  @ViewChild('barChart') barChartDiv!: ElementRef;
+  @ViewChild('donutChart') donutChartDiv!: ElementRef;
 
-   // Filter Signals
-   selectedArea = signal<string | number>('ALL');
-   selectedLeader = signal<string | number>('ALL');
+  // Filters State
+  selectedArea = signal<string>('ALL');
+  selectedLeader = signal<string>('ALL');
 
-   @ViewChild('budgetChartContainer') budgetChartContainer!: ElementRef;
+  constructor() {
+    // Re-render charts when filters change
+    effect(() => {
+       this.selectedArea();
+       this.selectedLeader();
+       this.dataService.getAllProjects(); // Dependency
+       setTimeout(() => this.renderCharts(), 100);
+    });
+  }
 
-   // --- Constants for Currency Conversion (Mock) ---
-   readonly EXCHANGE_RATE = 3.75; // USD to PEN
+  areas = computed(() => this.dataService.getAllAreas());
+  
+  leaders = computed(() => {
+     // Get all users that lead at least one project
+     const allProjects = this.dataService.getAllProjects();
+     const leaderIds = new Set<number>();
+     allProjects.forEach(p => p.areaConfig.forEach(c => leaderIds.add(c.leaderId)));
+     return this.dataService.getAllUsers().filter(u => leaderIds.has(u.id));
+  });
 
-   constructor() {
-      // Redraw charts when data changes
-      effect(() => {
-         const p = this.filteredProjects(); // dependency
-         setTimeout(() => this.drawBudgetChart(), 100);
-      });
-   }
+  filteredProjects = computed(() => {
+     let projects = this.dataService.getAllProjects();
+     
+     if (this.selectedArea() !== 'ALL') {
+        projects = projects.filter(p => p.areaConfig.some(c => c.areaId === +this.selectedArea()));
+     }
+     
+     if (this.selectedLeader() !== 'ALL') {
+        projects = projects.filter(p => p.areaConfig.some(c => c.leaderId === +this.selectedLeader()));
+     }
+     
+     return projects;
+  });
 
-   // --- Data Accessors ---
-   areas = computed(() => this.dataService.getAllAreas());
-   leaders = computed(() => this.dataService.getAllUsers().filter(u => u.subRole === 'GERENTE' || u.subRole === 'JEFE'));
+  sortedProjects = computed(() => {
+     return [...this.filteredProjects()].sort((a,b) => b.progress - a.progress);
+  });
 
-   filteredProjects = computed(() => {
-      let projects = this.dataService.filteredProjects();
-      const area = this.selectedArea();
-      const leader = this.selectedLeader();
+  myProjects = computed(() => {
+     return this.dataService.filteredProjects();
+  });
 
-      if (area !== 'ALL') {
-         // Filter by checking if any entry in areaConfig matches the selected area
-         projects = projects.filter(p => p.areaConfig.some(c => c.areaId === +area));
-      }
-      if (leader !== 'ALL') {
-         // Filter by checking if any entry in areaConfig matches the selected leader
-         projects = projects.filter(p => p.areaConfig.some(c => c.leaderId === +leader));
-      }
-      return projects;
-   });
+  // KPI Computations
+  kpiActiveProjects = computed(() => this.filteredProjects().filter(p => p.status === 'EN_PROCESO').length);
+  
+  kpiMonthlySavings = computed(() => {
+    return this.filteredProjects().reduce((acc, p) => {
+       const indicators = this.dataService.getIndicatorsByProject(p.id);
+       const monthlySavings = indicators.reduce((sum, ind) => {
+          const savings = (ind.currentValue - ind.projectedValue) * ind.frequencyPerMonth * ind.unitCost;
+          return sum + savings;
+       }, 0);
+       return acc + monthlySavings;
+    }, 0);
+  });
 
-   // --- KPI Calculations ---
+  kpiBudgetExec = computed(() => {
+     const proj = this.filteredProjects();
+     if (proj.length === 0) return 0;
+     const totalBudget = proj.reduce((acc, p) => acc + p.budget, 0);
+     const totalSpent = proj.reduce((acc, p) => {
+        const expenses = this.dataService.getExpensesByProject(p.id);
+        return acc + expenses.reduce((sum, ex) => sum + ex.amount, 0);
+     }, 0);
+     return Math.round((totalSpent / totalBudget) * 100) || 0;
+  });
 
-   kpiActiveProjects = computed(() => {
-      return this.filteredProjects().filter(p => p.status === 'EN_PROCESO').length;
-   });
+  kpiAvgPayback = computed(() => {
+     const proj = this.filteredProjects();
+     if (proj.length === 0) return 0;
+     let totalPayback = 0;
+     let count = 0;
+     
+     proj.forEach(p => {
+        const indicators = this.dataService.getIndicatorsByProject(p.id);
+        const monthlySavings = indicators.reduce((sum, ind) => {
+           const savings = (ind.currentValue - ind.projectedValue) * ind.frequencyPerMonth * ind.unitCost;
+           return sum + savings;
+        }, 0);
+        
+        if (monthlySavings > 0) {
+           totalPayback += (p.budget / monthlySavings);
+           count++;
+        }
+     });
+     
+     return count > 0 ? (totalPayback / count).toFixed(1) : '...';
+  });
 
-   kpiMonthlySavings = computed(() => {
-      const projects = this.filteredProjects();
-      const indicators = this.dataService.getAllIndicators();
+  getProjectLeader(p: Project) {
+     const leaderId = p.areaConfig[0]?.leaderId;
+     return this.dataService.getAllUsers().find(u => u.id === leaderId);
+  }
 
-      let totalSavingsPEN = 0;
+  getProjectPayback(p: Project) {
+     const indicators = this.dataService.getIndicatorsByProject(p.id);
+     const monthlySavings = indicators.reduce((sum, ind) => {
+        const savings = (ind.currentValue - ind.projectedValue) * ind.frequencyPerMonth * ind.unitCost;
+        return sum + savings;
+     }, 0);
+     return monthlySavings > 0 ? (p.budget / monthlySavings).toFixed(1) : '∞';
+  }
 
-      projects.forEach(p => {
-         const projInds = indicators.filter(i => i.projectId === p.id);
-         projInds.forEach(ind => {
-            const diff = Math.max(0, ind.currentValue - ind.projectedValue);
-            let saving = diff * ind.frequency * ind.unitCost;
-            // Heuristic: We assume unitCost is in Project Currency
-            if (p.currency === 'USD') saving *= this.EXCHANGE_RATE;
+  // D3 Rendering Logic
+  renderCharts() {
+     this.renderBarChart();
+     this.renderDonutChart();
+  }
 
-            totalSavingsPEN += saving;
-         });
-      });
+  renderBarChart() {
+     const container = this.barChartDiv.nativeElement;
+     d3.select(container).selectAll('*').remove();
+     
+     const data = this.areas().map(area => {
+        const spent = this.dataService.getAllProjects()
+           .filter(p => p.areaConfig.some(c => c.areaId === area.id))
+           .reduce((acc, p) => {
+               const expenses = this.dataService.getExpensesByProject(p.id);
+               return acc + expenses.reduce((sum, ex) => sum + ex.amount, 0);
+           }, 0);
+        return { name: area.name, value: spent };
+     }).filter(d => d.value > 0);
 
-      return totalSavingsPEN;
-   });
+     if (data.length === 0) return;
 
-   kpiBudgetExec = computed(() => {
-      const projects = this.filteredProjects();
-      const expenses = this.dataService.getAllExpenses();
+     const margin = {top: 20, right: 20, bottom: 40, left: 60};
+     const width = container.clientWidth - margin.left - margin.right;
+     const height = container.clientHeight - margin.top - margin.bottom;
 
-      let totalBudgetPEN = 0;
-      let totalSpentPEN = 0;
+     const svg = d3.select(container)
+       .append('svg')
+       .attr('width', '100%')
+       .attr('height', '100%')
+       .attr('viewBox', `0 0 ${container.clientWidth} ${container.clientHeight}`)
+       .append('g')
+       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-      projects.forEach(p => {
-         // Budget
-         let b = p.budget;
-         if (p.currency === 'USD') b *= this.EXCHANGE_RATE;
-         totalBudgetPEN += b;
+     const x = d3.scaleBand()
+       .range([0, width])
+       .domain(data.map(d => d.name))
+       .padding(0.3);
 
-         // Expenses
-         const projExpenses = expenses.filter(e => e.projectId === p.id);
-         const spent = projExpenses.reduce((acc, curr) => {
-            let amt = curr.amount;
-            if (curr.currency === 'USD') amt *= this.EXCHANGE_RATE;
-            return acc + amt;
-         }, 0);
-         totalSpentPEN += spent;
-      });
+     const y = d3.scaleLinear()
+       .domain([0, d3.max(data, d => d.value) || 0])
+       .range([height, 0]);
 
-      if (totalBudgetPEN === 0) return 0;
-      return Math.round((totalSpentPEN / totalBudgetPEN) * 100);
-   });
+     svg.append('g')
+       .attr('transform', `translate(0,${height})`)
+       .call(d3.axisBottom(x))
+       .selectAll('text')
+       .style('font-size', '10px')
+       .style('font-family', 'Inter, sans-serif')
+       .style('fill', 'currentColor');
 
-   kpiAvgPayback = computed(() => {
-      const projects = this.filteredProjects();
-      const indicators = this.dataService.getAllIndicators();
+     svg.append('g')
+       .call(d3.axisLeft(y).ticks(5).tickFormat(d => 'S/' + d))
+       .selectAll('text')
+       .style('font-size', '10px')
+       .style('font-family', 'Inter, sans-serif')
+       .style('fill', 'currentColor');
 
-      let totalMonths = 0;
-      let count = 0;
+     // Grid lines
+     svg.append('g')			
+        .attr('class', 'grid')
+        .attr('opacity', 0.1)
+        .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(() => ''));
 
-      projects.forEach(p => {
-         // Calculate Savings
-         const projInds = indicators.filter(i => i.projectId === p.id);
-         const monthlySavings = projInds.reduce((acc, ind) => {
-            const diff = Math.max(0, ind.currentValue - ind.projectedValue);
-            return acc + (diff * ind.frequency * ind.unitCost);
-         }, 0);
+     svg.selectAll('rect')
+       .data(data)
+       .enter()
+       .append('rect')
+       .attr('x', d => x(d.name)!)
+       .attr('y', height)
+       .attr('width', x.bandwidth())
+       .attr('height', 0)
+       .attr('fill', 'hsl(var(--primary))')
+       .attr('rx', 4)
+       .transition()
+       .duration(800)
+       .attr('y', d => y(d.value))
+       .attr('height', d => height - y(d.value));
+  }
 
-         if (monthlySavings > 0) {
-            const payback = p.budget / monthlySavings;
-            totalMonths += payback;
-            count++;
-         }
-      });
+  renderDonutChart() {
+     const container = this.donutChartDiv.nativeElement;
+     d3.select(container).selectAll('*').remove();
+     
+     const raw = this.filteredProjects();
+     const stats = [
+        { label: 'Planif.', count: raw.filter(p => p.status === 'PLANIFICACION').length, color: '#94a3b8' },
+        { label: 'En Progreso', count: raw.filter(p => p.status === 'EN_PROCESO').length, color: 'hsl(var(--primary))' },
+        { label: 'Finalizado', count: raw.filter(p => p.status === 'FINALIZADO').length, color: '#10b981' }
+     ].filter(s => s.count > 0);
 
-      if (count === 0) return 0;
-      return (totalMonths / count).toFixed(1);
-   });
+     if (stats.length === 0) return;
 
-   // --- Lists Computations ---
+     const width = container.clientWidth;
+     const height = container.clientHeight;
+     const radius = Math.min(width, height) / 2 - 40;
 
-   topProjectsByBudget = computed(() => {
-      return [...this.filteredProjects()]
-         .sort((a, b) => b.budget - a.budget) // Simplified: not normalizing currency for sorting list order, usually roughly correlated or mostly same currency
-         .slice(0, 5);
-   });
+     const svg = d3.select(container)
+       .append('svg')
+       .attr('width', '100%')
+       .attr('height', '100%')
+       .attr('viewBox', `0 0 ${width} ${height}`)
+       .append('g')
+       .attr('transform', `translate(${width / 2},${height / 2})`);
 
-   topIndicators = computed(() => {
-      const projects = this.filteredProjects();
-      const allInds = this.dataService.getAllIndicators();
+     const pie = d3.pie<any>().value(d => d.count);
+     const arc = d3.arc<any>().innerRadius(radius * 0.6).outerRadius(radius);
+     
+     const arcs = svg.selectAll('arc')
+        .data(pie(stats))
+        .enter()
+        .append('g');
 
-      const result: { indicator: ImpactIndicator, project: Project, savingsPEN: number }[] = [];
+     arcs.append('path')
+        .attr('d', arc)
+        .attr('fill', d => d.data.color)
+        .attr('stroke', 'var(--background)')
+        .style('stroke-width', '2px')
+        .transition()
+        .duration(800)
+        .attrTween('d', (d: any) => {
+           const interpolate = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
+           return (t: any) => arc(interpolate(t));
+        });
 
-      projects.forEach(p => {
-         const pInds = allInds.filter(i => i.projectId === p.id);
-         pInds.forEach(ind => {
-            const diff = Math.max(0, ind.currentValue - ind.projectedValue);
-            let saving = diff * ind.frequency * ind.unitCost;
-            if (p.currency === 'USD') saving *= this.EXCHANGE_RATE;
+     // Legend
+     const legend = svg.append('g')
+        .attr('transform', `translate(${-radius * 0.5}, ${radius + 20})`);
 
-            result.push({ indicator: ind, project: p, savingsPEN: saving });
-         });
-      });
-
-      return result.sort((a, b) => b.savingsPEN - a.savingsPEN).slice(0, 10);
-   });
-
-   // --- D3 Charts ---
-
-   drawBudgetChart() {
-      if (!this.budgetChartContainer) return;
-      const el = this.budgetChartContainer.nativeElement;
-      d3.select(el).selectAll('*').remove();
-
-      // Aggregating Data by Area
-      const areaData = new Map<string, { budget: number, spent: number }>();
-      const projects = this.filteredProjects();
-      const expenses = this.dataService.getAllExpenses();
-
-      projects.forEach(p => {
-         // FIX: Use the first area in areaConfig as the primary area for this chart
-         const primaryAreaId = p.areaConfig.length > 0 ? p.areaConfig[0].areaId : 0;
-         const areaName = this.dataService.getAllAreas().find(a => a.id === primaryAreaId)?.name || 'Sin Asignar';
-
-         let budgetPEN = p.budget;
-         if (p.currency === 'USD') budgetPEN *= this.EXCHANGE_RATE;
-
-         // Calculate Spent
-         const projExp = expenses.filter(e => e.projectId === p.id);
-         const spentPEN = projExp.reduce((acc, curr) => {
-            let amt = curr.amount;
-            if (curr.currency === 'USD') amt *= this.EXCHANGE_RATE;
-            return acc + amt;
-         }, 0);
-
-         const current = areaData.get(areaName) || { budget: 0, spent: 0 };
-         areaData.set(areaName, {
-            budget: current.budget + budgetPEN,
-            spent: current.spent + spentPEN
-         });
-      });
-
-      const data = Array.from(areaData.entries()).map(([area, val]) => ({ area, ...val }));
-
-      // Setup Chart Dimensions
-      const margin = { top: 20, right: 20, bottom: 40, left: 60 };
-      const width = el.clientWidth - margin.left - margin.right;
-      const height = 300 - margin.top - margin.bottom;
-
-      const svg = d3.select(el).append('svg')
-         .attr('width', width + margin.left + margin.right)
-         .attr('height', height + margin.top + margin.bottom)
-         .append('g')
-         .attr('transform', `translate(${margin.left},${margin.top})`);
-
-      // X Axis
-      const x0 = d3.scaleBand()
-         .domain(data.map(d => d.area))
-         .rangeRound([0, width])
-         .paddingInner(0.1);
-
-      const x1 = d3.scaleBand()
-         .domain(['Presupuesto', 'Gasto Real'])
-         .rangeRound([0, x0.bandwidth()])
-         .padding(0.05);
-
-      const y = d3.scaleLinear()
-         .domain([0, d3.max(data, d => Math.max(d.budget, d.spent)) || 1000])
-         .rangeRound([height, 0]);
-
-      // Colors
-      const z = d3.scaleOrdinal()
-         .domain(['Presupuesto', 'Gasto Real'])
-         .range(['#cbd5e1', '#3b82f6']); // Slate 300 vs Blue 500
-
-      // Draw Bars
-      svg.append('g')
-         .selectAll('g')
-         .data(data)
-         .join('g')
-         .attr('transform', d => `translate(${x0(d.area)},0)`)
-         .selectAll('rect')
-         .data(d => [
-            { key: 'Presupuesto', value: d.budget },
-            { key: 'Gasto Real', value: d.spent }
-         ])
-         .join('rect')
-         .attr('x', d => x1(d.key)!)
-         .attr('y', d => y(d.value))
-         .attr('width', x1.bandwidth())
-         .attr('height', d => height - y(d.value))
-         .attr('fill', d => z(d.key) as string)
-         .attr('rx', 4); // Rounded top
-
-      // X Axis
-      svg.append('g')
-         .attr('transform', `translate(0,${height})`)
-         .call(d3.axisBottom(x0))
-         .selectAll('text')
-         .style('text-anchor', 'middle')
-         .style('font-size', '10px')
-         .style('fill', '#64748b');
-
-      // Y Axis
-      svg.append('g')
-         .call(d3.axisLeft(y).ticks(5, 's')) // 's' for SI units (1k, 1M)
-         .selectAll('text')
-         .style('fill', '#64748b');
-
-      // Legend
-      const legend = svg.append('g')
-         .attr('font-family', 'sans-serif')
-         .attr('font-size', 10)
-         .attr('text-anchor', 'end')
-         .selectAll('g')
-         .data(['Presupuesto', 'Gasto Real'])
-         .join('g')
-         .attr('transform', (d, i) => `translate(0,${i * 20})`);
-
-      legend.append('rect')
-         .attr('x', width - 19)
-         .attr('width', 19)
-         .attr('height', 19)
-         .attr('fill', d => z(d) as string)
-         .attr('rx', 4);
-
-      legend.append('text')
-         .attr('x', width - 24)
-         .attr('y', 9.5)
-         .attr('dy', '0.32em')
-         .text(d => d)
-         .attr('fill', '#64748b');
-
-      if (data.length === 0) {
-         svg.append('text')
-            .attr('x', width / 2)
-            .attr('y', height / 2)
-            .attr('text-anchor', 'middle')
-            .text('No hay datos disponibles')
-            .attr('fill', '#cbd5e1');
-      }
-   }
+     stats.forEach((s, i) => {
+        const item = legend.append('g').attr('transform', `translate(${i * 80}, 0)`);
+        item.append('circle').attr('r', 4).attr('fill', s.color);
+        item.append('text')
+           .attr('x', 10)
+           .attr('y', 4)
+           .text(s.label)
+           .style('font-size', '10px')
+           .style('font-family', 'Inter, sans-serif')
+           .style('fill', 'currentColor');
+     });
+  }
 }
