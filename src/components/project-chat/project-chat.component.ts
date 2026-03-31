@@ -11,17 +11,17 @@ import { DataService, ProjectMessage } from '../../services/data.service';
     template: `
     <div class="flex flex-col h-[600px] bg-card rounded-lg shadow-sm border border-border overflow-hidden font-sans">
       <!-- Chat Header -->
-      <div class="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
+      <div class="p-4 border-b border-border bg-muted/20 flex items-center justify-between">
          <div class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-primary rounded-md flex items-center justify-center text-primary-foreground shadow-sm">
+            <div class="h-8 w-8 bg-primary/10 border border-primary/20 rounded-md flex items-center justify-center text-primary shadow-sm">
                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
             </div>
             <div>
                <h3 class="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight">Canal de Comunicación</h3>
-               <p class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter italic">Privado • Solo Miembros del Proyecto</p>
+               <p class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter italic">Privado • Solo miembros autorizados</p>
             </div>
          </div>
-         <span class="text-[9px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase tracking-widest border border-primary/20">
+         <span class="text-[9px] font-black bg-primary/10 text-primary px-2 py-0.5 rounded-md uppercase tracking-widest border border-primary/20">
             {{ messages().length }} Mensajes
          </span>
       </div>
@@ -36,17 +36,18 @@ import { DataService, ProjectMessage } from '../../services/data.service';
                </div>
                
                <!-- Message Bubble -->
-               <div class="max-w-[75%] space-y-1.5">
+               <div class="max-w-[80%] space-y-1.5">
                   <div class="flex items-center gap-2 px-1" [class.justify-end]="isMyMessage(msg)">
-                     <span class="text-[10px] font-black text-foreground uppercase tracking-tighter">{{ getUserName(msg.userId) }}</span>
+                     <span class="text-[10px] font-black text-foreground uppercase tracking-tight">{{ getUserName(msg.userId) }}</span>
                      <span class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">{{ formatTime(msg.createdAt) }}</span>
                   </div>
                   
-                  <div class="p-3.5 rounded-lg shadow-sm text-xs leading-relaxed font-medium transition-all"
+                  <div class="p-4 rounded-xl shadow-sm text-[11px] leading-relaxed font-bold tracking-tight transition-all"
                        [class.bg-primary]="isMyMessage(msg)"
                        [class.text-primary-foreground]="isMyMessage(msg)"
                        [class.rounded-tr-none]="isMyMessage(msg)"
-                       [class.bg-card]="!isMyMessage(msg)"
+                       [class.bg-card/80]="!isMyMessage(msg)"
+                       [class.backdrop-blur-sm]="!isMyMessage(msg)"
                        [class.text-foreground]="!isMyMessage(msg)"
                        [class.border]="!isMyMessage(msg)"
                        [class.border-border]="!isMyMessage(msg)"
@@ -76,14 +77,14 @@ import { DataService, ProjectMessage } from '../../services/data.service';
       </div>
 
       <!-- Message Input -->
-      <div class="p-5 bg-card border-t border-border">
+      <div class="p-5 bg-card border-t border-border shadow-[0_-4px_24px_rgba(0,0,0,0.02)]">
          <form (ngSubmit)="sendMessage()" class="flex items-center gap-3">
             <input type="text" [(ngModel)]="newMessage" name="newMessage"
                    placeholder="ESCRIBE UN MENSAJE..."
-                   class="flex-1 px-4 py-3 bg-muted/30 border border-border rounded-md text-[11px] placeholder:text-muted-foreground/50 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-foreground font-black uppercase tracking-widest">
+                   class="flex-1 h-11 px-4 bg-muted/30 border border-border rounded-md text-[11px] placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none transition-all text-foreground font-black uppercase tracking-widest">
             <button type="submit" [disabled]="!newMessage().trim()"
-                    class="h-[42px] px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md shadow-lg shadow-primary/20 flex items-center justify-center transition-all disabled:opacity-50 disabled:grayscale disabled:shadow-none group">
-               <svg class="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    class="h-11 px-6 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md shadow-lg shadow-primary/10 flex items-center justify-center transition-all active:scale-95 disabled:opacity-50 disabled:grayscale disabled:shadow-none group">
+               <svg class="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
             </button>
          </form>
       </div>
