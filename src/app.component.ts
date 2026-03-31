@@ -13,13 +13,14 @@ import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ManualComponent } from './components/manual/manual.component';
 import { NotificationComponent } from './components/notification/notification.component';
+import { AppSwitcherComponent } from './components/app-switcher/app-switcher.component';
 
 type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROFILE' | 'MANUAL';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, DashboardComponent, ProjectDetailComponent, UserManagementComponent, AreaManagementComponent, BiDashboardComponent, KanbanBoardComponent, LoginComponent, ProfileComponent, ManualComponent, NotificationComponent],
+  imports: [CommonModule, DashboardComponent, ProjectDetailComponent, UserManagementComponent, AreaManagementComponent, BiDashboardComponent, KanbanBoardComponent, LoginComponent, ProfileComponent, ManualComponent, NotificationComponent, AppSwitcherComponent],
   template: `
     @if (dataService.isAuthenticated()) {
       <!-- Main Application Layout -->
@@ -212,18 +213,22 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
         <!-- Main Content -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
           
-          <!-- Mobile Header -->
-          <header class="flex items-center gap-4 px-4 py-3 border-b border-border bg-card lg:hidden sticky top-0 z-30">
-            <button (click)="sidebarOpen.set(true)" class="p-2 -ml-2 text-muted-foreground hover:bg-accent rounded-md">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-            </button>
-            <div class="flex items-center gap-2">
-              <div class="w-10 h-10 flex items-center justify-center shrink-0 overflow-hidden">
-                <img src="/Logo.png" alt="Logo" class="h-full w-full object-contain">
+          <!-- Global Header -->
+          <header class="flex items-center justify-between px-4 py-3 border-b border-border bg-card sticky top-0 z-30">
+            <div class="flex items-center gap-4 lg:hidden">
+              <button (click)="sidebarOpen.set(true)" class="p-2 -ml-2 text-muted-foreground hover:bg-accent rounded-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+              </button>
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
+                  <img src="/Logo.png" alt="Logo" class="h-full w-full object-contain">
+                </div>
+                <span class="font-semibold text-lg">S-Project</span>
               </div>
-              <span class="font-semibold text-lg">S-Project</span>
             </div>
-            <div class="ml-auto flex items-center gap-2">
+            
+            <div class="flex-1 flex justify-end items-center gap-4">
+              <app-app-switcher currentAppId="s-project"></app-app-switcher>
               <app-notification></app-notification>
             </div>
           </header>
