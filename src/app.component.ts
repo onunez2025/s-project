@@ -51,10 +51,9 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             </button>
           </div>
 
-          <!-- Header / Logo -->
           <div class="p-6 flex items-center gap-3">
-            <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0 overflow-hidden shadow-sm">
-                S
+            <div class="w-10 h-10 flex items-center justify-center shrink-0 overflow-hidden">
+                <img src="/Logo.png" alt="Logo" class="h-full w-auto object-contain">
             </div>
             <div>
               <h1 class="font-bold text-lg leading-none tracking-tight">S-Project</h1>
@@ -219,7 +218,9 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
             <div class="flex items-center gap-2">
-              <div class="w-6 h-6 bg-primary rounded flex items-center justify-center text-primary-foreground font-bold text-xs">S</div>
+              <div class="w-7 h-7 flex items-center justify-center shrink-0 overflow-hidden">
+                <img src="/Logo.png" alt="Logo" class="h-full w-auto object-contain">
+              </div>
               <span class="font-semibold text-lg">S-Project</span>
             </div>
             <div class="ml-auto flex items-center gap-2">
