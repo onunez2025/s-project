@@ -20,7 +20,9 @@ import { ThemeService } from '../../services/theme.service';
 
           <div class="relative z-10">
              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-xl shadow-sm">S</div>
+                <div class="w-12 h-12 flex items-center justify-center shrink-0 overflow-hidden">
+                   <img src="/Logo.png" alt="S-Project Logo" class="h-full w-full object-contain drop-shadow-md">
+                </div>
                 <span class="text-2xl font-bold tracking-tight">S-Project</span>
              </div>
              <h1 class="text-5xl font-bold mb-4 leading-tight">
@@ -31,9 +33,9 @@ import { ThemeService } from '../../services/theme.service';
                 <div class="flex flex-col w-fit gap-2">
                    <span class="text-2xl font-bold text-slate-100 tracking-tight">Gerencia de Atención al Cliente</span>
                    <img 
-                       src="/Logo.png" 
-                       alt="S-Project Logo" 
-                       class="h-auto max-w-[12rem] object-contain drop-shadow-xl animate-in zoom-in duration-500"
+                       src="/logo-grupo-sole-white.png" 
+                       alt="Logo Grupo Sole" 
+                       class="h-auto max-w-[12rem] object-contain opacity-90"
                    >
                 </div>
              </div>
