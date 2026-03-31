@@ -57,6 +57,13 @@ import { ThemeService } from '../../services/theme.service';
                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 }
              </button>
+             <!-- Language Toggle Para Paridad Visual -->
+             <button
+                 class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border hover:bg-accent text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+                 disabled
+             >
+                 ES
+             </button>
           </div>
 
           <div class="w-full max-w-md space-y-8">
@@ -77,14 +84,14 @@ import { ThemeService } from '../../services/theme.service';
              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6 mt-8">
                 <div class="space-y-4">
                    <div>
-                      <label class="block text-sm font-medium mb-1.5 ml-1">Email Corporativo</label>
+                      <label class="block text-sm font-medium mb-1.5 ml-1">Usuario</label>
                       <div class="relative">
                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                          </div>
                          <input type="email" formControlName="email" 
-                                class="block w-full pl-10 pr-3 py-2.5 bg-input/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none text-foreground"
-                                placeholder="nombre@sole.com">
+                                class="block w-full pl-10 pr-3 py-2.5 bg-input/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none text-foreground text-sm"
+                                placeholder="Ingrese usuario">
                       </div>
                    </div>
 
@@ -95,8 +102,8 @@ import { ThemeService } from '../../services/theme.service';
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                          </div>
                          <input [type]="showPassword() ? 'text' : 'password'" formControlName="password" 
-                                class="block w-full pl-10 pr-10 py-2.5 bg-input/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none text-foreground"
-                                placeholder="••••••••">
+                                class="block w-full pl-10 pr-10 py-2.5 bg-input/50 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none text-foreground text-sm"
+                                placeholder="Ingrese contraseña">
                          
                          <button type="button" (click)="showPassword.set(!showPassword())" class="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors">
                             @if(showPassword()) {
@@ -122,7 +129,7 @@ import { ThemeService } from '../../services/theme.service';
                 </div>
 
                 <button type="submit" [disabled]="loginForm.invalid || isLoading()" 
-                        class="w-full flex justify-center h-10 px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary/80 to-primary hover:from-primary/80 hover:to-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed items-center"
+                        class="w-full flex justify-center h-9 px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-bold text-primary-foreground bg-gradient-to-r from-primary/80 to-primary hover:from-primary/80 hover:to-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed items-center"
                         [class.animate-pulse]="isLoading()">
                    {{ isLoading() ? 'Iniciando Sesión...' : 'Ingresar' }}
                 </button>
