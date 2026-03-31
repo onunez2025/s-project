@@ -62,34 +62,6 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             </div>
           </div>
 
-          <!-- User Profile Card -->
-          <div class="px-4 py-2">
-            <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('PROFILE'); sidebarOpen.set(false)"
-               class="flex items-center gap-3 p-3 rounded-lg transition-all group border border-transparent"
-               [class.bg-primary/10]="dataService.currentView() === 'PROFILE'"
-               [class.border-primary/20]="dataService.currentView() === 'PROFILE'"
-               [class.shadow-sm]="dataService.currentView() === 'PROFILE'"
-               [class.bg-background/50]="dataService.currentView() !== 'PROFILE'"
-               [class.hover:bg-background]="dataService.currentView() !== 'PROFILE'"
-               [class.hover:shadow-md]="dataService.currentView() !== 'PROFILE'">
-              <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden shrink-0">
-                @if (dataService.currentUser()?.avatar) {
-                  <img [src]="dataService.currentUser()?.avatar" alt="Profile" class="w-full h-full object-cover">
-                } @else {
-                  {{ dataService.currentUser()?.name?.substring(0, 2).toUpperCase() || 'SP' }}
-                }
-              </div>
-              <div class="overflow-hidden">
-                <p class="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                  {{ dataService.currentUser()?.name || 'Usuario' }}
-                </p>
-                <p class="text-xs text-muted-foreground truncate">
-                  {{ dataService.currentUser()?.subRole || dataService.currentUser()?.role || 'Sin Rol' }}
-                </p>
-              </div>
-            </a>
-          </div>
-
           <!-- Navigation -->
           <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
             
@@ -189,21 +161,6 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
             }
           </nav>
 
-          <!-- Footer / Theme Toggle / Logout -->
-          <div class="p-4 border-t border-border space-y-2">
-            <button (click)="themeService.toggleTheme()"
-                    class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md transition-colors">
-              @if (themeService.theme() === 'dark') {
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                Modo Claro
-              } @else {
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                Modo Oscuro
-              }
-            </button>
-
-            <button (click)="dataService.logout()"
-                    class="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
               Cerrar Sesión
             </button>
@@ -214,21 +171,47 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
           
           <!-- Global Header -->
-          <header class="flex items-center justify-between px-4 py-3 border-b border-border bg-card sticky top-0 z-30">
-            <div class="flex items-center gap-4 lg:hidden">
-              <button (click)="sidebarOpen.set(true)" class="p-2 -ml-2 text-muted-foreground hover:bg-accent rounded-md">
+          <header class="flex items-center justify-between px-4 py-2 border-b border-border bg-card sticky top-0 z-30">
+            <div class="flex items-center gap-4">
+              <button (click)="sidebarOpen.set(true)" class="p-2 -ml-2 text-muted-foreground hover:bg-accent rounded-md lg:hidden">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
               </button>
               <div class="flex items-center gap-2">
                 <div class="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/Logo.png" alt="Logo" class="h-full w-full object-contain">
                 </div>
-                <span class="font-semibold text-lg">S-Project</span>
+                <span class="font-semibold text-lg hidden sm:inline-block">S-Project</span>
               </div>
             </div>
             
-            <div class="flex-1 flex justify-end items-center gap-4">
-              <app-app-switcher currentAppId="s-project"></app-app-switcher>
+            <div class="flex-1 flex justify-end items-center gap-2 sm:gap-4">
+              <!-- Dark Mode Toggle -->
+              <button (click)="themeService.toggleTheme()"
+                      class="p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800/50 rounded-full transition-colors duration-200 focus:outline-none"
+                      title="Cambiar Tema">
+                @if (themeService.theme() === 'dark') {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+                } @else {
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                }
+              </button>
+
+              <!-- App Switcher -->
+              <app-switcher currentAppId="s-project"></app-switcher>
+
+              <!-- Mi Perfil Avatar -->
+              <button (click)="dataService.currentView.set('PROFILE')" 
+                      class="flex items-center gap-2 p-1.5 rounded-full hover:bg-accent group transition-all"
+                      title="Mi Perfil">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden shrink-0 border border-transparent group-hover:border-primary/50">
+                  @if (dataService.currentUser()?.avatar) {
+                    <img [src]="dataService.currentUser()?.avatar" alt="Profile" class="w-full h-full object-cover">
+                  } @else {
+                    {{ dataService.currentUser()?.name?.substring(0, 2).toUpperCase() || 'SP' }}
+                  }
+                </div>
+              </button>
+
               <app-notification></app-notification>
             </div>
           </header>
