@@ -137,9 +137,9 @@ type TimeScale = 'Day' | 'Week' | 'Month';
       </div>
       
       <!-- Hover Tooltip -->
-      <div #tooltip class="fixed pointer-events-none opacity-0 bg-background/95 backdrop-blur-md text-foreground px-4 py-3 rounded-lg shadow-2xl z-50 text-[10px] font-bold uppercase tracking-widest transition-opacity duration-200 border border-border">
-         <div class="mb-1" id="tt-dates"></div>
-         <div class="text-primary" id="tt-progress"></div>
+      <div #tooltip class="fixed pointer-events-none opacity-0 bg-card/95 backdrop-blur-md text-foreground px-4 py-3 rounded-lg shadow-2xl z-50 border border-border flex flex-col gap-1 min-w-[150px]">
+         <div class="text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border pb-1 mb-1" id="tt-dates"></div>
+         <div class="text-[11px] font-black text-primary uppercase tracking-tight" id="tt-progress"></div>
       </div>
     </div>
   `,
@@ -326,10 +326,10 @@ export class GanttChartComponent implements OnDestroy {
       const group = svgBody.append('g')
         .attr('class', 'bar-group'); // Class for selection if needed
 
-      let color = 'hsl(var(--muted))'; 
-      if (d.status === 'FINALIZADO') color = 'hsl(var(--primary))';
-      else if (d.status === 'EN_PROCESO') color = 'hsl(var(--destructive))';
-      else color = 'hsl(var(--muted-foreground) / 0.5)'; 
+      let color = 'hsl(var(--muted-foreground) / 0.3)'; 
+      if (d.status === 'FINALIZADO') color = 'hsl(142 71% 45%)'; // Emerald 500
+      else if (d.status === 'EN_PROCESO') color = 'hsl(var(--primary))'; // Blue
+      else if (d.status === 'PLANIFICACION') color = 'hsl(var(--muted-foreground) / 0.5)';
 
       // Bar
       const rect = group.append('rect')
@@ -422,13 +422,13 @@ export class GanttChartComponent implements OnDestroy {
 
         if (d.status === 'EN_PROCESO') {
           labelText = 'En Curso';
-          labelClass = 'text-[10px] font-bold fill-red-700 uppercase tracking-wide';
+          labelClass = 'text-[9px] font-black fill-primary uppercase tracking-widest';
         } else if (d.status === 'PLANIFICACION') {
           labelText = 'Plan';
-          labelClass = 'text-[10px] font-bold fill-slate-400 uppercase tracking-wide';
+          labelClass = 'text-[9px] font-black fill-muted-foreground uppercase tracking-widest';
         } else if (d.status === 'FINALIZADO') {
           labelText = 'Completado';
-          labelClass = 'text-[10px] font-bold fill-green-600 uppercase tracking-wide';
+          labelClass = 'text-[9px] font-black fill-emerald-600 uppercase tracking-widest';
         }
 
         group.append('text')
