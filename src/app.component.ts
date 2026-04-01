@@ -1,5 +1,4 @@
-
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ElementRef, OnDestroy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService, User } from './services/data.service';
 import { ThemeService } from './services/theme.service';
@@ -271,10 +270,65 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
   `,
   styles: []
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   dataService = inject(DataService);
   themeService = inject(ThemeService);
   sidebarOpen = signal(false);
+
+  private timeoutId: any;
+  private readonly INACTIVITY_TIME = 5 * 60 * 1000; // 5 minutos en ms
+  private readonly activityEvents = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+
+  constructor() {
+    // Escuchar cambios en la autenticación para iniciar/detener el timer
+    effect(() => {
+      if (this.dataService.isAuthenticated()) {
+        this.setupInactivityTimer();
+      } else {
+        this.clearInactivityTimer();
+      }
+    });
+  }
+
+  private setupInactivityTimer() {
+    this.clearInactivityTimer(); // Limpiar previo si existe
+    
+    // Configurar listeners
+    this.activityEvents.forEach(event => {
+      window.addEventListener(event, this.handleUserActivity);
+    });
+
+    this.resetTimer();
+  }
+
+  private clearInactivityTimer() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
+    
+    this.activityEvents.forEach(event => {
+      window.removeEventListener(event, this.handleUserActivity);
+    });
+  }
+
+  private handleUserActivity = () => {
+    this.resetTimer();
+  };
+
+  private resetTimer() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+    
+    this.timeoutId = setTimeout(() => {
+      this.dataService.logout();
+    }, this.INACTIVITY_TIME);
+  }
+
+  ngOnDestroy() {
+    this.clearInactivityTimer();
+  }
 }
 
-// Fix Deploy: 03/31/2026 16:37:23
+// Security Polish: 04/01/2026 15:07:44
