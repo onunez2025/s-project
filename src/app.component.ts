@@ -183,7 +183,7 @@ type ViewState = 'BI' | 'LIST' | 'DETAIL' | 'USERS' | 'AREAS' | 'KANBAN' | 'PROF
                 <div class="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/Logo.png" alt="Logo" class="h-full w-full object-contain">
                 </div>
-                <span class="font-semibold text-lg hidden sm:inline-block">S-Project</span>
+                <span class="font-bold text-lg hidden sm:inline-block">S-Project</span>
               </div>
             </div>
             
