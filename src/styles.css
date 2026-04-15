@@ -66,30 +66,26 @@
   }
 }
 
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#F8FAFC] text-foreground dark:bg-[#020617];
     font-family: 'Lato', ui-sans-serif, system-ui, sans-serif;
-    cursor: url('/cursor.png'), auto !important;
   }
 
-  a, button, [role="button"], input[type="button"], input[type="submit"] {
-    cursor: url('/cursor.png'), pointer !important;
-  }
-
-  /* Custom Scrollbar - EBM Style */
+  /* Custom Scrollbar - SIATC Style */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
-
+  
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: transparent; 
   }
-
+  
   ::-webkit-scrollbar-thumb {
     @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
   }
