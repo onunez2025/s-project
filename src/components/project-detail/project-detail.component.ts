@@ -16,10 +16,10 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
   imports: [CommonModule, FormsModule, ProjectFormComponent, ProjectChatComponent],
   template: `
     @if (project(); as p) {
-      <div class="flex flex-col h-full animate-fade-in gap-6 pb-10">
+      <div class="flex flex-col h-full animate-fade-in gap-4 pb-4">
         
         <!-- Modern Header -->
-        <div class="bg-card rounded-lg p-5 border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm">
+        <div class="bg-card rounded-lg p-4 border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm">
           <div class="flex items-start gap-4">
              <button (click)="back.emit()" class="group mt-1 p-1.5 rounded-md hover:bg-muted transition-colors border border-border">
                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-muted-foreground group-hover:text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,9 +137,9 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
         </div>
 
         @if (activeTab() === 'BOARD') {
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-fade-in">
             <!-- Left Column: Activities (Takes 2/3) -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-4">
               <!-- Quick Stats -->
               <div class="grid grid-cols-3 gap-4">
                 <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
@@ -165,8 +165,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                 </div>
               </div>
               <!-- Tasks Card -->
-              <div class="bg-card rounded-lg shadow-sm border border-border flex flex-col min-h-[400px] overflow-hidden">
-                 <div class="p-4 border-b border-border flex justify-between items-center bg-muted/30">
+              <div class="bg-card rounded-lg shadow-sm border border-border flex flex-col overflow-hidden max-h-[calc(100vh-420px)]">
+                 <div class="p-3 border-b border-border flex justify-between items-center bg-muted/30 shrink-0">
                    <h3 class="font-bold text-foreground text-sm tracking-tight">Mis Tareas</h3>
                    @if (canAddActivities()) {
                      <button (click)="isAddingActivity.set(!isAddingActivity())" class="text-[10px] bg-primary text-primary-foreground hover:bg-primary/90 font-bold px-3 py-1 rounded-md transition-colors shadow-sm">
@@ -175,7 +175,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                    }
                  </div>
 
-                 <div class="p-4 flex-1">
+                 <div class="p-2 flex-1 overflow-y-auto custom-scrollbar">
                    @if (isAddingActivity()) {
                      <div class="bg-muted/50 p-4 rounded-md mb-4 border border-border shadow-sm animate-in fade-in slide-in-from-top-2">
                         <div class="mb-3">
@@ -212,7 +212,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
 
                    <div class="space-y-2">
                      @for (act of activities(); track act.id) {
-                       <div class="group flex items-center justify-between p-3 rounded-md border border-border bg-card/50 transition-all duration-200 hover:border-primary/30 hover:bg-muted/30">
+                       <div class="group flex items-center justify-between p-2.5 rounded-md border border-border bg-card/50 transition-all duration-200 hover:border-primary/30 hover:bg-muted/30">
                           <div class="flex items-center gap-3 flex-1">
                             <div class="flex-shrink-0">
                                @if (act.status === 'PENDIENTE') {
@@ -275,8 +275,8 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
             </div>
 
             <!-- Right Column: Info & Team -->
-            <div class="space-y-6">
-              <div class="bg-card rounded-lg p-5 shadow-sm border border-border">
+            <div class="space-y-4">
+              <div class="bg-card rounded-lg p-4 shadow-sm border border-border">
                  <h3 class="font-bold text-foreground text-sm tracking-tight mb-4 border-b border-border pb-2">Detalles</h3>
                  <div class="space-y-4">
                    <div class="flex justify-between items-center">
@@ -310,7 +310,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               </div>
 
               <!-- Lideres y Equipo -->
-              <div class="bg-card rounded-lg p-5 shadow-sm border border-border">
+              <div class="bg-card rounded-lg p-4 shadow-sm border border-border">
                  <h3 class="font-bold text-foreground text-sm tracking-tight mb-4 border-b border-border pb-2">Equipo</h3>
                  
                  <!-- Leaders Loop -->
@@ -349,11 +349,11 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
         }
 
         @if (activeTab() === 'EXPENSES') {
-           <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 animate-fade-in">
+           <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 animate-fade-in">
              
              <!-- Expense Summary Cards -->
              <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-               <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 border-primary flex justify-between items-center border-t border-r border-b border-border">
+               <div class="bg-card p-4 rounded-lg shadow-sm border-l-4 border-primary flex justify-between items-center border-t border-r border-b border-border">
                  <div>
                    <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Presupuesto Inicial</p>
                    <p class="text-xl font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.2-2' }}</p>
@@ -363,7 +363,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                  </div>
                </div>
 
-               <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 border-purple-500 flex justify-between items-center border-t border-r border-b border-border">
+               <div class="bg-card p-4 rounded-lg shadow-sm border-l-4 border-purple-500 flex justify-between items-center border-t border-r border-b border-border">
                  <div>
                    <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Gasto Acumulado (Est.)</p>
                    <p class="text-xl font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalSpent() | number:'1.2-2' }}</p>
@@ -373,7 +373,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                  </div>
                </div>
 
-               <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 flex justify-between items-center border-t border-r border-b border-border"
+               <div class="bg-card p-4 rounded-lg shadow-sm border-l-4 flex justify-between items-center border-t border-r border-b border-border"
                     [class.border-emerald-500]="remainingBudget() >= 0"
                     [class.border-destructive]="remainingBudget() < 0">
                  <div>
@@ -398,7 +398,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                </div>
              </div>
              
-              <div class="lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 h-fit">
+              <div class="lg:col-span-1 bg-white p-4 rounded-2xl shadow-sm border border-slate-100 h-fit">
                   <h3 class="font-bold text-slate-800 mb-4 text-sm tracking-wide">Registrar Gasto</h3>
                   <div class="space-y-4">
                      <div>
@@ -483,7 +483,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
         }
 
         @if (activeTab() === 'FILES') {
-           <div class="grid grid-cols-1 gap-6 animate-fade-in">
+           <div class="grid grid-cols-1 gap-4 animate-fade-in">
              <!-- Drag & Drop Zone -->
              @if (canManageFilesAndExpenses()) {
                 <div class="border border-dashed border-primary/30 rounded-lg bg-primary/5 p-8 flex flex-col items-center justify-center text-center hover:bg-primary/10 transition-all cursor-pointer group"
@@ -544,27 +544,27 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
         }
 
         @if (activeTab() === 'PAYBACK') {
-           <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in font-bold">
+           <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 animate-fade-in font-bold">
               <div class="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 tracking-tighter">
-                 <div class="bg-card p-5 rounded-lg shadow-sm border border-border flex flex-col justify-between h-28 relative overflow-hidden group">
+                 <div class="bg-card p-4 rounded-lg shadow-sm border border-border flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
                       <p class="text-[10px] text-muted-foreground tracking-widest">Inversión (Capex)</p>
                       <p class="text-xl font-black text-foreground mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.0-0' }}</p>
                     </div>
                  </div>
-                 <div class="bg-card p-5 rounded-lg shadow-sm border border-primary/20 flex flex-col justify-between h-28 relative overflow-hidden group">
+                 <div class="bg-card p-4 rounded-lg shadow-sm border border-primary/20 flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
                       <p class="text-[10px] text-primary tracking-widest">Ahorro Mensual</p>
                       <p class="text-xl font-black text-primary mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalMonthlySavings() | number:'1.0-0' }}</p>
                     </div>
                  </div>
-                 <div class="bg-card p-5 rounded-lg shadow-sm border border-emerald-500/20 flex flex-col justify-between h-28 relative overflow-hidden group">
+                 <div class="bg-card p-4 rounded-lg shadow-sm border border-emerald-500/20 flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
                       <p class="text-[10px] text-emerald-500 tracking-widest">Ahorro Anual</p>
                       <p class="text-xl font-black text-emerald-500 mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ roiAnnual() | number:'1.0-0' }}</p>
                     </div>
                  </div>
-                 <div class="bg-foreground p-5 rounded-lg shadow-sm flex flex-col justify-between h-28 relative overflow-hidden text-background">
+                 <div class="bg-foreground p-4 rounded-lg shadow-sm flex flex-col justify-between h-28 relative overflow-hidden text-background">
                     <div>
                       <p class="text-[10px] opacity-70 tracking-widest">Payback (Retorno)</p>
                       <p class="text-xl font-black mt-1">
@@ -575,14 +575,14 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               </div>
               
                <div class="xl:col-span-2 space-y-6">
-                 <div class="bg-card rounded-lg shadow-sm border border-border p-6">
+                 <div class="bg-card rounded-lg shadow-sm border border-border p-4">
                     <h3 class="text-xs tracking-widest text-muted-foreground mb-6">Proyección de Retorno</h3>
                     <div #paybackChart class="w-full h-[300px] bg-muted/20 rounded-md relative overflow-hidden"></div>
                  </div>
                </div>
 
               <div class="xl:col-span-1">
-                 <div class="bg-card rounded-lg shadow-sm border border-border p-5 sticky top-6">
+                 <div class="bg-card rounded-lg shadow-sm border border-border p-4 sticky top-6">
                     <h3 class="font-bold text-foreground text-[10px] tracking-widest mb-6 px-1">Indicador de Impacto</h3>
                      <div class="space-y-4">
                        <div>

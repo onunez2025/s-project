@@ -51,7 +51,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
             </div>
 
             <!-- Header / Logo -->
-            <div class="p-6 flex items-center gap-4 border-b border-border/50 bg-gradient-to-br from-primary/5 to-transparent">
+            <div class="p-5 flex items-center gap-4 border-b border-border/50 bg-gradient-to-br from-primary/5 to-transparent">
               <div class="w-12 h-12 flex items-center justify-center shrink-0 overflow-hidden bg-white rounded-2xl shadow-lg shadow-primary/5 border border-primary/10 p-1.5 transition-transform hover:scale-105">
                   <img src="/ecosystem-logos/s-project.png" alt="S-Project Logo" class="h-full w-full object-contain">
               </div>
@@ -184,7 +184,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
           
           <!-- Global Header SIATC Platinum — h-20 stardarized -->
-          <header class="h-20 shrink-0 px-8 flex items-center justify-between sticky top-0 z-40 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-b border-border/50">
+          <header class="h-20 shrink-0 px-6 flex items-center justify-between sticky top-0 z-40 bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl border-b border-border/50">
             <div class="flex items-center gap-6">
               <button (click)="sidebarOpen.set(true)" class="p-3 -ml-3 text-muted-foreground hover:bg-white dark:hover:bg-white/5 rounded-2xl lg:hidden shadow-sm transition-all border border-transparent hover:border-border/50">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -244,7 +244,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
           </header>
 
           <!-- Content Area Platinum -->
-          <main class="flex-1 overflow-y-auto px-8 pb-8 flex flex-col custom-scrollbar relative">
+          <main class="flex-1 overflow-y-auto px-6 pb-6 flex flex-col custom-scrollbar relative">
             <div class="flex-1 w-full max-w-[1600px] mx-auto flex flex-col min-h-0 animate-in fade-in duration-700">
               @switch (dataService.currentView()) {
                 @case ('BI') {
