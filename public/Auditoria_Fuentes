@@ -1,0 +1,92 @@
+# Auditoría Exhaustiva de UX/UI - S-Project
+
+Este documento detalla todos los hallazgos relacionados con el uso de textos en mayúsculas (clase `uppercase` o texto en duro) y el uso de fuentes distintas a **Lato**.
+
+## 1. Fuentes (Typography Audit)
+
+### Fuentes No-Lato detectadas
+Se ha encontrado que la fuente **Inter** está siendo inyectada manualmente en los gráficos de D3.js, lo cual rompe la consistencia visual del sistema SIATC.
+
+| Archivo | Línea | Detalle |
+|---------|-------|---------|
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 420 | `.style('font-family', 'Inter, sans-serif')` (Gráfico de Barras - Eje X) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 427 | `.style('font-family', 'Inter, sans-serif')` (Gráfico de Barras - Eje Y) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 509 | `.style('font-family', 'Inter, sans-serif')` (Gráfico Donut - Leyenda) |
+
+> [!IMPORTANT]
+> El resto de la aplicación utiliza `font-sans` configurada como **Lato** en `tailwind.config.js`, pero estos gráficos ignoran esa configuración global.
+
+---
+
+## 2. Textos en Mayúsculas (Uppercase Audit)
+
+Se han identificado múltiples secciones donde se utiliza la clase CSS `uppercase` o el texto está escrito directamente en mayúsculas.
+
+### A. Componentes Globales y Sidebar
+| Archivo | Línea | Elemento | Texto / Clase |
+|---------|-------|----------|---------------|
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 59 | Logo Title | `S-PROJECT` (En duro + clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 60 | Subtitle | `Project Core` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 66 | Nav Group | `Operaciones` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 82 | Nav Item | `Dashboard` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 98 | Nav Item | `Proyectos` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 114 | Nav Item | `Mis Tareas` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 130 | Nav Item | `Ayuda` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 137 | Nav Group | `Administración` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 151 | Nav Item | `Teams` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 166 | Nav Item | `Áreas` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 177 | Button | `Cerrar Sesión` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 198 | Header Title | `S-PROJECT — SIATC` (En duro + clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 201 | Status | `Sincronizado` (Clase uppercase) |
+| [app.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/app.component.ts) | 237-238 | Profile | Name & Role (Clase uppercase) |
+
+### B. BI Dashboard & Widgets
+| Archivo | Línea | Elemento | Texto / Clase |
+|---------|-------|----------|---------------|
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 23 | Tag | `BI` (En duro + clase uppercase) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 74 | KPI Label | `Proyectos Activos` (Clase uppercase) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 86 | KPI Label | `Ahorro Mensual (Est.)` (Clase uppercase) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 101 | KPI Label | `Ejecución Presupuestal` (Clase uppercase) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 115 | KPI Label | `Payback Promedio` (Clase uppercase) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 167-172| Cabeceras Tabla| `PROYECTO`, `LÍDER`, `PROGRESO`, etc (Clase uppercase) |
+| [bi-dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/bi-dashboard/bi-dashboard.component.ts) | 205 | Estado Proyecto | Project Status (Clase uppercase) |
+| [due-soon-widget.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/ui/due-soon-widget/due-soon-widget.component.ts) | 49 | Nombre Proyecto | Task Project Name (Clase uppercase) |
+| [due-soon-widget.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/ui/due-soon-widget/due-soon-widget.component.ts) | 67 | Footer | Footer Labels (Clase uppercase) |
+
+### C. Gestión de Proyectos y Formularios
+| Archivo | Línea | Elemento | Texto / Clase |
+|---------|-------|----------|---------------|
+| [dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/dashboard/dashboard.component.ts) | 106 | Estado Proyecto | Project Status (Clase uppercase) |
+| [dashboard.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/dashboard/dashboard.component.ts) | 161 | Etiqueta | `PRESUPUESTO` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 18 | Título Modal | `EDITAR PROYECTO` / `NUEVO PROYECTO` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 21 | Subtítulo | `CONFIGURACIÓN MULTI-ÁREA Y EQUIPO` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 35 | Label | `NOMBRE DEL PROYECTO` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 39 | Error | `EL NOMBRE ES REQUERIDO.` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 52 | Grupo Labels | `PRESUPUESTO Y TIEMPOS` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 61 | Addon | `S/` / `$` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 77-81 | Opción | `SOLES` / `DÓLARES` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 106 | Grupo Labels | `ÁREAS Y LÍDERES` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 117 | Area Tag | Area Name (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 147 | Error | `DEBES SELECCIONAR AL MENOS UN ÁREA.` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 154 | Grupo Labels | `EQUIPO DE TRABAJO` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 162 | Sub Grupo | `MIEMBROS` (Clase uppercase) |
+| [project-form.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/project-form/project-form.component.ts) | 199 | Botón Acción | `GUARDAR CAMBIOS` / `CREAR PROYECTO` (Clase uppercase) |
+
+---
+
+### D. Gestión de Usuarios
+| Archivo | Línea | Elemento | Texto / Clase |
+|---------|-------|----------|---------------|
+| [user-management.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/user-management/user-management.component.ts) | 19 | Descripción | "ADMINISTRACIÓN DE USUARIOS, ROLES Y JERARQUÍAS..." (Clase uppercase) |
+| [user-management.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/user-management/user-management.component.ts) | 38-42 | Cabeceras Tabla | `USUARIO`, `ÁREAS`, `NIVEL`, etc. (Clase uppercase) |
+| [user-management.component.ts](file:///d:/diego/Documentos/Antigravity/S-Project/s-project/src/components/user-management/user-management.component.ts) | 141-163| Etiquetas Formul.| Todos los labels como `NOMBRE COMPLETO`, `ROL`, etc. (Clase uppercase) |
+
+---
+
+## 3. Resumen de Hallazgos
+
+1.  **Fuentes**: El 98% de la app usa **Lato** correctamente vía Tailwind. Sin embargo, el **BI Dashboard** inyecta **Inter** en los estilos inline de D3, lo cual es una inconsistencia crítica.
+2.  **Mayúsculas**: Hay un uso extremadamente agresivo de la clase `uppercase` en etiquetas de formularios, encabezados de tablas, botones de acción y títulos de navegación. Casi todos los identificadores descriptivos (Nivel, Rol, Área, Estado) están forzados a mayúsculas.
+
+> [!CAUTION]
+> Se recomienda normalizar los textos a **Title Case** o **Sentence Case** según los lineamientos de accesibilidad y coherencia visual del sistema SIATC, eliminando la clase `uppercase` donde no sea estrictamente necesaria para la jerarquía visual.

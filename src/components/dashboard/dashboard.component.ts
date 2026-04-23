@@ -103,7 +103,7 @@ type ViewMode = 'CARDS' | 'GANTT';
                  </div>
                  
                  <div class="flex items-center gap-2">
-                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border"
+                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide border"
                       [class.bg-blue-50]="proj.status === 'EN_PROCESO'"
                       [class.text-blue-700]="proj.status === 'EN_PROCESO'"
                       [class.border-blue-100]="proj.status === 'EN_PROCESO'"
@@ -158,7 +158,7 @@ type ViewMode = 'CARDS' | 'GANTT';
                 <!-- Footer Info -->
                 <div class="flex justify-between items-center border-t border-border pt-3">
                    <div class="flex flex-col">
-                     <span class="text-[10px] text-muted-foreground font-bold uppercase">Presupuesto</span>
+                     <span class="text-[10px] text-muted-foreground font-bold">Presupuesto</span>
                      <span class="text-xs font-bold">{{ proj.currency === 'PEN' ? 'S/' : '$' }} {{ proj.budget | number }}</span>
                    </div>
                    <div class="flex -space-x-2 overflow-hidden pl-2 py-1">

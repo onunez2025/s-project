@@ -15,10 +15,10 @@ import { DataService, Area } from '../../services/data.service';
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 class="text-2xl font-bold tracking-tight">Configuración de Áreas</h2>
-          <p class="text-muted-foreground text-[11px] font-bold uppercase tracking-wider">Gestión de departamentos y unidades de negocio</p>
+          <p class="text-muted-foreground text-[11px] font-bold tracking-wider">Gestión de departamentos y unidades de negocio</p>
         </div>
         
-        <button (click)="openCreate()" class="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2">
+        <button (click)="openCreate()" class="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md text-[10px] font-black tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2">
           <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
@@ -32,24 +32,24 @@ import { DataService, Area } from '../../services/data.service';
           <table class="min-w-full divide-y divide-border">
             <thead class="bg-muted/30">
               <tr>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">ID</th>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Nombre del Área</th>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Dotación</th>
-                <th class="px-6 py-4 text-right text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Acciones</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">ID</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Nombre del Área</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Dotación</th>
+                <th class="px-6 py-4 text-right text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Acciones</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-border">
               @for (area of areas(); track area.id) {
                 <tr class="hover:bg-accent/50 transition-colors group">
                   <td class="px-6 py-3 whitespace-nowrap">
-                     <span class="font-mono text-[10px] font-bold text-muted-foreground uppercase">#{{ area.id }}</span>
+                     <span class="font-mono text-[10px] font-bold text-muted-foreground">#{{ area.id }}</span>
                   </td>
                   <td class="px-6 py-3 whitespace-nowrap">
-                     <div class="text-[11px] font-black text-foreground uppercase tracking-tight">{{ area.name }}</div>
+                     <div class="text-[11px] font-black text-foreground tracking-tight">{{ area.name }}</div>
                   </td>
                   <td class="px-6 py-3 whitespace-nowrap">
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest bg-primary/5 text-primary border border-primary/10">
-                      {{ getEmployeeCount(area.id) }} miembros
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-black tracking-widest bg-primary/5 text-primary border border-primary/10">
+                      {{ getEmployeeCount(area.id) }} Miembros
                     </span>
                   </td>
                   <td class="px-6 py-3 whitespace-nowrap text-right">
@@ -77,10 +77,10 @@ import { DataService, Area } from '../../services/data.service';
             <div class="w-full max-w-sm bg-card/95 backdrop-blur-md h-full shadow-2xl border-l border-border p-6 overflow-y-auto animate-in slide-in-from-right duration-300 flex flex-col">
               <div class="flex justify-between items-center mb-6">
                  <div>
-                   <h3 class="text-sm font-black uppercase tracking-widest text-primary">
+                   <h3 class="text-sm font-black tracking-widest text-primary">
                      {{ editingArea() ? 'Editar Área' : 'Alta de Área' }}
                    </h3>
-                   <p class="text-[10px] text-muted-foreground font-bold uppercase tracking-tight mt-0.5">Mantenimiento de Unidades Operativas</p>
+                   <p class="text-[10px] text-muted-foreground font-bold tracking-tight mt-0.5">Mantenimiento de Unidades Operativas</p>
                  </div>
                  <button (click)="closeForm()" class="h-8 w-8 rounded-full bg-muted/50 hover:bg-destructive/10 text-muted-foreground hover:text-destructive flex items-center justify-center transition-all active:scale-90">
                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,21 +92,21 @@ import { DataService, Area } from '../../services/data.service';
               <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-1 flex flex-col min-h-0">
                 <div class="space-y-4 flex-1">
                   <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 ml-0.5">Nombre del Área</label>
+                    <label class="block text-[10px] font-black tracking-widest text-muted-foreground mb-1.5 ml-0.5">Nombre del Área</label>
                     <input type="text" formControlName="name" 
-                           class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold uppercase tracking-tight outline-none placeholder:text-muted-foreground/50"
-                           placeholder="EJ. LOGÍSTICA">
+                           class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold tracking-tight outline-none placeholder:text-muted-foreground/50"
+                           placeholder="Ej. Logística">
                     @if (form.get('name')?.touched && form.get('name')?.invalid) {
-                      <p class="text-[9px] text-destructive mt-1.5 font-black uppercase tracking-widest">El nombre es requerido (mín. 3 carac.)</p>
+                      <p class="text-[9px] text-destructive mt-1.5 font-black tracking-widest">El nombre es requerido (mín. 3 carac.)</p>
                     }
                   </div>
                 </div>
 
                 <div class="pt-5 flex flex-col gap-2 border-t border-border mt-auto">
-                    <button type="submit" [disabled]="form.invalid" class="w-full h-10 bg-primary text-primary-foreground rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 shadow-md transition-all active:scale-95 disabled:opacity-50">
+                    <button type="submit" [disabled]="form.invalid" class="w-full h-10 bg-primary text-primary-foreground rounded-md text-[10px] font-black tracking-widest hover:bg-primary/90 shadow-md transition-all active:scale-95 disabled:opacity-50">
                       {{ editingArea() ? 'Guardar Cambios' : 'Confirmar Alta' }}
                     </button>
-                    <button type="button" (click)="closeForm()" class="w-full h-9 border border-border rounded-md text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:bg-muted/50 transition-all">Cancelar</button>
+                    <button type="button" (click)="closeForm()" class="w-full h-9 border border-border rounded-md text-[9px] font-black tracking-widest text-muted-foreground hover:bg-muted/50 transition-all">Cancelar</button>
                 </div>
               </form>
             </div>

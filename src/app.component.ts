@@ -56,14 +56,14 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   <img src="/ecosystem-logos/s-project.png" alt="S-Project Logo" class="h-full w-full object-contain">
               </div>
               <div class="flex flex-col">
-                <h1 class="font-bold text-lg leading-none tracking-tight text-foreground uppercase pt-1">S-PROJECT</h1>
-                <p class="text-[10px] font-black text-primary tracking-[0.2em] uppercase mt-1 opacity-70">Project Core</p>
+                <h1 class="font-bold text-lg leading-none tracking-tight text-foreground pt-1">S-Project</h1>
+                <p class="text-[10px] font-black text-primary tracking-[0.2em] mt-1 opacity-70">Project Core</p>
               </div>
             </div>
 
             <!-- Navigation SIATC Standard -->
             <nav class="flex-1 px-3 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
-              <p class="text-[10px] font-black text-muted-foreground tracking-[0.2em] px-4 py-2 uppercase opacity-40">Operaciones</p>
+              <p class="text-[10px] font-black text-muted-foreground tracking-[0.2em] px-4 py-2 opacity-40">Operaciones</p>
               
               <!-- BI Dashboard -->
               <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('BI'); sidebarOpen.set(false)" 
@@ -79,7 +79,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   <svg class="w-5 h-5 transition-transform duration-500 group-hover/item:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                   </svg>
-                  <span class="tracking-tight uppercase">Dashboard</span>
+                  <span class="tracking-tight">Dashboard</span>
                 </div>
               </a>
 
@@ -95,7 +95,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   <svg class="w-5 h-5 transition-transform duration-500 group-hover/item:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                   </svg>
-                  <span class="tracking-tight uppercase">Proyectos</span>
+                  <span class="tracking-tight">Proyectos</span>
                 </div>
               </a>
               
@@ -111,7 +111,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   <svg class="w-5 h-5 transition-transform duration-500 group-hover/item:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                   </svg>
-                  <span class="tracking-tight uppercase">Mis Tareas</span>
+                  <span class="tracking-tight">Mis Tareas</span>
                 </div>
               </a>
 
@@ -127,14 +127,14 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   <svg class="w-5 h-5 transition-transform duration-500 group-hover/item:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                   </svg>
-                  <span class="tracking-tight uppercase">Ayuda</span>
+                  <span class="tracking-tight">Ayuda</span>
                 </div>
               </a>
 
               <!-- ADMIN SECTION -->
               @if (dataService.currentUser()?.role === 'ADMIN') {
                 <div class="pt-6 mt-4 border-t border-border/50">
-                  <p class="px-4 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-40">Administración</p>
+                  <p class="px-4 mb-2 text-[10px] font-black tracking-[0.2em] text-muted-foreground opacity-40">Administración</p>
                 </div>
                 
                 <a href="#" (click)="$event.preventDefault(); dataService.currentView.set('USERS'); sidebarOpen.set(false)" 
@@ -148,7 +148,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                     <svg class="w-5 h-5 transition-transform duration-500 group-hover/item:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
-                    <span class="tracking-tight uppercase">Teams</span>
+                    <span class="tracking-tight">Teams</span>
                   </div>
                 </a>
 
@@ -163,7 +163,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                     <svg class="w-5 h-5 transition-transform duration-500 group-hover/item:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
-                    <span class="tracking-tight uppercase">Áreas</span>
+                    <span class="tracking-tight">Áreas</span>
                   </div>
                 </a>
               }
@@ -172,7 +172,7 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
             <!-- Logout Footer -->
             <div class="p-4 border-t border-border/50 bg-muted/20">
               <button (click)="dataService.logout()" 
-                      class="w-full flex items-center gap-3 px-4 py-3 text-xs font-black text-rose-500 hover:bg-rose-500 hover:text-white rounded-2xl transition-all shadow-rose-500/10 hover:shadow-lg uppercase tracking-[0.2em]">
+                      class="w-full flex items-center gap-3 px-4 py-3 text-xs font-black text-rose-500 hover:bg-rose-500 hover:text-white rounded-2xl transition-all shadow-rose-500/10 hover:shadow-lg tracking-[0.2em]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 Cerrar Sesión
               </button>
@@ -195,10 +195,10 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   <img src="/ecosystem-logos/s-project.png" alt="Logo" class="w-7 h-7 object-contain">
                 </div>
                 <div class="flex flex-col">
-                  <span class="font-black text-sm tracking-tight text-foreground uppercase pt-1">S-PROJECT — SIATC</span>
+                  <span class="font-black text-sm tracking-tight text-foreground pt-1">S-Project — SIATC</span>
                   <div class="flex items-center gap-2">
                     <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span class="text-[10px] font-black text-muted-foreground tracking-widest uppercase opacity-60">Sincronizado</span>
+                    <span class="text-[10px] font-black text-muted-foreground tracking-widest opacity-60">Sincronizado</span>
                   </div>
                 </div>
               </div>
@@ -234,8 +234,8 @@ import { AppSwitcherComponent } from './components/app-switcher/app-switcher.com
                   }
                 </div>
                 <div class="flex flex-col min-w-0 hidden md:flex text-right">
-                  <span class="text-[11px] font-black text-foreground truncate uppercase tracking-tight">{{ dataService.currentUser()?.name }}</span>
-                  <span class="text-[9px] font-black text-primary/70 uppercase tracking-widest">{{ dataService.currentUser()?.role || 'User' }}</span>
+                  <span class="text-[11px] font-black text-foreground truncate tracking-tight">{{ dataService.currentUser()?.name }}</span>
+                  <span class="text-[9px] font-black text-primary/70 tracking-widest">{{ dataService.currentUser()?.role || 'User' }}</span>
                 </div>
               </button>
 

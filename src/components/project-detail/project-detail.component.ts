@@ -29,7 +29,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
              <div>
                <div class="flex items-center gap-3">
                  <h1 class="text-xl font-bold tracking-tight text-foreground" [attr.title]="p.name">{{ p.name }}</h1>
-                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tighter border"
+                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-tighter border"
                     [class.bg-destructive/10]="p.status === 'EN_PROCESO'"
                     [class.text-destructive]="p.status === 'EN_PROCESO'"
                     [class.border-destructive/20]="p.status === 'EN_PROCESO'"
@@ -49,7 +49,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
           <!-- Header Actions -->
           <div class="flex items-center gap-3">
              @if (p.status === 'FINALIZADO') {
-                <div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 font-bold text-[10px] uppercase tracking-wider">
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 font-bold text-[10px] tracking-wider">
                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                    Cerrado
                 </div>
@@ -143,11 +143,11 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
               <!-- Quick Stats -->
               <div class="grid grid-cols-3 gap-4">
                 <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Actividades</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Actividades</p>
                    <p class="text-xl font-bold text-foreground">{{ activities().length }}</p>
                 </div>
                  <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Progreso</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Progreso</p>
                    <div class="flex items-center gap-2">
                      <p class="text-xl font-bold text-primary">{{ p.progress }}%</p>
                      <div class="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
@@ -156,7 +156,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                    </div>
                 </div>
                  <div class="bg-card p-4 rounded-lg shadow-sm border border-border">
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Líderes</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Líderes</p>
                    <div class="flex items-center gap-1 mt-1">
                       @for(c of p.areaConfig; track c.areaId) {
                          <img [src]="getUser(c.leaderId)?.avatar" class="h-6 w-6 rounded-full border border-background -ml-2 first:ml-0" [title]="getUser(c.leaderId)?.name">
@@ -164,10 +164,10 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                    </div>
                 </div>
               </div>
-              <!-- Tasks Card -->
+              <!-- Tasks Card -->
               <div class="bg-card rounded-lg shadow-sm border border-border flex flex-col min-h-[400px] overflow-hidden">
                  <div class="p-4 border-b border-border flex justify-between items-center bg-muted/30">
-                   <h3 class="font-bold text-foreground text-sm uppercase tracking-tight">Mis Tareas</h3>
+                   <h3 class="font-bold text-foreground text-sm tracking-tight">Mis Tareas</h3>
                    @if (canAddActivities()) {
                      <button (click)="isAddingActivity.set(!isAddingActivity())" class="text-[10px] bg-primary text-primary-foreground hover:bg-primary/90 font-bold px-3 py-1 rounded-md transition-colors shadow-sm">
                        {{ isAddingActivity() ? 'Cancelar' : '+ Nueva Tarea' }}
@@ -179,21 +179,21 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                    @if (isAddingActivity()) {
                      <div class="bg-muted/50 p-4 rounded-md mb-4 border border-border shadow-sm animate-in fade-in slide-in-from-top-2">
                         <div class="mb-3">
-                           <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Descripción</label>
+                           <label class="block text-[10px] font-bold text-muted-foreground tracking-wider mb-1 ml-0.5">Descripción</label>
                            <input type="text" [(ngModel)]="newActivityDesc" placeholder="¿Qué hay que hacer?" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                         </div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
                            <div>
-                             <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Inicio Plan</label>
+                             <label class="block text-[10px] font-bold text-muted-foreground tracking-wider mb-1 ml-0.5">Inicio Plan</label>
                              <input type="date" [(ngModel)]="newActivityStart" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                            </div>
                            <div>
-                             <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Fin Plan</label>
+                             <label class="block text-[10px] font-bold text-muted-foreground tracking-wider mb-1 ml-0.5">Fin Plan</label>
                              <input type="date" [(ngModel)]="newActivityEnd" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                            </div>
                         </div>
                         <div class="mb-4">
-                          <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1 ml-0.5">Responsable</label>
+                          <label class="block text-[10px] font-bold text-muted-foreground tracking-wider mb-1 ml-0.5">Responsable</label>
                           <select [(ngModel)]="newActivityResp" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                             <option [value]="0">Asignar a...</option>
                             <!-- Leaders -->
@@ -206,7 +206,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                             }
                           </select>
                         </div>
-                        <button (click)="addActivity()" [disabled]="!newActivityDesc() || !newActivityStart() || !newActivityEnd() || !newActivityResp()" class="w-full bg-primary text-primary-foreground font-bold py-2 rounded-md text-xs shadow-sm hover:bg-primary/90 transition-all uppercase tracking-wider">Guardar Tarea</button>
+                        <button (click)="addActivity()" [disabled]="!newActivityDesc() || !newActivityStart() || !newActivityEnd() || !newActivityResp()" class="w-full bg-primary text-primary-foreground font-bold py-2 rounded-md text-xs shadow-sm hover:bg-primary/90 transition-all tracking-wider">Guardar Tarea</button>
                      </div>
                    }
 
@@ -242,7 +242,7 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                                <div class="flex items-center gap-2 mt-0.5">
                                   <div class="flex items-center gap-1.5 bg-muted px-2 py-0.5 rounded-md">
                                     <img [src]="getUser(act.responsibleId)?.avatar" class="h-3 w-3 rounded-full">
-                                    <span class="text-[9px] text-muted-foreground font-bold uppercase tracking-tighter">{{ getUser(act.responsibleId)?.name }}</span>
+                                    <span class="text-[9px] text-muted-foreground font-bold tracking-tighter">{{ getUser(act.responsibleId)?.name }}</span>
                                   </div>
                                   <span class="text-[9px] text-muted-foreground font-medium italic">
                                      @if(act.status === 'REALIZADA') { Finalizado: {{act.actualEndDate}} }
@@ -266,19 +266,18 @@ type DetailTab = 'BOARD' | 'EXPENSES' | 'FILES' | 'PAYBACK' | 'CONVERSATIONS';
                        </div>
                      } @empty {
                        <div class="text-center py-10">
-                           <p class="text-muted-foreground text-xs font-bold uppercase tracking-widest">No hay tareas pendientes</p>
+                           <p class="text-muted-foreground text-xs font-bold tracking-widest">No hay tareas pendientes</p>
                        </div>
                      }
                    </div>
                  </div>
               </div>
-iv>
             </div>
 
             <!-- Right Column: Info & Team -->
             <div class="space-y-6">
               <div class="bg-card rounded-lg p-5 shadow-sm border border-border">
-                 <h3 class="font-bold text-foreground text-sm uppercase tracking-tight mb-4 border-b border-border pb-2">Detalles</h3>
+                 <h3 class="font-bold text-foreground text-sm tracking-tight mb-4 border-b border-border pb-2">Detalles</h3>
                  <div class="space-y-4">
                    <div class="flex justify-between items-center">
                      <span class="text-xs text-muted-foreground font-medium">Áreas Participantes</span>
@@ -289,20 +288,20 @@ iv>
                      <span class="text-xs font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number }}</span>
                    </div>
                    <div class="space-y-2 pt-2">
-                     <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                     <div class="flex justify-between text-[10px] font-bold tracking-tighter">
                        <span class="text-muted-foreground">Inicio Plan</span>
                        <span class="text-foreground">{{ p.startDate }}</span>
                      </div>
-                     <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                     <div class="flex justify-between text-[10px] font-bold tracking-tighter">
                        <span class="text-muted-foreground">Fin Plan</span>
                        <span class="text-foreground">{{ p.endDate }}</span>
                      </div>
                      <div class="h-px bg-border my-2"></div>
-                     <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                     <div class="flex justify-between text-[10px] font-bold tracking-tighter">
                        <span class="text-muted-foreground">Inicio Real</span>
                        <span class="font-bold" [class.text-primary]="p.actualStartDate" [class.text-muted-foreground/30]="!p.actualStartDate">{{ p.actualStartDate || '--' }}</span>
                      </div>
-                      <div class="flex justify-between text-[10px] uppercase font-bold tracking-tighter">
+                      <div class="flex justify-between text-[10px] font-bold tracking-tighter">
                        <span class="text-muted-foreground">Fin Real</span>
                        <span class="font-bold" [class.text-emerald-500]="p.actualEndDate" [class.text-muted-foreground/30]="!p.actualEndDate">{{ p.actualEndDate || '--' }}</span>
                      </div>
@@ -312,7 +311,7 @@ iv>
 
               <!-- Lideres y Equipo -->
               <div class="bg-card rounded-lg p-5 shadow-sm border border-border">
-                 <h3 class="font-bold text-foreground text-sm uppercase tracking-tight mb-4 border-b border-border pb-2">Equipo</h3>
+                 <h3 class="font-bold text-foreground text-sm tracking-tight mb-4 border-b border-border pb-2">Equipo</h3>
                  
                  <!-- Leaders Loop -->
                  <div class="space-y-3 mb-6">
@@ -321,7 +320,7 @@ iv>
                          <img [src]="getUser(config.leaderId)?.avatar" class="h-8 w-8 rounded-full object-cover">
                          <div>
                             <p class="text-[11px] font-bold text-foreground leading-none">{{ getUser(config.leaderId)?.name }}</p>
-                            <p class="text-[9px] text-primary font-bold uppercase tracking-tighter mt-1">Líder {{ getAreaName(config.areaId) }}</p>
+                            <p class="text-[9px] text-primary font-bold tracking-tighter mt-1">Líder {{ getAreaName(config.areaId) }}</p>
                          </div>
                        </div>
                     }
@@ -329,7 +328,7 @@ iv>
 
                  <!-- Team Members -->
                  <div>
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 px-1">Miembros ({{ p.teamIds.length }})</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-widest mb-2 px-1">Miembros ({{ p.teamIds.length }})</p>
                    <div class="space-y-1 max-h-60 overflow-y-auto custom-scrollbar">
                      @for (memberId of p.teamIds; track memberId) {
                        <div class="flex items-center gap-3 p-2 hover:bg-muted/50 rounded-md transition-colors">
@@ -356,7 +355,7 @@ iv>
              <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 border-primary flex justify-between items-center border-t border-r border-b border-border">
                  <div>
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Presupuesto Inicial</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Presupuesto Inicial</p>
                    <p class="text-xl font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.2-2' }}</p>
                  </div>
                  <div class="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
@@ -366,7 +365,7 @@ iv>
 
                <div class="bg-card p-5 rounded-lg shadow-sm border-l-4 border-purple-500 flex justify-between items-center border-t border-r border-b border-border">
                  <div>
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Gasto Acumulado (Est.)</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Gasto Acumulado (Est.)</p>
                    <p class="text-xl font-bold text-foreground">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ totalSpent() | number:'1.2-2' }}</p>
                  </div>
                  <div class="h-10 w-10 bg-purple-50/10 rounded-full flex items-center justify-center text-purple-500">
@@ -378,7 +377,7 @@ iv>
                     [class.border-emerald-500]="remainingBudget() >= 0"
                     [class.border-destructive]="remainingBudget() < 0">
                  <div>
-                   <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Presupuesto Restante</p>
+                   <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Presupuesto Restante</p>
                    <p class="text-xl font-bold" 
                       [class.text-emerald-600]="remainingBudget() >= 0"
                       [class.text-destructive]="remainingBudget() < 0">
@@ -400,7 +399,7 @@ iv>
              </div>
              
               <div class="lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 h-fit">
-                  <h3 class="font-bold text-slate-800 mb-4 text-sm uppercase tracking-wide">Registrar Gasto</h3>
+                  <h3 class="font-bold text-slate-800 mb-4 text-sm tracking-wide">Registrar Gasto</h3>
                   <div class="space-y-4">
                      <div>
                        <label class="block text-xs font-bold text-slate-500 mb-1">Descripción</label>
@@ -438,7 +437,7 @@ iv>
                               class="block w-full rounded-xl border-slate-200 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all border p-3 text-slate-900 text-sm font-medium outline-none">
                      </div>
                      <button (click)="addExpense()" [disabled]="!newExpenseDesc() || !newExpenseAmount() || !newExpenseDate()" 
-                             class="w-full bg-primary text-primary-foreground font-bold py-2.5 rounded-md hover:bg-primary/90 shadow-sm transition-all disabled:opacity-50 mt-2 text-xs uppercase tracking-widest">
+                             class="w-full bg-primary text-primary-foreground font-bold py-2.5 rounded-md hover:bg-primary/90 shadow-sm transition-all disabled:opacity-50 mt-2 text-xs tracking-widest">
                         Guardar Gasto
                      </button>
                   </div>
@@ -449,9 +448,9 @@ iv>
                   <table class="min-w-full divide-y divide-border">
                     <thead class="bg-muted/50">
                       <tr>
-                        <th class="px-6 py-3 text-left text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Descripción</th>
-                        <th class="px-6 py-3 text-left text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Categoría</th>
-                        <th class="px-6 py-3 text-right text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Monto</th>
+                        <th class="px-6 py-3 text-left text-[10px] font-bold text-muted-foreground tracking-widest">Descripción</th>
+                        <th class="px-6 py-3 text-left text-[10px] font-bold text-muted-foreground tracking-widest">Categoría</th>
+                        <th class="px-6 py-3 text-right text-[10px] font-bold text-muted-foreground tracking-widest">Monto</th>
                         <th class="px-6 py-3"></th>
                       </tr>
                     </thead>
@@ -546,10 +545,10 @@ iv>
 
         @if (activeTab() === 'PAYBACK') {
            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in font-bold">
-              <div class="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 uppercase tracking-tighter">
+              <div class="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 tracking-tighter">
                  <div class="bg-card p-5 rounded-lg shadow-sm border border-border flex flex-col justify-between h-28 relative overflow-hidden group">
                     <div>
-                      <p class="text-[10px] text-muted-foreground tracking-widest">Inversión (CAPEX)</p>
+                      <p class="text-[10px] text-muted-foreground tracking-widest">Inversión (Capex)</p>
                       <p class="text-xl font-black text-foreground mt-1">{{ p.currency === 'PEN' ? 'S/' : '$' }} {{ p.budget | number:'1.0-0' }}</p>
                     </div>
                  </div>
@@ -577,28 +576,28 @@ iv>
               
                <div class="xl:col-span-2 space-y-6">
                  <div class="bg-card rounded-lg shadow-sm border border-border p-6">
-                    <h3 class="text-xs uppercase tracking-widest text-muted-foreground mb-6">Proyección de Retorno</h3>
+                    <h3 class="text-xs tracking-widest text-muted-foreground mb-6">Proyección de Retorno</h3>
                     <div #paybackChart class="w-full h-[300px] bg-muted/20 rounded-md relative overflow-hidden"></div>
                  </div>
                </div>
 
               <div class="xl:col-span-1">
                  <div class="bg-card rounded-lg shadow-sm border border-border p-5 sticky top-6">
-                    <h3 class="font-bold text-foreground text-[10px] uppercase tracking-widest mb-6 px-1">Indicador de Impacto</h3>
+                    <h3 class="font-bold text-foreground text-[10px] tracking-widest mb-6 px-1">Indicador de Impacto</h3>
                      <div class="space-y-4">
                        <div>
-                          <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Nombre</label>
+                          <label class="block text-[10px] font-bold text-muted-foreground tracking-wider mb-1.5 ml-0.5">Nombre</label>
                           <input type="text" [(ngModel)]="newIndName" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                        </div>
                        <div>
-                          <label class="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1.5 ml-0.5">Categoría</label>
+                          <label class="block text-[10px] font-bold text-muted-foreground tracking-wider mb-1.5 ml-0.5">Categoría</label>
                           <select [(ngModel)]="newIndCategory" (change)="updateUnitLabel()" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                                <option value="HORAS_HOMBRE">Horas Hombre</option>
                                <option value="INSUMOS">Insumos</option>
                                <option value="RIESGOS">Riesgos</option>
                           </select>
                        </div>
-                        <div class="grid grid-cols-2 gap-3 uppercase tracking-tighter">
+                        <div class="grid grid-cols-2 gap-3 tracking-tighter">
                           <div>
                              <label class="block text-[9px] font-bold text-muted-foreground mb-1 ml-0.5">Actual</label>
                              <input type="number" [(ngModel)]="newIndCurrent" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
@@ -608,7 +607,7 @@ iv>
                              <input type="number" [(ngModel)]="newIndProjected" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
                           </div>
                        </div>
-                        <div class="grid grid-cols-2 gap-3 uppercase tracking-tighter">
+                        <div class="grid grid-cols-2 gap-3 tracking-tighter">
                           <div>
                              <label class="block text-[9px] font-bold text-muted-foreground mb-1 ml-0.5">Frecuencia</label>
                              <input type="number" [(ngModel)]="newIndFreq" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
@@ -618,7 +617,7 @@ iv>
                              <input type="number" [(ngModel)]="newIndCost" class="w-full px-3 py-2 bg-input/50 border border-input rounded-md text-xs focus:ring-1 focus:ring-primary outline-none font-bold">
                           </div>
                        </div>
-                       <button (click)="addIndicator()" class="w-full bg-primary text-primary-foreground font-black py-2.5 rounded-md text-xs uppercase tracking-widest shadow-sm hover:bg-primary/90 transition-all mt-4">Registrar</button>
+                       <button (click)="addIndicator()" class="w-full bg-primary text-primary-foreground font-black py-2.5 rounded-md text-xs tracking-widest shadow-sm hover:bg-primary/90 transition-all mt-4">Registrar</button>
                      </div>
                  </div>
               </div>
@@ -670,8 +669,8 @@ iv>
                        </div>
 
                        <div class="flex items-center gap-3 pt-4">
-                          <button (click)="closeEditModal()" class="flex-1 py-2 border border-border text-muted-foreground rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all">Cancelar</button>
-                          <button (click)="saveEditActivity()" [disabled]="!editActivityDesc() || !editActivityStart() || !editActivityEnd() || !editActivityResp()" class="flex-1 py-2 bg-primary text-primary-foreground rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-primary/90 transition-all disabled:opacity-50">Guardar</button>
+                          <button (click)="closeEditModal()" class="flex-1 py-2 border border-border text-muted-foreground rounded-md text-[10px] font-black tracking-widest hover:bg-muted transition-all">Cancelar</button>
+                          <button (click)="saveEditActivity()" [disabled]="!editActivityDesc() || !editActivityStart() || !editActivityEnd() || !editActivityResp()" class="flex-1 py-2 bg-primary text-primary-foreground rounded-md text-[10px] font-black tracking-widest shadow-sm hover:bg-primary/90 transition-all disabled:opacity-50">Guardar</button>
                        </div>
                    </div>
                 </div>

@@ -46,7 +46,7 @@ interface UrgentTask {
 
              <div class="pl-2">
                 <div class="flex justify-between items-start mb-1">
-                    <span class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider truncate w-2/3" title="{{task.projectName}}">{{ task.projectName }}</span>
+                    <span class="text-[10px] font-bold text-muted-foreground tracking-wider truncate w-2/3" title="{{task.projectName}}">{{ task.projectName }}</span>
                     <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground whitespace-nowrap">
                         {{ task.daysLeft <= 0 ? (task.daysLeft === 0 ? 'Hoy' : 'Hace ' + (task.daysLeft * -1) + 'd') : 'En ' + task.daysLeft + 'd' }}
                     </span>
@@ -64,7 +64,7 @@ interface UrgentTask {
       </div>
       
       <!-- Footer / Legend -->
-      <div class="px-4 py-2 bg-muted/30 border-t border-border flex justify-between text-[9px] font-bold text-muted-foreground uppercase tracking-tighter">
+      <div class="px-4 py-2 bg-muted/30 border-t border-border flex justify-between text-[9px] font-bold text-muted-foreground tracking-tighter">
         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-destructive"></span> Vencido</div>
         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> < 3 días</div>
         <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> < 7 días</div>

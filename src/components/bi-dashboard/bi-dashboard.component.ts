@@ -20,7 +20,7 @@ import * as d3 from 'd3';
        <div class="bg-card p-4 rounded-lg shadow-sm border flex flex-col md:flex-row gap-4 justify-between items-center z-20 sticky top-0 md:relative">
         <div class="flex items-center gap-3">
             <h2 class="font-bold text-lg tracking-tight">Dashboard Ejecutivo</h2>
-            <span class="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-bold border border-primary/20 uppercase tracking-wider">BI</span>
+            <span class="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-[10px] font-bold border border-primary/20 tracking-wider">BI</span>
          </div>
          <div class="flex flex-wrap gap-2 w-full md:w-auto">
             <!-- Area Filter -->
@@ -71,7 +71,7 @@ import * as d3 from 'd3';
                 <svg class="w-24 h-24 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
              </div>
              <div>
-                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Proyectos Activos</p>
+                <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Proyectos Activos</p>
                 <p class="text-3xl font-bold tracking-tight mt-1">{{ kpiActiveProjects() }}</p>
              </div>
              <div class="text-[10px] font-medium text-muted-foreground">De {{ filteredProjects().length }} en total registrados</div>
@@ -83,7 +83,7 @@ import * as d3 from 'd3';
                 <svg class="w-24 h-24 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4s0 0 0 0zm1 2h2v2H7v-2z" clip-rule="evenodd"/></svg>
              </div>
              <div>
-                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Ahorro Mensual (Est.)</p>
+                <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Ahorro Mensual (Est.)</p>
                 <p class="text-3xl font-bold text-green-600 tracking-tight mt-1">S/ {{ kpiMonthlySavings() | number:'1.0-0' }}</p>
              </div>
              <div class="text-[10px] font-medium text-green-600 flex items-center gap-1">
@@ -98,7 +98,7 @@ import * as d3 from 'd3';
                 <svg class="w-24 h-24 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
              </div>
              <div>
-                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Ejecución Presupuestal</p>
+                 <p class="text-[10px] font-bold text-muted-foreground tracking-wider">Ejecución Presupuestal</p>
                 <p class="text-3xl font-bold tracking-tight mt-1">{{ kpiBudgetExec() }}%</p>
              </div>
              <div class="w-full bg-muted rounded-full h-1 mt-2 overflow-hidden">
@@ -112,7 +112,7 @@ import * as d3 from 'd3';
                 <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
              </div>
              <div>
-                <p class="text-[10px] font-bold text-white/60 uppercase tracking-wider">Payback Promedio</p>
+                 <p class="text-[10px] font-bold text-white/60 tracking-wider">Payback Promedio</p>
                 <p class="text-3xl font-bold tracking-tight mt-1">{{ kpiAvgPayback() }} <span class="text-sm font-normal text-white/60">Meses</span></p>
              </div>
              <div class="text-[10px] font-medium text-white/60">Tiempo de recuperación de inversión</div>
@@ -164,12 +164,12 @@ import * as d3 from 'd3';
                  <table class="w-full border-collapse">
                    <thead>
                      <tr class="bg-muted/30 text-left">
-                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Proyecto</th>
-                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Líder</th>
-                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Progreso</th>
-                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Presupuesto</th>
-                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Payback</th>
-                       <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Estado</th>
+                        <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground tracking-wider">Proyecto</th>
+                        <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground tracking-wider">Líder</th>
+                        <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground tracking-wider">Progreso</th>
+                        <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground tracking-wider">Presupuesto</th>
+                        <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground tracking-wider">Payback</th>
+                        <th class="px-5 py-3 text-[10px] font-bold text-muted-foreground tracking-wider">Estado</th>
                      </tr>
                    </thead>
                    <tbody class="divide-y divide-border/50">
@@ -202,7 +202,7 @@ import * as d3 from 'd3';
                             {{ getProjectPayback(p) }} <span class="text-[10px] text-muted-foreground">meses</span>
                          </td>
                          <td class="px-5 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 rounded-md text-[10px] font-bold border uppercase tracking-wider"
+                             <span class="px-2 py-1 rounded-md text-[10px] font-bold border tracking-wider"
                                [class.bg-primary/10]="p.status === 'EN_PROCESO'"
                                [class.text-primary]="p.status === 'EN_PROCESO'"
                                [class.border-primary/20]="p.status === 'EN_PROCESO'"
@@ -417,14 +417,14 @@ export class BiDashboardComponent {
        .call(d3.axisBottom(x))
        .selectAll('text')
        .style('font-size', '10px')
-       .style('font-family', 'Inter, sans-serif')
+       .style('font-family', 'Lato, sans-serif')
        .style('fill', 'currentColor');
 
      svg.append('g')
        .call(d3.axisLeft(y).ticks(5).tickFormat(d => 'S/' + d))
        .selectAll('text')
        .style('font-size', '10px')
-       .style('font-family', 'Inter, sans-serif')
+       .style('font-family', 'Lato, sans-serif')
        .style('fill', 'currentColor');
 
      // Grid lines
@@ -506,7 +506,7 @@ export class BiDashboardComponent {
            .attr('y', 4)
            .text(s.label)
            .style('font-size', '10px')
-           .style('font-family', 'Inter, sans-serif')
+           .style('font-family', 'Lato, sans-serif')
            .style('fill', 'currentColor');
      });
   }

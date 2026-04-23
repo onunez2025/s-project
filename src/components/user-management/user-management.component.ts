@@ -16,10 +16,10 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 class="text-2xl font-bold tracking-tight">Gestión de Personal</h2>
-          <p class="text-muted-foreground text-[11px] font-bold uppercase tracking-wider">Administración de usuarios, roles y jerarquías del sistema.</p>
+          <p class="text-muted-foreground text-[11px] font-bold tracking-wider">Administración de usuarios, roles y jerarquías del sistema.</p>
         </div>
         
-        <button (click)="openCreate()" class="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2">
+        <button (click)="openCreate()" class="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md text-[10px] font-black tracking-widest shadow-sm transition-all hover:scale-[1.02] active:scale-95 flex items-center gap-2">
           <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
@@ -35,11 +35,11 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
            <table class="min-w-full divide-y divide-border">
             <thead class="bg-muted/30">
               <tr>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Usuario</th>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Áreas</th>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Nivel</th>
-                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Reporta A</th>
-                <th class="px-6 py-4 text-right text-[9px] font-black text-muted-foreground uppercase tracking-widest border-b border-border">Acciones</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Usuario</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Áreas</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Nivel</th>
+                <th class="px-6 py-4 text-left text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Reporta A</th>
+                <th class="px-6 py-4 text-right text-[9px] font-black text-muted-foreground tracking-widest border-b border-border">Acciones</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-border">
@@ -51,7 +51,7 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                         <img [src]="user.avatar" class="h-full w-full object-cover">
                       </div>
                       <div class="flex flex-col">
-                        <span class="text-[11px] font-black text-foreground uppercase tracking-tight">{{ user.name }}</span>
+                        <span class="text-[11px] font-black text-foreground tracking-tight">{{ user.name }}</span>
                         <span class="text-[10px] text-muted-foreground font-bold">{{ user.email }}</span>
                       </div>
                     </div>
@@ -59,22 +59,22 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                   <td class="px-6 py-3 whitespace-nowrap">
                       <div class="flex flex-wrap gap-1.5">
                         @for (areaId of user.areaIds; track areaId) {
-                           <span class="text-[9px] font-black text-primary uppercase tracking-widest bg-primary/5 px-2 py-0.5 rounded-md border border-primary/10">
+                           <span class="text-[9px] font-black text-primary tracking-widest bg-primary/5 px-2 py-0.5 rounded-md border border-primary/10">
                              {{ getAreaName(areaId) }}
                            </span>
                         }
                         @if (user.areaIds.length === 0) {
-                           <span class="text-[9px] font-bold text-muted-foreground uppercase italic tracking-tighter">Sin asignar</span>
+                           <span class="text-[9px] font-bold text-muted-foreground italic tracking-tighter">Sin asignar</span>
                         }
                       </div>
                   </td>
                   <td class="px-6 py-3 whitespace-nowrap">
                     @if (user.role === 'ADMIN') {
-                       <span class="px-2 py-0.5 inline-flex text-[9px] font-black rounded-md bg-foreground text-background uppercase tracking-widest">
+                       <span class="px-2 py-0.5 inline-flex text-[9px] font-black rounded-md bg-foreground text-background tracking-widest">
                          ADMIN
                        </span>
                     } @else {
-                       <span class="px-2 py-0.5 inline-flex text-[9px] font-black rounded-md border uppercase tracking-widest"
+                       <span class="px-2 py-0.5 inline-flex text-[9px] font-black rounded-md border tracking-widest"
                         [class.bg-purple-500/10]="user.subRole === 'GERENTE'"
                         [class.text-purple-600]="user.subRole === 'GERENTE'"
                         [class.border-purple-500/20]="user.subRole === 'GERENTE'"
@@ -94,10 +94,10 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                          <div class="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-black text-primary border border-primary/20">
                             {{ getUserName(user.reportsToId)?.charAt(0) }}
                          </div>
-                         <span class="text-[10px] font-bold text-foreground uppercase tracking-tight">{{ getUserName(user.reportsToId) }}</span>
+                         <span class="text-[10px] font-bold text-foreground tracking-tight">{{ getUserName(user.reportsToId) }}</span>
                       </div>
                     } @else {
-                      <span class="text-muted-foreground text-[9px] font-bold uppercase tracking-tighter italic">N/A</span>
+                      <span class="text-muted-foreground text-[9px] font-bold tracking-tighter italic">N/A</span>
                     }
                   </td>
                   <td class="px-6 py-3 whitespace-nowrap text-right">
@@ -123,10 +123,10 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
               
               <div class="flex justify-between items-center mb-6">
                  <div>
-                   <h3 class="text-sm font-black uppercase tracking-widest text-primary">
+                   <h3 class="text-sm font-black tracking-widest text-primary">
                       {{ editingUser() ? 'Editar Perfil' : 'Alta de Usuario' }}
                    </h3>
-                   <p class="text-[10px] text-muted-foreground font-bold uppercase tracking-tight mt-0.5">Configuración de acceso y jerarquías</p>
+                   <p class="text-[10px] text-muted-foreground font-bold tracking-tight mt-0.5">Configuración de acceso y jerarquías</p>
                  </div>
                  <button (click)="closeForm()" class="h-8 w-8 rounded-full bg-muted/50 hover:bg-destructive/10 text-muted-foreground hover:text-destructive flex items-center justify-center transition-all active:scale-90">
                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,21 +138,21 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
               <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex-1 flex flex-col min-h-0">
                 <div class="space-y-5 overflow-y-auto pr-1 pb-4">
                   <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 ml-0.5">Nombre Completo</label>
+                    <label class="block text-[10px] font-black tracking-widest text-muted-foreground mb-1.5 ml-0.5">Nombre Completo</label>
                     <input type="text" formControlName="name" 
-                           class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold uppercase tracking-tight outline-none placeholder:text-muted-foreground/50"
+                           class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold tracking-tight outline-none placeholder:text-muted-foreground/50"
                            placeholder="EJ. JUAN PÉREZ">
                   </div>
                   
                   <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 ml-0.5">Email Corporativo</label>
+                    <label class="block text-[10px] font-black tracking-widest text-muted-foreground mb-1.5 ml-0.5">Email Corporativo</label>
                     <input type="email" formControlName="email" 
                            class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold outline-none">
                   </div>
                   
                   @if (!editingUser()) {
                      <div>
-                        <label class="block text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 ml-0.5">Contraseña Inicial</label>
+                        <label class="block text-[10px] font-black tracking-widest text-muted-foreground mb-1.5 ml-0.5">Contraseña Inicial</label>
                         <input type="text" formControlName="password" 
                                class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold outline-none" 
                                placeholder="••••••••">
@@ -160,15 +160,15 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                   }
 
                   <div>
-                    <label class="block text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1.5 ml-0.5">Rol del Sistema</label>
-                    <select formControlName="role" class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold uppercase tracking-tight outline-none">
+                    <label class="block text-[10px] font-black tracking-widest text-muted-foreground mb-1.5 ml-0.5">Rol del Sistema</label>
+                    <select formControlName="role" class="block w-full rounded-md bg-muted/30 border border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all px-3 py-2 text-[11px] font-bold tracking-tight outline-none">
                       <option value="USUARIO">Usuario Regular</option>
                       <option value="ADMIN">Administrador</option>
                     </select>
                   </div>
 
                   <div class="p-4 bg-muted/30 rounded-lg space-y-4 border border-border shadow-inner">
-                    <label class="block text-[9px] font-black text-muted-foreground uppercase tracking-widest">Áreas de Operación</label>
+                    <label class="block text-[9px] font-black text-muted-foreground tracking-widest">Áreas de Operación</label>
                     <div class="grid grid-cols-1 gap-2">
                       @for(area of areas(); track area.id) {
                         <label class="flex items-center gap-3 p-2.5 rounded-md bg-card border border-border cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all select-none">
@@ -176,7 +176,7 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                                  [checked]="isAreaSelected(area.id)"
                                  (change)="toggleArea(area.id)"
                                  class="w-3.5 h-3.5 rounded border-input text-primary focus:ring-primary">
-                          <span class="text-[10px] font-black uppercase tracking-widest text-foreground/80">{{ area.name }}</span>
+                          <span class="text-[10px] font-black tracking-widest text-foreground/80">{{ area.name }}</span>
                         </label>
                       }
                     </div>
@@ -185,8 +185,8 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                   @if (userForm.get('role')?.value === 'USUARIO') {
                     <div class="p-4 bg-primary/5 rounded-lg space-y-4 border border-primary/10">
                       <div>
-                        <label class="block text-[9px] font-black text-primary uppercase tracking-widest mb-1.5 ml-0.5">Nivel Jerárquico</label>
-                        <select formControlName="subRole" class="block w-full rounded-md bg-card border border-primary/20 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none">
+                        <label class="block text-[9px] font-black text-primary tracking-widest mb-1.5 ml-0.5">Nivel Jerárquico</label>
+                        <select formControlName="subRole" class="block w-full rounded-md bg-card border border-primary/20 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all px-3 py-2 text-[10px] font-black tracking-widest outline-none">
                           <option [value]="null">--- SELECCIONAR ---</option>
                           <option value="GERENTE">GERENTE</option>
                           <option value="JEFE">JEFE</option>
@@ -195,8 +195,8 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                       </div>
 
                       <div>
-                        <label class="block text-[9px] font-black text-primary uppercase tracking-widest mb-1.5 ml-0.5">Reporta A (Supervisor)</label>
-                        <select formControlName="reportsToId" class="block w-full rounded-md bg-card border border-primary/20 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all px-3 py-2 text-[10px] font-black uppercase tracking-widest outline-none">
+                        <label class="block text-[9px] font-black text-primary tracking-widest mb-1.5 ml-0.5">Reporta A (Supervisor)</label>
+                        <select formControlName="reportsToId" class="block w-full rounded-md bg-card border border-primary/20 focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all px-3 py-2 text-[10px] font-black tracking-widest outline-none">
                           <option [value]="null">
                              {{ potentialSupervisors().length === 0 ? 'SIN SUPERIOR' : '--- SELECCIONAR ---' }}
                           </option>
@@ -210,7 +210,7 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                 </div>
 
                 <div class="pt-5 flex flex-col gap-2 border-t border-border mt-auto">
-                    <button type="submit" [disabled]="userForm.invalid || isLoading()" class="w-full h-10 bg-primary text-primary-foreground rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-primary/90 shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
+                    <button type="submit" [disabled]="userForm.invalid || isLoading()" class="w-full h-10 bg-primary text-primary-foreground rounded-md text-[10px] font-black tracking-widest hover:bg-primary/90 shadow-md transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
                        @if (isLoading()) {
                           <svg class="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
                              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -221,7 +221,7 @@ import { DataService, User, Area, Role, SubRole } from '../../services/data.serv
                           {{ editingUser() ? 'Actualizar Registro' : 'Confirmar Alta' }}
                        }
                     </button>
-                    <button type="button" (click)="closeForm()" class="w-full h-9 border border-border rounded-md text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:bg-muted/50 transition-all">Cancelar</button>
+                    <button type="button" (click)="closeForm()" class="w-full h-9 border border-border rounded-md text-[9px] font-black tracking-widest text-muted-foreground hover:bg-muted/50 transition-all">Cancelar</button>
                 </div>
               </form>
             </div>
