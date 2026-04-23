@@ -85,17 +85,22 @@ import { DataService, User, Area, Project, Currency, AreaLeaderConfig } from '..
 
                <div>
                  <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 ml-0.5 uppercase">Inicio</label>
-                 <input type="date" formControlName="startDate" 
+                 <input type="date" formControlName="startDate" max="2050-12-31"
                         class="w-full px-3 py-1.5 bg-background border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                </div>
                <div>
                  <label class="block text-[10px] font-bold text-muted-foreground mb-1.5 ml-0.5 uppercase">Fin</label>
-                 <input type="date" formControlName="endDate" 
+                 <input type="date" formControlName="endDate" max="2050-12-31"
                         class="w-full px-3 py-1.5 bg-background border border-input rounded-md text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-medium">
                </div>
                @if(form.errors?.['dateRange']) {
                   <p class="col-span-2 text-center text-[10px] text-destructive font-black bg-destructive/10 p-1.5 rounded uppercase tracking-tighter">
                      La fecha de fin debe ser posterior a la de inicio.
+                  </p>
+               }
+               @if(form.errors?.['invalidYear']) {
+                  <p class="col-span-2 text-center text-[10px] text-destructive font-black bg-destructive/10 p-1.5 rounded uppercase tracking-tighter">
+                     El año máximo permitido es 2050.
                   </p>
                }
             </div>
@@ -239,7 +244,21 @@ export class ProjectFormComponent {
   dateRangeValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const start = control.get('startDate');
     const end = control.get('endDate');
-    return start && end && new Date(start.value) > new Date(end.value) ? { dateRange: true } : null;
+    
+    if (!start || !end || !start.value || !end.value) return null;
+    
+    const startDate = new Date(start.value);
+    const endDate = new Date(end.value);
+
+    if (startDate > endDate) {
+      return { dateRange: true };
+    }
+
+    if (startDate.getFullYear() > 2050 || endDate.getFullYear() > 2050) {
+      return { invalidYear: true };
+    }
+
+    return null;
   };
 
   form = this.fb.group({
