@@ -61,6 +61,14 @@ type ViewMode = 'CARDS' | 'GANTT';
              </button>
           </div>
           
+          <!-- Export Button -->
+          <button (click)="exportToExcel()" class="w-full sm:w-auto bg-card hover:bg-muted text-foreground border border-border px-4 py-2.5 rounded-md text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+            <svg class="h-4 w-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Exportar
+          </button>
+
           <!-- Create Button -->
           @if (canCreateProject()) {
             <button (click)="openCreate()" class="w-full sm:w-auto bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2.5 rounded-md text-sm font-medium shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
@@ -267,11 +275,8 @@ export class DashboardComponent {
       );
     }
 
-    projects.sort((a, b) => {
-      const dateA = new Date(a.endDate).getTime();
-      const dateB = new Date(b.endDate).getTime();
-      return dateA - dateB;
-    });
+    // Ordenar por ID descendente para mostrar los más recientes primero
+    projects.sort((a, b) => b.id - a.id);
 
     return projects;
   });
@@ -318,5 +323,62 @@ export class DashboardComponent {
   closeForm() {
     this.showForm.set(false);
     this.editingProject.set(null);
+  }
+
+  exportToExcel() {
+    const projects = this.displayProjects();
+    if (projects.length === 0) return;
+
+    const headers = [
+      'ID', 
+      'Nombre del Proyecto', 
+      'Descripción', 
+      'Áreas', 
+      'Líderes', 
+      'Estado', 
+      'Progreso (%)', 
+      'Presupuesto', 
+      'Moneda', 
+      'Fecha Inicio', 
+      'Fecha Fin',
+      'Equipo'
+    ];
+
+    const rows = projects.map(p => {
+      const areas = this.getProjectAreas(p);
+      const leaders = this.getLeaderIds(p).map(id => this.dataService.getAllUsers().find(u => u.id === id)?.name).join(', ');
+      const team = p.teamIds.map(id => this.dataService.getAllUsers().find(u => u.id === id)?.name).join(', ');
+      
+      return [
+        p.id,
+        p.name,
+        p.description || '',
+        areas,
+        leaders,
+        p.status,
+        p.progress,
+        p.budget,
+        p.currency,
+        p.startDate,
+        p.endDate,
+        team
+      ];
+    });
+
+    const csvContent = [
+      headers.join(';'),
+      ...rows.map(r => r.map(field => {
+        const stringField = String(field).replace(/"/g, '""');
+        return `"${stringField}"`;
+      }).join(';'))
+    ].join('\r\n');
+
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `proyectos_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 }

@@ -158,7 +158,7 @@ import * as d3 from 'd3';
            <div class="lg:col-span-2 bg-card rounded-lg shadow-sm border overflow-hidden">
                <div class="p-4 border-b bg-muted/30 flex justify-between items-center">
                   <h3 class="font-bold text-sm">Detalle de Proyectos</h3>
-                  <button class="text-[10px] font-bold text-primary hover:underline">Exportar Excel</button>
+                  <button (click)="exportToExcel()" class="text-[10px] font-bold text-primary hover:underline">Exportar Excel</button>
                </div>
                <div class="overflow-x-auto">
                  <table class="w-full border-collapse">
@@ -509,5 +509,61 @@ export class BiDashboardComponent {
            .style('font-family', 'Lato, sans-serif')
            .style('fill', 'currentColor');
      });
+  }
+
+  exportToExcel() {
+    const projects = this.sortedProjects();
+    if (projects.length === 0) return;
+
+    const headers = [
+      'ID', 
+      'Nombre del Proyecto', 
+      'Líder', 
+      'Estado', 
+      'Progreso (%)', 
+      'Presupuesto', 
+      'Moneda', 
+      'Payback (Meses)',
+      'Ahorro Mensual Est.'
+    ];
+
+    const rows = projects.map(p => {
+      const leader = this.getProjectLeader(p)?.name || 'N/A';
+      const payback = this.getProjectPayback(p);
+      
+      const indicators = this.dataService.getIndicatorsByProject(p.id);
+      const monthlySavings = indicators.reduce((sum, ind) => {
+          const savings = (ind.currentValue - ind.projectedValue) * ind.frequency * ind.unitCost;
+          return sum + savings;
+      }, 0);
+
+      return [
+        p.id,
+        p.name,
+        leader,
+        p.status,
+        p.progress,
+        p.budget,
+        p.currency,
+        payback,
+        monthlySavings.toFixed(2)
+      ];
+    });
+
+    const csvContent = [
+      headers.join(';'),
+      ...rows.map(r => r.map(field => {
+        const stringField = String(field).replace(/"/g, '""');
+        return `"${stringField}"`;
+      }).join(';'))
+    ].join('\r\n');
+
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `reporte_bi_proyectos_${new Date().toISOString().split('T')[0]}.csv`);
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 }
